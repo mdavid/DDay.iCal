@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<changelog>
+    <version number="0.16" released="2006-08-11">        
+        <bugs>
+            <known>
+                <summary>Alarms do not trigger relative to the END of a component</summary>
+                <details>
+                    Alarms are currently only able to trigger relative to the START date of a component,
+                    whereas it should be able to trigger relative to the START or END of the component.
+                </details>
+            </known>
+            <fixed>
+                <summary>Fixed a bug that caused DURATION data types to misbehave when parsing an iCalendar.</summary>
+                <details>
+                    DURATION data types would accept "full" durations, with day and time components,
+                    but would reject a duration with only the day component (i.e. "-P2D").
+                    Also, DURATION data types would not be automatically assigned when parsing
+                    a content line.
+                </details>
+            </fixed>
+            <fixed>
+                <summary>
+                    Fixed a bug that caused RDATE and EXDATE properties to malfunction when using a
+                    time zone instead of UTC.
+                </summary>
+            </fixed>
+        </bugs>
+        <features>
+            <improved>
+                <summary>
+                    Improved documentation on all classes; most classes should have a class summary,
+                    and the most-used classes should have examples.
+                </summary>
+            </improved>
+            <added>
+                <summary>
+                    Added support for ALARM components. You can now poll events and todo items for alarm times.
+                </summary>                
+            </added>
+            <added>
+                <summary>
+                    Added support for JOURNAL components. You can now work with journal entries.
+                </summary>
+            </added>
+        </features>
+        <notes>
+            <note ts="2006-08-14 4:50PM">I've applied a BSD-variation license to the DDay.iCal project.</note>
+        </notes>
+    </version>
+    <version number="0.15" released="2006-08-08">
+        <summary>Initial release - todo and events should be working.</summary>        
+    </version>
+</changelog>
