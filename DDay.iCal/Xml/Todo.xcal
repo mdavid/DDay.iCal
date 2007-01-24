@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<iCalendar>
+    <!-- status values are: NEEDS-ACTION, COMPLETED, IN-PROCESS, CANCELLED -->
+    <vcalendar version="2.0"
+          prodid="-//HandGen//NONSGML vGen v1.0//EN">
+        <vtodo>
+            <uid>CA298F72-0854-467d-8E2C-E470F7F09FC6</uid>
+            <summary>Implement serialization code for Event components</summary>
+            <status>NEEDS-ACTION</status>
+        </vtodo>
+        <vtodo>
+            <uid>FFAC8CD1-FCD2-440c-9897-154BD1EF923B</uid>
+            <summary>Implement FreeBusy component</summary>
+            <status>NEEDS-ACTION</status>
+        </vtodo>
+        <vtodo>
+            <uid>93DA7870-7EAA-4f8b-8355-6C96FEFE1FD5</uid>
+            <summary>Implement Alarm component</summary>
+            <status>NEEDS-ACTION</status>
+        </vtodo>
+        <vtodo>
+            <uid>52B68C3B-129A-470d-8342-2432FED0870C</uid>
+            <summary>Implement Journal component</summary>
+            <status>NEEDS-ACTION</status>
+        </vtodo>
+        <vtodo>
+            <uid>8695E4B6-C2E8-4865-A29A-CB7F6D566ED5</uid>
+            <summary>Implement TimeZone component</summary>
+            <status>NEEDS-ACTION</status>
+        </vtodo>
+        <vtodo>
+            <uid>3367CAAC-9E70-4de8-BD15-A854C60CBE70</uid>
+            <summary>Implement Todo component</summary>
+            <status>NEEDS-ACTION</status>
+        </vtodo>
+    </vcalendar>
+</iCalendar>
