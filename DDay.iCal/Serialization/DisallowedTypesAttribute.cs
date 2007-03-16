@@ -4,7 +4,16 @@ using System.Text;
 
 namespace DDay.iCal.Serialization
 {
-    public class DisallowedTypes : Attribute
+    /// <summary>
+    /// Lists the iCalendar types that are not
+    /// allowed on the property.
+    /// <example>
+    /// For example, if "DATE" were a disallowed type on a
+    /// Date_Time object, it would always be serialized as
+    /// DATE-TIME.
+    /// </example>
+    /// </summary>
+    public class DisallowedTypesAttribute : Attribute
     {
         #region Private Fields
 
@@ -24,15 +33,16 @@ namespace DDay.iCal.Serialization
 
         #region Constructors
 
-        public DisallowedTypes() : base()
+        public DisallowedTypesAttribute() : base()
         {
             Types = new List<string>();
         }
-        public DisallowedTypes(string type) : this()
+        public DisallowedTypesAttribute(string type) : this()
         {            
             Types.Add(type);
         }
-        public DisallowedTypes(params string[] types) : this()
+        public DisallowedTypesAttribute(params string[] types)
+            : this()
         {
             Types.AddRange(types);
         }

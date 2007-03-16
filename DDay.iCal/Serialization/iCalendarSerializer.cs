@@ -7,6 +7,26 @@ using DDay.iCal.Serialization.iCalendar.Components;
 
 namespace DDay.iCal.Serialization
 {
+    /// <summary>
+    /// A class that serializes <see cref="iCalendar"/>s into the
+    /// standard iCalendar (.ics) format.
+    /// <remarks>
+    /// The default encoding for .ics files is UTF-8.
+    /// </remarks>
+    /// <example>
+    /// The following code demonstrates how to serialize an iCalendar to file:
+    /// <code>
+    /// iCalendar iCal = new iCalendar();
+    /// 
+    /// Event evt = iCal.Create&lt;Event&gt;();
+    /// evt.Start = DateTime.Now;
+    /// evt.Summary = "Event summary";
+    /// 
+    /// iCalendarSerializer serializer = new iCalendarSerializer(iCal);
+    /// serializer.Serialize(@"filename.ics");
+    /// </code>
+    /// </example>
+    /// </summary>
     public class iCalendarSerializer : ComponentBaseSerializer 
     {
         #region Private Fields
@@ -34,15 +54,6 @@ namespace DDay.iCal.Serialization
             fs.Close();
         }
 
-        #endregion
-
-        #region ISerializable Members
-
-        public override void Serialize(Stream stream, Encoding encoding)
-        {
-            base.Serialize(stream, encoding);
-        }
-
-        #endregion
+        #endregion        
     }
 }
