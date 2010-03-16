@@ -43,7 +43,7 @@ namespace DDay.iCal.DataTypes
         virtual public Text FormatType
         {
             get
-            {                
+            {
                 if (Parameters.ContainsKey("FMTYPE"))
                 {
                     Parameter p = (Parameter)Parameters["FMTYPE"];
