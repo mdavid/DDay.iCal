@@ -812,7 +812,10 @@ namespace DDay.iCal
 
         public void Dispose()
         {
-            Children.Clear();
+            if (!Children.IsReadOnly)
+            {
+                Children.Clear();
+            }
         }
 
         #endregion        
