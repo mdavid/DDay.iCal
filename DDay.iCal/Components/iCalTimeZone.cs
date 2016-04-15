@@ -16,16 +16,16 @@ namespace DDay.iCal
         #region Static Public Methods
 
 #if !SILVERLIGHT
-        static public iCalTimeZone FromLocalTimeZone()
+        public static iCalTimeZone FromLocalTimeZone()
         {
             return FromSystemTimeZone(System.TimeZoneInfo.Local);
         }
-        static public iCalTimeZone FromLocalTimeZone(DateTime earlistDateTimeToSupport, bool includeHistoricalData)
+        public static iCalTimeZone FromLocalTimeZone(DateTime earlistDateTimeToSupport, bool includeHistoricalData)
         {
             return FromSystemTimeZone(System.TimeZoneInfo.Local, earlistDateTimeToSupport, includeHistoricalData);
         }
 
-        static private void PopulateiCalTimeZoneInfo(ITimeZoneInfo tzi, System.TimeZoneInfo.TransitionTime transition, int year)
+        private static void PopulateiCalTimeZoneInfo(ITimeZoneInfo tzi, System.TimeZoneInfo.TransitionTime transition, int year)
         {
             var c = CultureInfo.CurrentCulture.Calendar;
 
@@ -178,31 +178,31 @@ namespace DDay.iCal
 
         #region ITimeZone Members
 
-        virtual public string ID
+        public virtual string ID
         {
             get { return Properties.Get<string>("TZID"); }
             set { Properties.Set("TZID", value); }
         }
 
-        virtual public string TZID
+        public virtual string TZID
         {
             get { return ID; }
             set { ID = value; }
         }
 
-        virtual public IDateTime LastModified
+        public virtual IDateTime LastModified
         {
             get { return Properties.Get<IDateTime>("LAST-MODIFIED"); }
             set { Properties.Set("LAST-MODIFIED", value); }
         }
 
-        virtual public Uri Url
+        public virtual Uri Url
         {
             get { return Properties.Get<Uri>("TZURL"); }
             set { Properties.Set("TZURL", value); }
         }
 
-        virtual public ICalendarObjectList<ITimeZoneInfo> TimeZoneInfos
+        public virtual ICalendarObjectList<ITimeZoneInfo> TimeZoneInfos
         {
             get { return m_TimeZoneInfos; }
             set { m_TimeZoneInfos = value; }

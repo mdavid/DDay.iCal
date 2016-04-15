@@ -16,25 +16,25 @@ namespace DDay.iCal.Serialization
 
         #region ISerializationSettings Members
 
-        virtual public Type iCalendarType
+        public virtual Type iCalendarType
         {
             get { return m_iCalendarType; }
             set { m_iCalendarType = value; }
         }
 
-        virtual public bool EnsureAccurateLineNumbers
+        public virtual bool EnsureAccurateLineNumbers
         {
             get { return m_EnsureAccurateLineNumbers; }
             set { m_EnsureAccurateLineNumbers = value; }
         }
 
-        virtual public ParsingModeType ParsingMode
+        public virtual ParsingModeType ParsingMode
         {
             get { return m_ParsingMode; }
             set { m_ParsingMode = value; }
         }
 
-        virtual public bool StoreExtraSerializationData
+        public virtual bool StoreExtraSerializationData
         {
             get { return m_StoreExtraSerializationData; }
             set { m_StoreExtraSerializationData = value; }

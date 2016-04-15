@@ -33,13 +33,13 @@ namespace DDay.iCal
             Offset = ts;
         }
 
-        static public implicit operator UTCOffset(TimeSpan ts) => new UTCOffset(ts);
+        public static implicit operator UTCOffset(TimeSpan ts) => new UTCOffset(ts);
 
-        static public explicit operator TimeSpan(UTCOffset o) => o.Offset;
+        public static explicit operator TimeSpan(UTCOffset o) => o.Offset;
 
-        virtual public DateTime ToUTC(DateTime dt) => DateTime.SpecifyKind(dt.Add(-Offset), DateTimeKind.Utc);
+        public virtual DateTime ToUTC(DateTime dt) => DateTime.SpecifyKind(dt.Add(-Offset), DateTimeKind.Utc);
 
-        virtual public DateTime ToLocal(DateTime dt) => DateTime.SpecifyKind(dt.Add(Offset), DateTimeKind.Local);
+        public virtual DateTime ToLocal(DateTime dt) => DateTime.SpecifyKind(dt.Add(Offset), DateTimeKind.Local);
 
         protected bool Equals(UTCOffset other)
         {

@@ -6,7 +6,7 @@ namespace DDay.iCal
 {
     public class DateUtil
     {
-        static private System.Globalization.Calendar _Calendar;
+        private static System.Globalization.Calendar _Calendar;
 
         static DateUtil()
         {

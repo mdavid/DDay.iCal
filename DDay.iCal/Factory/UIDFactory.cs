@@ -4,7 +4,7 @@ namespace DDay.iCal
 {
     public class UIDFactory
     {
-        virtual public string Build()
+        public virtual string Build()
         {
             return Guid.NewGuid().ToString();
         }

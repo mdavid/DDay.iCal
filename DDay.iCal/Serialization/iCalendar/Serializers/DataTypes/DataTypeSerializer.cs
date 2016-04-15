@@ -19,7 +19,7 @@ namespace DDay.iCal.Serialization.iCalendar
 
         #region Protected Methods
 
-        virtual protected ICalendarDataType CreateAndAssociate()
+        protected virtual ICalendarDataType CreateAndAssociate()
         {
             // Create an instance of the object
             var dt = Activator.CreateInstance(TargetType) as ICalendarDataType;

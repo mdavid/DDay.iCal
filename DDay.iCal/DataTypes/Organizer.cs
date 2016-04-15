@@ -18,7 +18,7 @@ namespace DDay.iCal
     {
         #region IOrganizer Members
 
-        virtual public Uri SentBy
+        public virtual Uri SentBy
         {
             get { return new Uri(Parameters.Get("SENT-BY")); }
             set
@@ -30,13 +30,13 @@ namespace DDay.iCal
             }
         }
 
-        virtual public string CommonName
+        public virtual string CommonName
         {
             get { return Parameters.Get("CN"); }
             set { Parameters.Set("CN", value); }
         }
 
-        virtual public Uri DirectoryEntry
+        public virtual Uri DirectoryEntry
         {
             get { return new Uri(Parameters.Get("DIR")); }
             set
@@ -48,7 +48,7 @@ namespace DDay.iCal
             }
         }
 
-        virtual public Uri Value { get; set; }
+        public virtual Uri Value { get; set; }
 
         #endregion
 

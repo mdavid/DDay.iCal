@@ -31,7 +31,7 @@ namespace DDay.iCal
 
         #region ICalendarParameterCollection
 
-        virtual public void SetParent(ICalendarObject parent)
+        public virtual void SetParent(ICalendarObject parent)
         {            
             foreach (var parameter in this)
             {
@@ -39,12 +39,12 @@ namespace DDay.iCal
             }
         }
 
-        virtual public void Add(string name, string value)
+        public virtual void Add(string name, string value)
         {
             RealObject.Add(new CalendarParameter(name, value));
         }
 
-        virtual public string Get(string name)
+        public virtual string Get(string name)
         {
             var parameter = RealObject.FirstOrDefault(o => o.Name == name);
 
@@ -53,7 +53,7 @@ namespace DDay.iCal
             return default(string);
         }
 
-        virtual public IList<string> GetMany(string name)
+        public virtual IList<string> GetMany(string name)
         {
             return new GroupedValueListProxy<string, ICalendarParameter, CalendarParameter, string, string>(
                 Parameters, 
@@ -61,7 +61,7 @@ namespace DDay.iCal
             );
         }
 
-        virtual public void Set(string name, string value)
+        public virtual void Set(string name, string value)
         {
             var parameter = RealObject.FirstOrDefault(o => o.Name == name);
 
@@ -75,7 +75,7 @@ namespace DDay.iCal
             }
         }
 
-        virtual public void Set(string name, IEnumerable<string> values)
+        public virtual void Set(string name, IEnumerable<string> values)
         {
             var parameter = RealObject.FirstOrDefault(o => o.Name == name);
 
@@ -89,22 +89,22 @@ namespace DDay.iCal
             }
         }
 
-        virtual public int IndexOf(ICalendarParameter obj)
+        public virtual int IndexOf(ICalendarParameter obj)
         {
             return Parameters.IndexOf(obj);
         }
 
-        virtual public void Insert(int index, ICalendarParameter item)
+        public virtual void Insert(int index, ICalendarParameter item)
         {
             Parameters.Insert(index, item);
         }
 
-        virtual public void RemoveAt(int index)
+        public virtual void RemoveAt(int index)
         {
             Parameters.RemoveAt(index);
         }
 
-        virtual public ICalendarParameter this[int index]
+        public virtual ICalendarParameter this[int index]
         {
             get
             {

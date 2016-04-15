@@ -33,7 +33,7 @@ namespace DDay.iCal
         /// Copies values from the target object to the
         /// current object.
         /// </summary>
-        virtual public void CopyFrom(ICopyable c)
+        public virtual void CopyFrom(ICopyable c)
         {
         }
 
@@ -41,7 +41,7 @@ namespace DDay.iCal
         /// Creates a copy of the object.
         /// </summary>
         /// <returns>The copy of the object.</returns>
-        virtual public T Copy<T>()
+        public virtual T Copy<T>()
         {
             ICopyable obj = null;
             var type = GetType();
@@ -60,7 +60,7 @@ namespace DDay.iCal
 
         #region ILoadable Members
 
-        virtual public bool IsLoaded
+        public virtual bool IsLoaded
         {
             get { return m_IsLoaded; }
         }
@@ -68,7 +68,7 @@ namespace DDay.iCal
         [field:NonSerialized]
         public event EventHandler Loaded;
 
-        virtual public void OnLoaded()
+        public virtual void OnLoaded()
         {
             m_IsLoaded = true;
             if (Loaded != null)

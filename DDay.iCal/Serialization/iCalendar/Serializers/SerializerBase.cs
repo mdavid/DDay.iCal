@@ -29,7 +29,7 @@ namespace DDay.iCal.Serialization.iCalendar
 
         #region ISerializer Members
 
-        virtual public ISerializationContext SerializationContext
+        public virtual ISerializationContext SerializationContext
         {
             get { return m_SerializationContext; }
             set { m_SerializationContext = value; }
@@ -83,28 +83,28 @@ namespace DDay.iCal.Serialization.iCalendar
 
         #region IServiceProvider Members
 
-        virtual public object GetService(Type serviceType)
+        public virtual object GetService(Type serviceType)
         {
             if (SerializationContext != null)
                 return SerializationContext.GetService(serviceType);
             return null;
         }
 
-        virtual public object GetService(string name)
+        public virtual object GetService(string name)
         {
             if (SerializationContext != null)
                 return SerializationContext.GetService(name);
             return null;
         }
 
-        virtual public T GetService<T>()
+        public virtual T GetService<T>()
         {
             if (SerializationContext != null)
                 return SerializationContext.GetService<T>();
             return default(T);
         }
 
-        virtual public T GetService<T>(string name)
+        public virtual T GetService<T>(string name)
         {
             if (SerializationContext != null)
                 return SerializationContext.GetService<T>(name);

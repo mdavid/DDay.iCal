@@ -91,19 +91,19 @@ namespace DDay.iCal
             get { return m_Calendar; }
         }
 
-        virtual public DateTime EvaluationStartBounds
+        public virtual DateTime EvaluationStartBounds
         {
             get { return m_EvaluationStartBounds; }
             set { m_EvaluationStartBounds = value; }
         }
 
-        virtual public DateTime EvaluationEndBounds
+        public virtual DateTime EvaluationEndBounds
         {
             get { return m_EvaluationEndBounds; }
             set { m_EvaluationEndBounds = value; }
         }
 
-        virtual public ICalendarObject AssociatedObject
+        public virtual ICalendarObject AssociatedObject
         {
             get
             {
@@ -117,19 +117,19 @@ namespace DDay.iCal
             protected set { m_AssociatedObject = value; }
         }
 
-        virtual public HashSet<IPeriod> Periods
+        public virtual HashSet<IPeriod> Periods
         {
             get { return m_Periods; }
         }
 
-        virtual public void Clear()
+        public virtual void Clear()
         {
             m_EvaluationStartBounds = DateTime.MaxValue;
             m_EvaluationEndBounds = DateTime.MinValue;
             m_Periods.Clear();
         }
 
-        abstract public HashSet<IPeriod> Evaluate(
+        public abstract HashSet<IPeriod> Evaluate(
             IDateTime referenceDate,
             DateTime periodStart,
             DateTime periodEnd,

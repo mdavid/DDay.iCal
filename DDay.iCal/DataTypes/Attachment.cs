@@ -112,25 +112,25 @@ namespace DDay.iCal
 
         #region IAttachment Members
 
-        virtual public Uri Uri
+        public virtual Uri Uri
         {
             get { return m_Uri; }
             set { m_Uri = value; }
         }
 
-        virtual public byte[] Data
+        public virtual byte[] Data
         {
             get { return m_Data; }
             set { m_Data = value; }
         }
 
-        virtual public Encoding ValueEncoding
+        public virtual Encoding ValueEncoding
         {
             get { return m_Encoding; }
             set { m_Encoding = value; }
         }
 
-        virtual public string Value
+        public virtual string Value
         {
             get
             {
@@ -147,7 +147,7 @@ namespace DDay.iCal
             }
         }
 
-        virtual public string FormatType
+        public virtual string FormatType
         {
             get { return Parameters.Get("FMTTYPE"); }
             set { Parameters.Set("FMTTYPE", value); }
@@ -156,7 +156,7 @@ namespace DDay.iCal
         /// <summary>
         /// Loads (fills) the <c>Data</c> property with the file designated at the given URI".
         /// </summary>
-        virtual public void LoadDataFromUri()
+        public virtual void LoadDataFromUri()
         {
             LoadDataFromUri(null, null, null);
         }
@@ -166,7 +166,7 @@ namespace DDay.iCal
         /// </summary>
         /// <param name="username">The username to supply for credentials</param>
         /// <param name="password">The pasword to supply for credentials</param>
-        virtual public void LoadDataFromUri(string username, string password)
+        public virtual void LoadDataFromUri(string username, string password)
         {
             LoadDataFromUri(null, username, password);
         }
@@ -177,7 +177,7 @@ namespace DDay.iCal
         /// <param name="uri">The Uri from which to download the <c>Data</c></param>
         /// <param name="username">The username to supply for credentials</param>
         /// <param name="password">The pasword to supply for credentials</param>
-        virtual public void LoadDataFromUri(Uri uri, string username, string password)
+        public virtual void LoadDataFromUri(Uri uri, string username, string password)
         {
             using (var client = new WebClient())
             {

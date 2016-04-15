@@ -4,7 +4,7 @@
     {
         #region Static Public Methods
 
-        static public void AssociateItem(object item, ICalendarObject objectToAssociate)
+        public static void AssociateItem(object item, ICalendarObject objectToAssociate)
         {
             if (item is ICalendarDataType)
                 ((ICalendarDataType)item).AssociatedObject = objectToAssociate;
@@ -12,7 +12,7 @@
                 ((ICalendarObject)item).Parent = objectToAssociate;
         }
 
-        static public void DeassociateItem(object item)
+        public static void DeassociateItem(object item)
         {
             if (item is ICalendarDataType)
                 ((ICalendarDataType)item).AssociatedObject = null;

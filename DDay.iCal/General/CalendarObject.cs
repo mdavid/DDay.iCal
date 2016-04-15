@@ -74,12 +74,12 @@ namespace DDay.iCal
 
         #region Protected Methods
 
-        virtual protected void OnDeserializing(StreamingContext context)
+        protected virtual void OnDeserializing(StreamingContext context)
         {
             Initialize();
         }
 
-        virtual protected void OnDeserialized(StreamingContext context)
+        protected virtual void OnDeserialized(StreamingContext context)
         {
         }
 
@@ -141,7 +141,7 @@ namespace DDay.iCal
         /// <summary>
         /// Returns the parent iCalObject that owns this one.
         /// </summary>
-        virtual public ICalendarObject Parent
+        public virtual ICalendarObject Parent
         {
             get { return _Parent; }
             set { _Parent = value; }
@@ -150,7 +150,7 @@ namespace DDay.iCal
         /// <summary>
         /// A collection of iCalObjects that are children of the current object.
         /// </summary>
-        virtual public ICalendarObjectList<ICalendarObject> Children
+        public virtual ICalendarObjectList<ICalendarObject> Children
         {
             get
             {
@@ -169,7 +169,7 @@ namespace DDay.iCal
         ///     </list>
         /// </example>
         /// </summary>        
-        virtual public string Name
+        public virtual string Name
         {
             get { return _Name; }
             set
@@ -186,7 +186,7 @@ namespace DDay.iCal
         /// <summary>
         /// Returns the <see cref="DDay.iCal.iCalendar"/> that this DDayiCalObject belongs to.
         /// </summary>
-        virtual public IICalendar Calendar
+        public virtual IICalendar Calendar
         {
             get
             {
@@ -204,19 +204,19 @@ namespace DDay.iCal
             }
         }
 
-        virtual public IICalendar iCalendar
+        public virtual IICalendar iCalendar
         {
             get { return Calendar; }
             protected set { Calendar = value; }
         }
 
-        virtual public int Line
+        public virtual int Line
         {
             get { return _Line; }
             set { _Line = value; }
         }
 
-        virtual public int Column
+        public virtual int Column
         {
             get { return _Column; }
             set { _Column = value; }
@@ -226,42 +226,42 @@ namespace DDay.iCal
 
         #region IServiceProvider Members
 
-        virtual public object GetService(Type serviceType)
+        public virtual object GetService(Type serviceType)
         {
             return _ServiceProvider.GetService(serviceType);
         }
 
-        virtual public object GetService(string name)
+        public virtual object GetService(string name)
         {
             return _ServiceProvider.GetService(name);            
         }
 
-        virtual public T GetService<T>()
+        public virtual T GetService<T>()
         {
             return _ServiceProvider.GetService<T>();
         }
 
-        virtual public T GetService<T>(string name)
+        public virtual T GetService<T>(string name)
         {
             return _ServiceProvider.GetService<T>(name);
         }
 
-        virtual public void SetService(string name, object obj)
+        public virtual void SetService(string name, object obj)
         {
             _ServiceProvider.SetService(name, obj);
         }
 
-        virtual public void SetService(object obj)
+        public virtual void SetService(object obj)
         {
             _ServiceProvider.SetService(obj);
         }
 
-        virtual public void RemoveService(Type type)
+        public virtual void RemoveService(Type type)
         {
             _ServiceProvider.RemoveService(type);
         }
 
-        virtual public void RemoveService(string name)
+        public virtual void RemoveService(string name)
         {
             _ServiceProvider.RemoveService(name);
         }
@@ -279,7 +279,7 @@ namespace DDay.iCal
                 GroupChanged(this, new ObjectEventArgs<string, string>(@old, @new));
         }
 
-        virtual public string Group
+        public virtual string Group
         {
             get { return Name; }
             set { Name = value; }

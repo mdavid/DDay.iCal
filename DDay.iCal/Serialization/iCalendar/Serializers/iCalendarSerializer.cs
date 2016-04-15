@@ -34,19 +34,19 @@ namespace DDay.iCal.Serialization.iCalendar
         #region Public Methods
 
         [Obsolete("Use the Serialize(IICalendar iCal, string filename) method instead.")]
-        virtual public void Serialize(string filename)
+        public virtual void Serialize(string filename)
         {
             if (m_ICalendar != null)
                 Serialize(m_ICalendar, filename);
         }
 
         [Obsolete("Use the SerializeToString(ICalendarObject obj) method instead.")]
-        virtual public string SerializeToString()
+        public virtual string SerializeToString()
         {
             return SerializeToString(m_ICalendar);
         }
 
-        virtual public void Serialize(IICalendar iCal, string filename)
+        public virtual void Serialize(IICalendar iCal, string filename)
         {
             using (var fs = new FileStream(filename, FileMode.Create))
             {

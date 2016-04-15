@@ -8,7 +8,7 @@ namespace DDay.iCal
     {
         #region ICalendarComponentFactory Members
 
-        virtual public ICalendarComponent Build(string objectName, bool uninitialized)
+        public virtual ICalendarComponent Build(string objectName, bool uninitialized)
         {
             Type type = null;
 

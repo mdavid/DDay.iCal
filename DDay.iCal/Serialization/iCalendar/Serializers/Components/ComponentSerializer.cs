@@ -10,7 +10,7 @@ namespace DDay.iCal.Serialization.iCalendar
     {
         #region Protected Properties
 
-        virtual protected IComparer<ICalendarProperty> PropertySorter
+        protected virtual IComparer<ICalendarProperty> PropertySorter
         {
             get
             {

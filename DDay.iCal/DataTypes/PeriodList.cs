@@ -145,12 +145,12 @@ namespace DDay.iCal
 
         #region IPeriodList Members
 
-        virtual public void Add(IDateTime dt)
+        public virtual void Add(IDateTime dt)
         {
             Periods.Add(new Period(dt));
         }
 
-        virtual public void Remove(IDateTime dt)
+        public virtual void Remove(IDateTime dt)
         {
             Periods.Remove(new Period(dt));
         }
@@ -171,12 +171,12 @@ namespace DDay.iCal
 
         #region IList<IPeriod> Members
 
-        virtual public void Add(IPeriod item)
+        public virtual void Add(IPeriod item)
         {
             m_Periods.Add(item);
         }
 
-        virtual public void Clear()
+        public virtual void Clear()
         {
             m_Periods.Clear();
         }

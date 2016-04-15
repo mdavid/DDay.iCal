@@ -12,7 +12,7 @@ namespace DDay.iCal
         {
         }
 
-        virtual public TType this[int index]
+        public virtual TType this[int index]
         {
             get
             {

@@ -24,19 +24,19 @@ namespace DDay.iCal
 
         #region Public Properties
 
-        virtual public string Description
+        public virtual string Description
         {
             get { return m_Description; }
             set { m_Description = value; }
         }
 
-        virtual public string ExtraData
+        public virtual string ExtraData
         {
             get { return m_ExtraData; }
             set { m_ExtraData = value; }
         }
 
-        virtual public IStatusCode StatusCode
+        public virtual IStatusCode StatusCode
         {
             get { return m_StatusCode; }
             set { m_StatusCode = value; }

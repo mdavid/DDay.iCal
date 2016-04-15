@@ -65,7 +65,7 @@ namespace DDay.iCal.Test
             Start = DateTime.Now;
         }
 
-        static public void TestCal(IICalendar iCal)
+        public static void TestCal(IICalendar iCal)
         {
             Assert.IsNotNull(iCal, "The iCalendar was not loaded");
             if (iCal.Events.Count > 0)

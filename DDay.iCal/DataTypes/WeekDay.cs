@@ -22,13 +22,13 @@ namespace DDay.iCal
 
         #region Public Properties
 
-        virtual public int Offset
+        public virtual int Offset
         {
             get { return m_Num; }
             set { m_Num = value; }
         }
 
-        virtual public DayOfWeek DayOfWeek
+        public virtual DayOfWeek DayOfWeek
         {
             get { return m_DayOfWeek; }
             set { m_DayOfWeek = value; }

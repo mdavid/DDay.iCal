@@ -50,7 +50,7 @@ namespace DDay.iCal.Test
             CompareCalendars(iCal1, iCal2);
         }
 
-        static public void CompareCalendars(IICalendar iCal1, IICalendar iCal2)
+        public static void CompareCalendars(IICalendar iCal1, IICalendar iCal2)
         {
             CompareComponents(iCal1, iCal2);
 
@@ -67,7 +67,7 @@ namespace DDay.iCal.Test
             }
         }
 
-        static public void CompareComponents(ICalendarComponent cb1, ICalendarComponent cb2)
+        public static void CompareComponents(ICalendarComponent cb1, ICalendarComponent cb2)
         {
             foreach (var p1 in cb1.Properties)
             {
@@ -105,7 +105,7 @@ namespace DDay.iCal.Test
             }
         }
 
-        static public void CompareEnumerables(IEnumerable a1, IEnumerable a2, string value)
+        public static void CompareEnumerables(IEnumerable a1, IEnumerable a2, string value)
         {
             if (a1 == null && a2 == null)
                 return;

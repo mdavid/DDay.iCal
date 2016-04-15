@@ -14,7 +14,7 @@ namespace DDay.Collections
             _Lists = lists;
         }
 
-        virtual public TType Current
+        public virtual TType Current
         {
             get
             {
@@ -24,7 +24,7 @@ namespace DDay.Collections
             }
         }
 
-        virtual public void Dispose()
+        public virtual void Dispose()
         {
             Reset();
         }
@@ -71,7 +71,7 @@ namespace DDay.Collections
             return false;
         }
 
-        virtual public bool MoveNext()
+        public virtual bool MoveNext()
         {
             if (_ListEnumerator != null)
             {
@@ -94,7 +94,7 @@ namespace DDay.Collections
             return false;
         }
 
-        virtual public void Reset()
+        public virtual void Reset()
         {
 
             if (_ListsEnumerator != null)

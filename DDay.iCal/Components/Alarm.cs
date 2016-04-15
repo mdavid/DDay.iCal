@@ -23,49 +23,49 @@ namespace DDay.iCal
 
         #region Public Properties
 
-        virtual public AlarmAction Action
+        public virtual AlarmAction Action
         {
             get { return Properties.Get<AlarmAction>("ACTION"); }
             set { Properties.Set("ACTION", value); }
         }
 
-        virtual public IAttachment Attachment
+        public virtual IAttachment Attachment
         {
             get { return Properties.Get<IAttachment>("ATTACH"); }
             set { Properties.Set("ATTACH", value); }
         }
 
-        virtual public IList<IAttendee> Attendees
+        public virtual IList<IAttendee> Attendees
         {
             get { return Properties.GetMany<IAttendee>("ATTENDEE"); }
             set { Properties.Set("ATTENDEE", value); }
         }
 
-        virtual public string Description
+        public virtual string Description
         {
             get { return Properties.Get<string>("DESCRIPTION"); }
             set { Properties.Set("DESCRIPTION", value); }
         }
 
-        virtual public TimeSpan Duration
+        public virtual TimeSpan Duration
         {
             get { return Properties.Get<TimeSpan>("DURATION"); }
             set { Properties.Set("DURATION", value); }
         }
 
-        virtual public int Repeat
+        public virtual int Repeat
         {
             get { return Properties.Get<int>("REPEAT"); }
             set { Properties.Set("REPEAT", value); }
         }
 
-        virtual public string Summary
+        public virtual string Summary
         {
             get { return Properties.Get<string>("SUMMARY"); }
             set { Properties.Set("SUMMARY", value); }
         }
 
-        virtual public ITrigger Trigger
+        public virtual ITrigger Trigger
         {
             get { return Properties.Get<ITrigger>("TRIGGER"); }
             set { Properties.Set("TRIGGER", value); }
@@ -75,7 +75,7 @@ namespace DDay.iCal
 
         #region Protected Properties
 
-        virtual protected List<AlarmOccurrence> Occurrences
+        protected virtual List<AlarmOccurrence> Occurrences
         {
             get { return m_Occurrences; }
             set { m_Occurrences = value; }
@@ -104,7 +104,7 @@ namespace DDay.iCal
         /// Gets a list of alarm occurrences for the given recurring component, <paramref name="rc"/>
         /// that occur between <paramref name="FromDate"/> and <paramref name="ToDate"/>.
         /// </summary>
-        virtual public IList<AlarmOccurrence> GetOccurrences(IRecurringComponent rc, IDateTime FromDate, IDateTime ToDate)
+        public virtual IList<AlarmOccurrence> GetOccurrences(IRecurringComponent rc, IDateTime FromDate, IDateTime ToDate)
         {
             Occurrences.Clear();
 
@@ -162,7 +162,7 @@ namespace DDay.iCal
         /// </summary>
         /// <param name="Start">The earliest date/time to poll trigerred alarms for.</param>
         /// <returns>A list of <see cref="AlarmOccurrence"/> objects, each containing a triggered alarm.</returns>
-        virtual public IList<AlarmOccurrence> Poll(IDateTime Start, IDateTime End)
+        public virtual IList<AlarmOccurrence> Poll(IDateTime Start, IDateTime End)
         {
             var Results = new List<AlarmOccurrence>();
 
@@ -185,7 +185,7 @@ namespace DDay.iCal
         /// <c>DURATION</c> properties.  Each recurrence of the alarm will
         /// have its own set of generated repetitions.
         /// </summary>
-        virtual protected void AddRepeatedItems()
+        protected virtual void AddRepeatedItems()
         {
             if (Repeat != null)
             {

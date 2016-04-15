@@ -29,7 +29,7 @@ namespace DDay.iCal
         /// <summary>
         /// Loads an iCalendar component (Event, Todo, Journal, etc.) from an open stream.
         /// </summary>
-        static public ICalendarComponent LoadFromStream(Stream s)
+        public static ICalendarComponent LoadFromStream(Stream s)
         {
             return LoadFromStream(s, Encoding.UTF8);
         }
@@ -38,12 +38,12 @@ namespace DDay.iCal
 
         #region LoadFromStream(Stream s, Encoding e) variants
 
-        static public ICalendarComponent LoadFromStream(Stream stream, Encoding encoding)
+        public static ICalendarComponent LoadFromStream(Stream stream, Encoding encoding)
         {
             return LoadFromStream(stream, encoding, new ComponentSerializer());
         }
 
-        static public T LoadFromStream<T>(Stream stream, Encoding encoding)
+        public static T LoadFromStream<T>(Stream stream, Encoding encoding)
             where T : ICalendarComponent
         {
             var serializer = new ComponentSerializer();            
@@ -53,7 +53,7 @@ namespace DDay.iCal
             return default(T);
         }
 
-        static public ICalendarComponent LoadFromStream(Stream stream, Encoding encoding, ISerializer serializer)
+        public static ICalendarComponent LoadFromStream(Stream stream, Encoding encoding, ISerializer serializer)
         {
             return serializer.Deserialize(stream, encoding) as ICalendarComponent;
         }
@@ -62,7 +62,7 @@ namespace DDay.iCal
 
         #region LoadFromStream(TextReader tr) variants
 
-        static public ICalendarComponent LoadFromStream(TextReader tr)
+        public static ICalendarComponent LoadFromStream(TextReader tr)
         {
             var text = tr.ReadToEnd();
             tr.Close();
@@ -72,7 +72,7 @@ namespace DDay.iCal
             return LoadFromStream(ms, Encoding.UTF8);
         }
 
-        static public T LoadFromStream<T>(TextReader tr) where T : ICalendarComponent
+        public static T LoadFromStream<T>(TextReader tr) where T : ICalendarComponent
         {
             object obj = LoadFromStream(tr);
             if (obj is T)
@@ -97,7 +97,7 @@ namespace DDay.iCal
         /// <summary>
         /// Returns a list of properties that are associated with the iCalendar object.
         /// </summary>
-        virtual public ICalendarPropertyList Properties
+        public virtual ICalendarPropertyList Properties
         {
             get { return m_Properties; }
             protected set
@@ -149,7 +149,7 @@ namespace DDay.iCal
         /// <summary>
         /// Adds a property to this component.
         /// </summary>
-        virtual public void AddProperty(string name, string value)
+        public virtual void AddProperty(string name, string value)
         {
             var p = new CalendarProperty(name, value);
             AddProperty(p);
@@ -158,7 +158,7 @@ namespace DDay.iCal
         /// <summary>
         /// Adds a property to this component.
         /// </summary>
-        virtual public void AddProperty(ICalendarProperty p)
+        public virtual void AddProperty(ICalendarProperty p)
         {
             p.Parent = this;
             Properties.Set(p.Name, p);

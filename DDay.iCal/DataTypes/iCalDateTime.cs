@@ -20,7 +20,7 @@ namespace DDay.iCal
     {
         #region Static Public Properties
 
-        static public iCalDateTime Now
+        public static iCalDateTime Now
         {
             get
             {
@@ -28,7 +28,7 @@ namespace DDay.iCal
             }
         }
 
-        static public iCalDateTime Today
+        public static iCalDateTime Today
         {
             get
             {

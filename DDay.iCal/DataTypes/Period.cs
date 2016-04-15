@@ -130,7 +130,7 @@ namespace DDay.iCal
 
         #region IPeriod Members
 
-        virtual public IDateTime StartTime
+        public virtual IDateTime StartTime
         {
             get { return m_StartTime; }
             set
@@ -140,7 +140,7 @@ namespace DDay.iCal
             }
         }
 
-        virtual public IDateTime EndTime
+        public virtual IDateTime EndTime
         {
             get { return m_EndTime; }
             set
@@ -150,7 +150,7 @@ namespace DDay.iCal
             }
         }
 
-        virtual public TimeSpan Duration
+        public virtual TimeSpan Duration
         {
             get { return m_Duration; }
             set
@@ -168,13 +168,13 @@ namespace DDay.iCal
         /// objects are matched against the date only, and
         /// not the date-time combination.
         /// </summary>
-        virtual public bool MatchesDateOnly
+        public virtual bool MatchesDateOnly
         {
             get { return m_MatchesDateOnly; }
             set { m_MatchesDateOnly = value; }
         }
 
-        virtual public bool Contains(IDateTime dt)
+        public virtual bool Contains(IDateTime dt)
         {
             // Start time is inclusive
             if (dt != null &&
@@ -188,7 +188,7 @@ namespace DDay.iCal
             return false;
         }
 
-        virtual public bool CollidesWith(IPeriod period)
+        public virtual bool CollidesWith(IPeriod period)
         {
             if (period != null &&
                 (

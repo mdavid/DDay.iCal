@@ -25,7 +25,7 @@ namespace DDay.iCal
 
         #region Public Properties
 
-        virtual public IDateTime DateTime
+        public virtual IDateTime DateTime
         {
             get { return m_DateTime; }
             set
@@ -45,7 +45,7 @@ namespace DDay.iCal
             }
         }
 
-        virtual public TimeSpan? Duration
+        public virtual TimeSpan? Duration
         {
             get { return m_Duration; }
             set
@@ -61,13 +61,13 @@ namespace DDay.iCal
             }
         }
 
-        virtual public TriggerRelation Related
+        public virtual TriggerRelation Related
         {
             get { return m_Related; }
             set { m_Related = value; }
         }
         
-        virtual public bool IsRelative
+        public virtual bool IsRelative
         {
             get { return m_Duration != null; }
         }

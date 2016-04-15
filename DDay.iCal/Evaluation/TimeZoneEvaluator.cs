@@ -21,7 +21,7 @@ namespace DDay.iCal
 
         #region Public Properties
 
-        virtual public HashSet<Occurrence> Occurrences
+        public virtual HashSet<Occurrence> Occurrences
         {
             get { return m_Occurrences; }
             set { m_Occurrences = value; }

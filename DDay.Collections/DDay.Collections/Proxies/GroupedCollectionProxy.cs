@@ -54,8 +54,8 @@ namespace DDay.Collections
 
         #region IGroupedCollection Members
 
-        virtual public event EventHandler<ObjectEventArgs<TNew, int>> ItemAdded;
-        virtual public event EventHandler<ObjectEventArgs<TNew, int>> ItemRemoved;
+        public virtual event EventHandler<ObjectEventArgs<TNew, int>> ItemAdded;
+        public virtual event EventHandler<ObjectEventArgs<TNew, int>> ItemRemoved;
 
         protected void OnItemAdded(TNew item, int index)
         {
@@ -69,27 +69,27 @@ namespace DDay.Collections
                 ItemRemoved(this, new ObjectEventArgs<TNew, int>(item, index));
         }
 
-        virtual public bool Remove(TGroup group)
+        public virtual bool Remove(TGroup group)
         {
             return _RealObject.Remove(group);
         }
 
-        virtual public void Clear(TGroup group)
+        public virtual void Clear(TGroup group)
         {
             _RealObject.Clear(group);
         }
 
-        virtual public bool ContainsKey(TGroup group)
+        public virtual bool ContainsKey(TGroup group)
         {
             return _RealObject.ContainsKey(group);            
         }
 
-        virtual public int CountOf(TGroup group)
+        public virtual int CountOf(TGroup group)
         {
             return _RealObject.Count(g => g.Group.GetType() == typeof (TGroup));
         }
 
-        virtual public IEnumerable<TNew> AllOf(TGroup group)
+        public virtual IEnumerable<TNew> AllOf(TGroup group)
         {
             return _RealObject
                 .AllOf(group)
@@ -97,17 +97,17 @@ namespace DDay.Collections
                 .Where(_Predicate);
         }
         
-        virtual public void SortKeys(IComparer<TGroup> comparer = null)
+        public virtual void SortKeys(IComparer<TGroup> comparer = null)
         {
             _RealObject.SortKeys(comparer);
         }
 
-        virtual public void Add(TNew item)
+        public virtual void Add(TNew item)
         {
             _RealObject.Add(item);
         }
 
-        virtual public void Clear()
+        public virtual void Clear()
         {
             // Only clear items of this type
             // that match the predicate.
@@ -122,12 +122,12 @@ namespace DDay.Collections
             }
         }
 
-        virtual public bool Contains(TNew item)
+        public virtual bool Contains(TNew item)
         {
             return _RealObject.Contains(item);
         }
 
-        virtual public void CopyTo(TNew[] array, int arrayIndex)
+        public virtual void CopyTo(TNew[] array, int arrayIndex)
         {
             var i = 0;
             foreach (var item in this)
@@ -136,7 +136,7 @@ namespace DDay.Collections
             }
         }
 
-        virtual public int Count
+        public virtual int Count
         {
             get 
             { 
@@ -146,17 +146,17 @@ namespace DDay.Collections
             }
         }
 
-        virtual public bool IsReadOnly
+        public virtual bool IsReadOnly
         {
             get { return false; }
         }
 
-        virtual public bool Remove(TNew item)
+        public virtual bool Remove(TNew item)
         {
             return _RealObject.Remove(item);
         }
 
-        virtual public IEnumerator<TNew> GetEnumerator()
+        public virtual IEnumerator<TNew> GetEnumerator()
         {
             return _RealObject
                 .OfType<TNew>()
@@ -179,7 +179,7 @@ namespace DDay.Collections
             get { return _RealObject; }
         }
 
-        virtual public void SetProxiedObject(IGroupedCollection<TGroup, TOriginal> realObject)
+        public virtual void SetProxiedObject(IGroupedCollection<TGroup, TOriginal> realObject)
         {
             _RealObject = realObject;
         }

@@ -46,7 +46,7 @@ namespace DDay.iCal
         /// <summary>
         /// Returns a list of parameters that are associated with the iCalendar object.
         /// </summary>
-        virtual public ICalendarParameterCollection Parameters
+        public virtual ICalendarParameterCollection Parameters
         {
             get { return _Parameters; }
             protected set
@@ -101,7 +101,7 @@ namespace DDay.iCal
         /// <summary>
         /// Adds a parameter to the iCalendar object.
         /// </summary>
-        virtual public void AddParameter(string name, string value)
+        public virtual void AddParameter(string name, string value)
         {            
             var p = new CalendarParameter(name, value);
             Parameters.Add(p);
@@ -110,7 +110,7 @@ namespace DDay.iCal
         /// <summary>
         /// Adds a parameter to the iCalendar object.
         /// </summary>
-        virtual public void AddParameter(ICalendarParameter p)
+        public virtual void AddParameter(ICalendarParameter p)
         {
             Parameters.Add(p);
         }
@@ -175,7 +175,7 @@ namespace DDay.iCal
                 ValueChanged(this, new ValueChangedEventArgs<object>((IEnumerable<object>)removedValue, (IEnumerable<object>)addedValue));
         }
 
-        virtual public IEnumerable<object> Values
+        public virtual IEnumerable<object> Values
         {
             get 
             {
@@ -210,12 +210,12 @@ namespace DDay.iCal
             }
         }
 
-        virtual public bool ContainsValue(object value)
+        public virtual bool ContainsValue(object value)
         {
             return _Values.Contains(value);
         }
 
-        virtual public int ValueCount
+        public virtual int ValueCount
         {
             get
             {
@@ -223,7 +223,7 @@ namespace DDay.iCal
             }
         }
 
-        virtual public void SetValue(object value)
+        public virtual void SetValue(object value)
         {
             if (_Values.Count == 0)
             {
@@ -247,7 +247,7 @@ namespace DDay.iCal
             }
         }
 
-        virtual public void SetValue(IEnumerable<object> values)
+        public virtual void SetValue(IEnumerable<object> values)
         {
             // Remove all previous values
             var removedValues = _Values.ToList();
@@ -256,7 +256,7 @@ namespace DDay.iCal
             OnValueChanged(removedValues, values);
         }
 
-        virtual public void AddValue(object value)
+        public virtual void AddValue(object value)
         {
             if (value != null)
             {
@@ -265,7 +265,7 @@ namespace DDay.iCal
             }
         }
         
-        virtual public void RemoveValue(object value)
+        public virtual void RemoveValue(object value)
         {
             if (value != null &&
                 _Values.Contains(value) &&

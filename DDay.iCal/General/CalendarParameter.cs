@@ -90,17 +90,17 @@ namespace DDay.iCal
                 ValueChanged(this, new ValueChangedEventArgs<string>(removedValues, addedValues));
         }
 
-        virtual public IEnumerable<string> Values
+        public virtual IEnumerable<string> Values
         {
             get { return _Values; }
         }
 
-        virtual public bool ContainsValue(string value)
+        public virtual bool ContainsValue(string value)
         {
             return _Values.Contains(value);
         }
 
-        virtual public int ValueCount
+        public virtual int ValueCount
         {
             get
             {
@@ -108,7 +108,7 @@ namespace DDay.iCal
             }
         }
 
-        virtual public void SetValue(string value)
+        public virtual void SetValue(string value)
         {
             if (_Values.Count == 0)
             {
@@ -132,7 +132,7 @@ namespace DDay.iCal
             }
         }
 
-        virtual public void SetValue(IEnumerable<string> values)
+        public virtual void SetValue(IEnumerable<string> values)
         {                        
             // Remove all previous values
             var removedValues = _Values.ToList();
@@ -141,7 +141,7 @@ namespace DDay.iCal
             OnValueChanged(removedValues, values);
         }
 
-        virtual public void AddValue(string value)
+        public virtual void AddValue(string value)
         {
             if (value != null)
             {
@@ -150,7 +150,7 @@ namespace DDay.iCal
             }
         }
 
-        virtual public void RemoveValue(string value)
+        public virtual void RemoveValue(string value)
         {
             if (value != null &&
                 _Values.Contains(value) &&
@@ -164,7 +164,7 @@ namespace DDay.iCal
 
         #region ICalendarParameter Members
 
-        virtual public string Value
+        public virtual string Value
         {
             get
             {

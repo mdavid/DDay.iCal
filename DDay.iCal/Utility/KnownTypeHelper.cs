@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace DDay.iCal
 {
-    static public class KnownTypeHelper
+    public static class KnownTypeHelper
     {
-        static public IList<Type> GetKnownTypes()
+        public static IList<Type> GetKnownTypes()
         {
             var types = new List<Type>();
 

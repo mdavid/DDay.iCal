@@ -8,19 +8,19 @@
     {
         #region ISerializationProcessor<ICalendarComponent> Members
 
-        virtual public void PreSerialization(ICalendarComponent obj)
+        public virtual void PreSerialization(ICalendarComponent obj)
         {
         }
 
-        virtual public void PostSerialization(ICalendarComponent obj)
+        public virtual void PostSerialization(ICalendarComponent obj)
         {
         }
 
-        virtual public void PreDeserialization(ICalendarComponent obj)
+        public virtual void PreDeserialization(ICalendarComponent obj)
         {
         }
 
-        virtual public void PostDeserialization(ICalendarComponent obj)
+        public virtual void PostDeserialization(ICalendarComponent obj)
         {
         }
 

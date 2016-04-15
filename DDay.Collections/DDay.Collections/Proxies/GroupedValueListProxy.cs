@@ -106,7 +106,7 @@ namespace DDay.Collections
 
         #region IList<TNewValue> Members
 
-        virtual public void Add(TNewValue item)
+        public virtual void Add(TNewValue item)
         {
             // Add the value to the object
             if (item is TOriginalValue)
@@ -116,7 +116,7 @@ namespace DDay.Collections
             }
         }
 
-        virtual public void Clear()
+        public virtual void Clear()
         {
             var items = Items.Where(o => o.Values != null);
 
@@ -127,7 +127,7 @@ namespace DDay.Collections
             }
         }
 
-        virtual public bool Contains(TNewValue item)
+        public virtual bool Contains(TNewValue item)
         {
             if (item is TOriginalValue)
             {
@@ -138,7 +138,7 @@ namespace DDay.Collections
             return false;
         }
 
-        virtual public void CopyTo(TNewValue[] array, int arrayIndex)
+        public virtual void CopyTo(TNewValue[] array, int arrayIndex)
         {
             Items                
                 .Where(o => o.Values != null)
@@ -147,7 +147,7 @@ namespace DDay.Collections
                 .CopyTo(array, arrayIndex);
         }
         
-        virtual public int Count
+        public virtual int Count
         {
             get
             {
@@ -155,12 +155,12 @@ namespace DDay.Collections
             }
         }
 
-        virtual public bool IsReadOnly
+        public virtual bool IsReadOnly
         {
             get { return false; }
         }
 
-        virtual public bool Remove(TNewValue item)
+        public virtual bool Remove(TNewValue item)
         {
             if (item is TOriginalValue)
             {
@@ -179,7 +179,7 @@ namespace DDay.Collections
             return false;
         }
 
-        virtual public IEnumerator<TNewValue> GetEnumerator()
+        public virtual IEnumerator<TNewValue> GetEnumerator()
         {
             return GetEnumeratorInternal();        
         }
@@ -189,7 +189,7 @@ namespace DDay.Collections
             return GetEnumeratorInternal();
         }
 
-        virtual public int IndexOf(TNewValue item)
+        public virtual int IndexOf(TNewValue item)
         {
             var index = -1;
 
@@ -211,7 +211,7 @@ namespace DDay.Collections
             return index;
         }
 
-        virtual public void Insert(int index, TNewValue item)
+        public virtual void Insert(int index, TNewValue item)
         {
             IterateValues((o, i, count) =>
                 {
@@ -232,7 +232,7 @@ namespace DDay.Collections
                 });
         }
 
-        virtual public void RemoveAt(int index)
+        public virtual void RemoveAt(int index)
         {
             IterateValues((o, i, count) =>
             {
@@ -251,7 +251,7 @@ namespace DDay.Collections
             });
         }
 
-        virtual public TNewValue this[int index]
+        public virtual TNewValue this[int index]
         {
             get
             {
@@ -281,7 +281,7 @@ namespace DDay.Collections
 
         #region IGroupedValueListProxy Members
 
-        virtual public IEnumerable<TInterface> Items
+        public virtual IEnumerable<TInterface> Items
         {
             get
             {

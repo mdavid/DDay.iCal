@@ -62,7 +62,7 @@ namespace DDay.iCal
         /// will be extrapolated.
         /// </note>
         /// </summary>
-        virtual public IDateTime DTEnd
+        public virtual IDateTime DTEnd
         {
             get { return Properties.Get<IDateTime>("DTEND"); }
             set
@@ -96,7 +96,7 @@ namespace DDay.iCal
         //
         // Therefore, Duration is not serialized, as DTEnd
         // should always be extrapolated from the duration.
-        virtual public TimeSpan Duration
+        public virtual TimeSpan Duration
         {
             get { return Properties.Get<TimeSpan>("DURATION"); }
             set
@@ -112,7 +112,7 @@ namespace DDay.iCal
         /// <summary>
         /// An alias to the DTEnd field (i.e. end date/time).
         /// </summary>
-        virtual public IDateTime End
+        public virtual IDateTime End
         {
             get { return DTEnd; }
             set { DTEnd = value; }
@@ -121,7 +121,7 @@ namespace DDay.iCal
         /// <summary>
         /// Returns true if the event is an all-day event.
         /// </summary>
-        virtual public bool IsAllDay
+        public virtual bool IsAllDay
         {
             get { return !Start.HasTime; }
             set
@@ -235,7 +235,7 @@ namespace DDay.iCal
         /// </summary>
         /// <param name="DateTime">The date to test.</param>
         /// <returns>True if the event occurs on the <paramref name="DateTime"/> provided, False otherwise.</returns>
-        virtual public bool OccursOn(IDateTime DateTime)
+        public virtual bool OccursOn(IDateTime DateTime)
         {
             foreach (var p in m_Evaluator.Periods)
                 // NOTE: removed UTC from date checks, since a date is a date.
@@ -256,7 +256,7 @@ namespace DDay.iCal
         /// </summary>
         /// <param name="DateTime">The date and time to test.</param>
         /// <returns>True if the event begins at the given date and time</returns>
-        virtual public bool OccursAt(IDateTime DateTime)
+        public virtual bool OccursAt(IDateTime DateTime)
         {
             foreach (var p in m_Evaluator.Periods)
                 if (p.StartTime.Equals(DateTime))
@@ -269,7 +269,7 @@ namespace DDay.iCal
         /// as an upcoming or occurred event.
         /// </summary>
         /// <returns>True if the event has not been cancelled, False otherwise.</returns>
-        virtual public bool IsActive()
+        public virtual bool IsActive()
         {
             return (Status != EventStatus.Cancelled);            
         }
