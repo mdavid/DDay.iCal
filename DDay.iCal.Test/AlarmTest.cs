@@ -35,7 +35,7 @@ namespace DDay.iCal.Test
         public void Alarm1()
         {
             var dateTimes = new List<IDateTime>();
-            dateTimes.AddRange(new iCalDateTime[] {new iCalDateTime(2006, 7, 18, 9, 30, 0, tzid)});
+            dateTimes.AddRange(new[] {new iCalDateTime(2006, 7, 18, 9, 30, 0, tzid)});
 
             TestAlarm("Alarm1.ics", dateTimes, new iCalDateTime(2006, 7, 1, tzid), new iCalDateTime(2006, 9, 1, tzid));
         }
@@ -44,7 +44,7 @@ namespace DDay.iCal.Test
         public void Alarm2()
         {
             var dateTimes = new List<IDateTime>();
-            dateTimes.AddRange(new iCalDateTime[]
+            dateTimes.AddRange(new[]
             {
                 new iCalDateTime(2006, 7, 18, 9, 30, 0, tzid), new iCalDateTime(2006, 7, 20, 9, 30, 0, tzid), new iCalDateTime(2006, 7, 22, 9, 30, 0, tzid),
                 new iCalDateTime(2006, 7, 24, 9, 30, 0, tzid), new iCalDateTime(2006, 7, 26, 9, 30, 0, tzid), new iCalDateTime(2006, 7, 28, 9, 30, 0, tzid),
@@ -59,7 +59,7 @@ namespace DDay.iCal.Test
         public void Alarm3()
         {
             var dateTimes = new List<IDateTime>();
-            dateTimes.AddRange(new iCalDateTime[]
+            dateTimes.AddRange(new[]
             {
                 new iCalDateTime(1998, 2, 11, 9, 0, 0, tzid), new iCalDateTime(1998, 3, 11, 9, 0, 0, tzid), new iCalDateTime(1998, 11, 11, 9, 0, 0, tzid),
                 new iCalDateTime(1999, 8, 11, 9, 0, 0, tzid), new iCalDateTime(2000, 10, 11, 9, 0, 0, tzid)
@@ -72,7 +72,7 @@ namespace DDay.iCal.Test
         public void Alarm4()
         {
             var dateTimes = new List<IDateTime>();
-            dateTimes.AddRange(new iCalDateTime[]
+            dateTimes.AddRange(new[]
             {
                 new iCalDateTime(1998, 2, 11, 9, 0, 0, tzid), new iCalDateTime(1998, 2, 11, 11, 0, 0, tzid), new iCalDateTime(1998, 2, 11, 13, 0, 0, tzid),
                 new iCalDateTime(1998, 2, 11, 15, 0, 0, tzid), new iCalDateTime(1998, 3, 11, 9, 0, 0, tzid), new iCalDateTime(1998, 3, 11, 11, 0, 0, tzid),
@@ -90,7 +90,7 @@ namespace DDay.iCal.Test
         public void Alarm5()
         {
             var dateTimes = new List<IDateTime>();
-            dateTimes.AddRange(new iCalDateTime[] {new iCalDateTime(1998, 1, 2, 8, 0, 0, tzid)});
+            dateTimes.AddRange(new[] {new iCalDateTime(1998, 1, 2, 8, 0, 0, tzid)});
 
             TestAlarm("Alarm5.ics", dateTimes, new iCalDateTime(1997, 7, 1, tzid), new iCalDateTime(2000, 12, 31, tzid));
         }
@@ -99,7 +99,7 @@ namespace DDay.iCal.Test
         public void Alarm6()
         {
             var DateTimes = new List<IDateTime>();
-            DateTimes.AddRange(new iCalDateTime[]
+            DateTimes.AddRange(new[]
             {
                 new iCalDateTime(1998, 1, 2, 8, 0, 0, tzid), new iCalDateTime(1998, 1, 5, 8, 0, 0, tzid), new iCalDateTime(1998, 1, 8, 8, 0, 0, tzid),
                 new iCalDateTime(1998, 1, 11, 8, 0, 0, tzid), new iCalDateTime(1998, 1, 14, 8, 0, 0, tzid), new iCalDateTime(1998, 1, 17, 8, 0, 0, tzid)
@@ -112,7 +112,7 @@ namespace DDay.iCal.Test
         public void Alarm7()
         {
             var dateTimes = new List<IDateTime>();
-            dateTimes.AddRange(new iCalDateTime[]
+            dateTimes.AddRange(new[]
             {
                 new iCalDateTime(2006, 7, 18, 10, 30, 0, tzid), new iCalDateTime(2006, 7, 20, 10, 30, 0, tzid), new iCalDateTime(2006, 7, 22, 10, 30, 0, tzid),
                 new iCalDateTime(2006, 7, 24, 10, 30, 0, tzid), new iCalDateTime(2006, 7, 26, 10, 30, 0, tzid), new iCalDateTime(2006, 7, 28, 10, 30, 0, tzid),

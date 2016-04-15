@@ -472,7 +472,7 @@ namespace DDay.iCal.Test
             var evt = iCal.Events.First();
 
             var items = new ArrayList();
-            items.AddRange(new string[]
+            items.AddRange(new[]
             {"One", "Two", "Three", "Four", "Five", "Six", "Seven", "A string of text with nothing less than a comma, semicolon; and a newline\n."});
 
             var found = new Hashtable();
@@ -809,7 +809,7 @@ END:VCALENDAR
             IDateTime dtEnd = new iCalDateTime(2006, 12, 23, tzid);
             var occurrences = iCal.GetOccurrences(dtStart, dtEnd).OrderBy(o => o.Period.StartTime).ToList();
 
-            var DateTimes = new iCalDateTime[]
+            var DateTimes = new[]
             {
                 new iCalDateTime(2006, 12, 18, 7, 0, 0, tzid), new iCalDateTime(2006, 12, 19, 7, 0, 0, tzid), new iCalDateTime(2006, 12, 20, 7, 0, 0, tzid),
                 new iCalDateTime(2006, 12, 21, 7, 0, 0, tzid), new iCalDateTime(2006, 12, 22, 7, 0, 0, tzid)

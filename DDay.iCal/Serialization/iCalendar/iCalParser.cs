@@ -869,7 +869,7 @@ namespace DDay.iCal
 
         private void initializeFactory() {}
 
-        public static readonly string[] tokenNames_ = new string[]
+        public static readonly string[] tokenNames_ = new[]
         {
             @"""<0>""", @"""EOF""", @"""<2>""", @"""NULL_TREE_LOOKAHEAD""", @"""CRLF""", @"""BEGIN""", @"""COLON""", @"""VCALENDAR""", @"""END""",
             @"""IANA_TOKEN""", @"""X_NAME""", @"""SEMICOLON""", @"""EQUAL""", @"""COMMA""", @"""DQUOTE""", @"""CTL""", @"""BACKSLASH""", @"""NUMBER""",

@@ -83,13 +83,13 @@ namespace DDay.iCal.Serialization.iCalendar
                                     // list.
                                     foreach (var innerObj in (IEnumerable) objToAdd)
                                     {
-                                        mi.Invoke(listObj, new object[] {innerObj});
+                                        mi.Invoke(listObj, new[] {innerObj});
                                     }
                                 }
                                 else
                                 {
                                     // Add the object to the list
-                                    mi.Invoke(listObj, new object[] {objToAdd});
+                                    mi.Invoke(listObj, new[] {objToAdd});
                                 }
                                 return listObj;
                             }

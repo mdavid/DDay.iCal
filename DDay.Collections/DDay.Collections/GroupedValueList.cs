@@ -11,7 +11,7 @@ namespace DDay.Collections
 
         public virtual void Set(TGroup group, TValueType value)
         {
-            Set(group, new TValueType[] {value});
+            Set(group, new[] {value});
         }
 
         public virtual void Set(TGroup group, IEnumerable<TValueType> values)

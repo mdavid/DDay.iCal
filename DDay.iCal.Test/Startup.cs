@@ -8,7 +8,7 @@ namespace DDay.iCal.Test
         [STAThread]
         public static void Main(string[] args)
         {
-            NUnit.Gui.AppEntry.Main(new string[] {Assembly.GetExecutingAssembly().Location});
+            NUnit.Gui.AppEntry.Main(new[] {Assembly.GetExecutingAssembly().Location});
         }
     }
 }

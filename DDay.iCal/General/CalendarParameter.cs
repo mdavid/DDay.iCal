@@ -117,14 +117,14 @@ namespace DDay.iCal
             {
                 // Our list doesn't contain any values.  Let's add one!
                 _Values.Add(value);
-                OnValueChanged(null, new string[] {value});
+                OnValueChanged(null, new[] {value});
             }
             else if (value != null)
             {
                 // Our list contains values.  Let's set the first value!
                 var oldValue = _Values[0];
                 _Values[0] = value;
-                OnValueChanged(new string[] {oldValue}, new string[] {value});
+                OnValueChanged(new[] {oldValue}, new[] {value});
             }
             else
             {
@@ -149,7 +149,7 @@ namespace DDay.iCal
             if (value != null)
             {
                 _Values.Add(value);
-                OnValueChanged(null, new string[] {value});
+                OnValueChanged(null, new[] {value});
             }
         }
 
@@ -157,7 +157,7 @@ namespace DDay.iCal
         {
             if (value != null && _Values.Contains(value) && _Values.Remove(value))
             {
-                OnValueChanged(new string[] {value}, null);
+                OnValueChanged(new[] {value}, null);
             }
         }
 

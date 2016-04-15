@@ -118,7 +118,7 @@ namespace DDay.iCal.Test
             var occurrences =
                 evt1.GetOccurrences(new iCalDateTime(1996, 1, 1, tzid), new iCalDateTime(2000, 1, 1, tzid)).OrderBy(o => o.Period.StartTime).ToList();
 
-            var DateTimes = new iCalDateTime[]
+            var DateTimes = new[]
             {
                 new iCalDateTime(1997, 9, 10, 9, 0, 0, tzid), new iCalDateTime(1997, 9, 11, 9, 0, 0, tzid), new iCalDateTime(1997, 9, 12, 9, 0, 0, tzid),
                 new iCalDateTime(1997, 9, 13, 9, 0, 0, tzid), new iCalDateTime(1997, 9, 14, 9, 0, 0, tzid), new iCalDateTime(1997, 9, 15, 9, 0, 0, tzid),
@@ -126,7 +126,7 @@ namespace DDay.iCal.Test
                 new iCalDateTime(1999, 3, 13, 9, 0, 0, tzid),
             };
 
-            var TimeZones = new string[]
+            var TimeZones = new[]
             {"US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern"};
 
             for (var i = 0; i < DateTimes.Length; i++)
@@ -151,7 +151,7 @@ namespace DDay.iCal.Test
             // Get occurrences for the 2nd event
             occurrences = evt2.GetOccurrences(new iCalDateTime(1996, 1, 1, tzid), new iCalDateTime(1998, 4, 1, tzid)).OrderBy(o => o.Period.StartTime).ToList();
 
-            var DateTimes1 = new iCalDateTime[]
+            var DateTimes1 = new[]
             {
                 new iCalDateTime(1997, 9, 2, 9, 0, 0, tzid), new iCalDateTime(1997, 9, 9, 9, 0, 0, tzid), new iCalDateTime(1997, 9, 16, 9, 0, 0, tzid),
                 new iCalDateTime(1997, 9, 23, 9, 0, 0, tzid), new iCalDateTime(1997, 9, 30, 9, 0, 0, tzid), new iCalDateTime(1997, 11, 4, 9, 0, 0, tzid),
@@ -161,7 +161,7 @@ namespace DDay.iCal.Test
                 new iCalDateTime(1998, 3, 17, 9, 0, 0, tzid), new iCalDateTime(1998, 3, 24, 9, 0, 0, tzid), new iCalDateTime(1998, 3, 31, 9, 0, 0, tzid)
             };
 
-            var TimeZones1 = new string[]
+            var TimeZones1 = new[]
             {
                 "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern",
                 "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern"
