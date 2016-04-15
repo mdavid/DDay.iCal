@@ -5,14 +5,6 @@ namespace DDay.iCal.Test
     [TestFixture]
     public class EventTest
     {
-        private string tzid;
-
-        [TestFixtureSetUp]
-        public void InitAll()
-        {
-            tzid = "US-Eastern";
-        }
-
         /// <summary>
         /// Ensures that events can be properly added to a calendar.
         /// </summary>

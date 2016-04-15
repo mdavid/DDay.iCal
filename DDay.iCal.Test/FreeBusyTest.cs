@@ -5,14 +5,6 @@ namespace DDay.iCal.Test
     [TestFixture]
     public class FreeBusyTest
     {
-        private string tzid;
-
-        [TestFixtureSetUp]
-        public void InitAll()
-        {
-            tzid = "US-Eastern";
-        }
-
         /// <summary>
         /// Ensures that GetFreeBusyStatus() return the correct status.
         /// </summary>

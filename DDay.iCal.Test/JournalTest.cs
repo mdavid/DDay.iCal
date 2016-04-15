@@ -7,14 +7,6 @@ namespace DDay.iCal.Test
     [TestFixture]
     public class JournalTest
     {
-        private string tzid;
-
-        [TestFixtureSetUp]
-        public void InitAll()
-        {
-            tzid = "US-Eastern";
-        }
-
         [Test, Category("Journal")]
         public void Journal1()
         {

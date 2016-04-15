@@ -5,14 +5,6 @@ namespace DDay.iCal.Test
     [TestFixture]
     public class CopyTest
     {
-        private string tzid;
-
-        [TestFixtureSetUp]
-        public void InitAll()
-        {
-            tzid = "US-Eastern";
-        }
-
         private void CopyCalendarTest(string filename)
         {
             var iCal1 = iCalendar.LoadFromFile(@"Calendars\Serialization\" + filename)[0];

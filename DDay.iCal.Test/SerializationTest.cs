@@ -16,14 +16,6 @@ namespace DDay.iCal.Test
     [TestFixture]
     public class SerializationTest
     {
-        private string tzid;
-
-        [TestFixtureSetUp]
-        public void InitAll()
-        {
-            tzid = "US-Eastern";
-        }
-
         private void SerializeTest(string filename, Type iCalSerializerType)
         {
             SerializeTest(filename, typeof (iCalendar), iCalSerializerType);
