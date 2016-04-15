@@ -2,8 +2,7 @@
 
 namespace DDay.iCal
 {
-    public interface IServiceProvider :
-        System.IServiceProvider
+    public interface IServiceProvider : System.IServiceProvider
     {
         object GetService(string name);
         T GetService<T>();

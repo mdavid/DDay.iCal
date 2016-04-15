@@ -6,18 +6,13 @@ using System.IO;
 
 namespace DDay.iCal.Serialization.iCalendar
 {
-    public class PropertySerializer :
-        SerializerBase
+    public class PropertySerializer : SerializerBase
     {
         #region Constructors
 
-        public PropertySerializer()
-        {
-        }
+        public PropertySerializer() {}
 
-        public PropertySerializer(ISerializationContext ctx) : base(ctx)
-        {
-        }
+        public PropertySerializer(ISerializationContext ctx) : base(ctx) {}
 
         #endregion
 
@@ -25,15 +20,13 @@ namespace DDay.iCal.Serialization.iCalendar
 
         public override Type TargetType
         {
-            get { return typeof(CalendarProperty); }
+            get { return typeof (CalendarProperty); }
         }
 
         public override string SerializeToString(object obj)
         {
             var prop = obj as ICalendarProperty;
-            if (prop != null && 
-                prop.Values != null &&
-                prop.Values.Any())
+            if (prop != null && prop.Values != null && prop.Values.Any())
             {
                 // Don't serialize the property if the value is null                
 
@@ -42,7 +35,7 @@ namespace DDay.iCal.Serialization.iCalendar
 
                 var mapper = GetService<IDataTypeMapper>();
                 var serializedType = mapper.GetPropertyMapping(prop);
-                
+
                 // Get a serializer factory that we can use to serialize
                 // the property and parameter values
                 var sf = GetService<ISerializerFactory>();
@@ -76,13 +69,15 @@ namespace DDay.iCal.Serialization.iCalendar
                             // Get the list of parameters we'll be serializing
                             var parameterList = prop.Parameters;
                             if (v is ICalendarDataType)
-                                parameterList = ((ICalendarDataType)v).Parameters;
+                            {
+                                parameterList = ((ICalendarDataType) v).Parameters;
+                            }
 
                             var sb = new StringBuilder(prop.Name);
                             if (parameterList.Any())
                             {
                                 // Get a serializer for parameters
-                                var parameterSerializer = sf.Build(typeof(ICalendarParameter), SerializationContext) as IStringSerializer;
+                                var parameterSerializer = sf.Build(typeof (ICalendarParameter), SerializationContext) as IStringSerializer;
                                 if (parameterSerializer != null)
                                 {
                                     // Serialize each parameter
@@ -137,7 +132,7 @@ namespace DDay.iCal.Serialization.iCalendar
                 return p;
             }
             return null;
-        } 
+        }
 
         #endregion
     }

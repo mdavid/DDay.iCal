@@ -88,10 +88,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class iCalendar :
-        CalendarComponent,
-        IICalendar,
-        IDisposable
+    public class iCalendar : CalendarComponent, IICalendar, IDisposable
     {
         #region Static Public Methods
 
@@ -111,7 +108,7 @@ namespace DDay.iCal
 
         public static IICalendarCollection LoadFromFile<T>(string filepath) where T : IICalendar
         {
-            return LoadFromFile(typeof(T), filepath);
+            return LoadFromFile(typeof (T), filepath);
         }
 
         public static IICalendarCollection LoadFromFile(Type iCalendarType, string filepath)
@@ -132,7 +129,7 @@ namespace DDay.iCal
 
         public static IICalendarCollection LoadFromFile<T>(string filepath, Encoding encoding) where T : IICalendar
         {
-            return LoadFromFile(typeof(T), filepath, encoding);
+            return LoadFromFile(typeof (T), filepath, encoding);
         }
 
         public static IICalendarCollection LoadFromFile(Type iCalendarType, string filepath, Encoding encoding)
@@ -172,7 +169,7 @@ namespace DDay.iCal
 
         public static IICalendarCollection LoadFromStream<T>(Stream s) where T : IICalendar
         {
-            return LoadFromStream(typeof(T), s);
+            return LoadFromStream(typeof (T), s);
         }
 
         public static IICalendarCollection LoadFromStream(Type iCalendarType, Stream s)
@@ -193,7 +190,7 @@ namespace DDay.iCal
 
         public new static IICalendarCollection LoadFromStream<T>(Stream s, Encoding encoding) where T : IICalendar
         {
-            return LoadFromStream(typeof(T), s, encoding);
+            return LoadFromStream(typeof (T), s, encoding);
         }
 
         public static IICalendarCollection LoadFromStream(Type iCalendarType, Stream s, Encoding encoding)
@@ -219,7 +216,7 @@ namespace DDay.iCal
 
         public new static IICalendarCollection LoadFromStream<T>(TextReader tr) where T : IICalendar
         {
-            return LoadFromStream(typeof(T), tr);
+            return LoadFromStream(typeof (T), tr);
         }
 
         public static IICalendarCollection LoadFromStream(Type iCalendarType, TextReader tr)
@@ -251,12 +248,12 @@ namespace DDay.iCal
         /// <returns>An <see cref="iCalendar"/> object</returns>
         public static IICalendarCollection LoadFromUri(Uri uri)
         {
-            return LoadFromUri(typeof(iCalendar), uri, null, null, null);
+            return LoadFromUri(typeof (iCalendar), uri, null, null, null);
         }
 
         public static IICalendarCollection LoadFromUri<T>(Uri uri) where T : IICalendar
         {
-            return LoadFromUri(typeof(T), uri, null, null, null);
+            return LoadFromUri(typeof (T), uri, null, null, null);
         }
 
         public static IICalendarCollection LoadFromUri(Type iCalendarType, Uri uri)
@@ -267,12 +264,12 @@ namespace DDay.iCal
 #if !SILVERLIGHT
         public static IICalendarCollection LoadFromUri(Uri uri, WebProxy proxy)
         {
-            return LoadFromUri(typeof(iCalendar), uri, null, null, proxy);
+            return LoadFromUri(typeof (iCalendar), uri, null, null, proxy);
         }
 
         public static IICalendarCollection LoadFromUri<T>(Uri uri, WebProxy proxy)
         {
-            return LoadFromUri(typeof(T), uri, null, null, proxy);
+            return LoadFromUri(typeof (T), uri, null, null, proxy);
         }
 
         public static IICalendarCollection LoadFromUri(Type iCalendarType, Uri uri, WebProxy proxy)
@@ -296,12 +293,12 @@ namespace DDay.iCal
         /// <returns>an <see cref="iCalendar"/> object</returns>
         public static IICalendarCollection LoadFromUri(Uri uri, string username, string password)
         {
-            return LoadFromUri(typeof(iCalendar), uri, username, password, null);
+            return LoadFromUri(typeof (iCalendar), uri, username, password, null);
         }
 
         public static IICalendarCollection LoadFromUri<T>(Uri uri, string username, string password) where T : IICalendar
         {
-            return LoadFromUri(typeof(T), uri, username, password, null);
+            return LoadFromUri(typeof (T), uri, username, password, null);
         }
 
         public static IICalendarCollection LoadFromUri(Type iCalendarType, Uri uri, string username, string password)
@@ -312,7 +309,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
         public static IICalendarCollection LoadFromUri(Uri uri, string username, string password, WebProxy proxy)
         {
-            return LoadFromUri(typeof(iCalendar), uri, username, password, proxy);
+            return LoadFromUri(typeof (iCalendar), uri, username, password, proxy);
         }
 #endif
 
@@ -331,55 +328,63 @@ namespace DDay.iCal
                 var request = WebRequest.Create(uri);
 
                 if (username != null && password != null)
+                {
                     request.Credentials = new System.Net.NetworkCredential(username, password);
+                }
 
 #if !SILVERLIGHT
                 if (proxy != null)
+                {
                     request.Proxy = proxy;
+                }
 #endif
 
                 var evt = new AutoResetEvent(false);
 
                 string str = null;
-                request.BeginGetResponse(new AsyncCallback(
-                    delegate(IAsyncResult result)
+                request.BeginGetResponse(new AsyncCallback(delegate(IAsyncResult result)
+                {
+                    var e = Encoding.UTF8;
+
+                    try
                     {
-                        var e = Encoding.UTF8;
-
-                        try
+                        using (var resp = request.EndGetResponse(result))
                         {
-                            using (var resp = request.EndGetResponse(result))
+                            // Try to determine the content encoding
+                            try
                             {
-                                // Try to determine the content encoding
-                                try
+                                var keys = new List<string>(resp.Headers.AllKeys);
+                                if (keys.Contains("Content-Encoding"))
                                 {
-                                    var keys = new List<string>(resp.Headers.AllKeys);
-                                    if (keys.Contains("Content-Encoding"))
-                                        e = Encoding.GetEncoding(resp.Headers["Content-Encoding"]);
+                                    e = Encoding.GetEncoding(resp.Headers["Content-Encoding"]);
                                 }
-                                catch
-                                {
-                                    // Fail gracefully back to UTF-8
-                                }
+                            }
+                            catch
+                            {
+                                // Fail gracefully back to UTF-8
+                            }
 
-                                using (var stream = resp.GetResponseStream())
+                            using (var stream = resp.GetResponseStream())
+                            {
                                 using (var sr = new StreamReader(stream, e))
                                 {
                                     str = sr.ReadToEnd();
                                 }
                             }
                         }
-                        finally
-                        {
-                            evt.Set();
-                        }
                     }
-                ), null);
+                    finally
+                    {
+                        evt.Set();
+                    }
+                }), null);
 
                 evt.WaitOne();
 
                 if (str != null)
+                {
                     return LoadFromStream(new StringReader(str));
+                }
                 return null;
             }
             catch (System.Net.WebException)
@@ -446,13 +451,9 @@ namespace DDay.iCal
 
         protected bool Equals(iCalendar other)
         {
-            return base.Equals(other)
-                && Equals(m_UniqueComponents, other.m_UniqueComponents)
-                && Equals(m_Events, other.m_Events)
-                && Equals(m_Todos, other.m_Todos)
-                && Equals(m_Journals, other.m_Journals)
-                && Equals(m_FreeBusy, other.m_FreeBusy)
-                && Equals(m_TimeZones, other.m_TimeZones);
+            return base.Equals(other) && Equals(m_UniqueComponents, other.m_UniqueComponents) && Equals(m_Events, other.m_Events) &&
+                   Equals(m_Todos, other.m_Todos) && Equals(m_Journals, other.m_Journals) && Equals(m_FreeBusy, other.m_FreeBusy) &&
+                   Equals(m_TimeZones, other.m_TimeZones);
         }
 
         public override bool Equals(object obj)
@@ -477,12 +478,24 @@ namespace DDay.iCal
             unchecked
             {
                 var hashCode = base.GetHashCode();
-                hashCode = (hashCode * 397) ^ (m_UniqueComponents != null ? m_UniqueComponents.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (m_Events != null ? m_Events.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (m_Todos != null ? m_Todos.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (m_Journals != null ? m_Journals.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (m_FreeBusy != null ? m_FreeBusy.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (m_TimeZones != null ? m_TimeZones.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (m_UniqueComponents != null
+                    ? m_UniqueComponents.GetHashCode()
+                    : 0);
+                hashCode = (hashCode * 397) ^ (m_Events != null
+                    ? m_Events.GetHashCode()
+                    : 0);
+                hashCode = (hashCode * 397) ^ (m_Todos != null
+                    ? m_Todos.GetHashCode()
+                    : 0);
+                hashCode = (hashCode * 397) ^ (m_Journals != null
+                    ? m_Journals.GetHashCode()
+                    : 0);
+                hashCode = (hashCode * 397) ^ (m_FreeBusy != null
+                    ? m_FreeBusy.GetHashCode()
+                    : 0);
+                hashCode = (hashCode * 397) ^ (m_TimeZones != null
+                    ? m_TimeZones.GetHashCode()
+                    : 0);
                 return hashCode;
             }
         }
@@ -503,7 +516,9 @@ namespace DDay.iCal
                 foreach (object obj in Children)
                 {
                     if (obj is IRecurrable)
-                        yield return (IRecurrable)obj;
+                    {
+                        yield return (IRecurrable) obj;
+                    }
                 }
             }
         }
@@ -691,7 +706,9 @@ namespace DDay.iCal
         public void ClearEvaluation()
         {
             foreach (var recurrable in RecurringItems)
+            {
                 recurrable.ClearEvaluation();
+            }
         }
 
         /// <summary>
@@ -702,15 +719,13 @@ namespace DDay.iCal
         /// <returns>A list of occurrences that occur on the given date (<paramref name="dt"/>).</returns>
         public virtual HashSet<Occurrence> GetOccurrences(IDateTime dt)
         {
-            return GetOccurrences<IRecurringComponent>(
-                new iCalDateTime(dt.AsSystemLocal.Date),
+            return GetOccurrences<IRecurringComponent>(new iCalDateTime(dt.AsSystemLocal.Date),
                 new iCalDateTime(dt.AsSystemLocal.Date.AddDays(1).AddSeconds(-1)));
         }
+
         public virtual HashSet<Occurrence> GetOccurrences(DateTime dt)
         {
-            return GetOccurrences<IRecurringComponent>(
-                new iCalDateTime(dt.Date),
-                new iCalDateTime(dt.Date.AddDays(1).AddSeconds(-1)));
+            return GetOccurrences<IRecurringComponent>(new iCalDateTime(dt.Date), new iCalDateTime(dt.Date.AddDays(1).AddSeconds(-1)));
         }
 
         /// <summary>
@@ -724,6 +739,7 @@ namespace DDay.iCal
         {
             return GetOccurrences<IRecurringComponent>(startTime, endTime);
         }
+
         public virtual HashSet<Occurrence> GetOccurrences(DateTime startTime, DateTime endTime)
         {
             return GetOccurrences<IRecurringComponent>(new iCalDateTime(startTime), new iCalDateTime(endTime));
@@ -743,15 +759,12 @@ namespace DDay.iCal
         /// <returns>A list of Periods representing the occurrences of this object.</returns>
         public virtual HashSet<Occurrence> GetOccurrences<T>(IDateTime dt) where T : IRecurringComponent
         {
-            return GetOccurrences<T>(
-                new iCalDateTime(dt.AsSystemLocal.Date),
-                new iCalDateTime(dt.AsSystemLocal.Date.AddDays(1).AddTicks(-1)));
+            return GetOccurrences<T>(new iCalDateTime(dt.AsSystemLocal.Date), new iCalDateTime(dt.AsSystemLocal.Date.AddDays(1).AddTicks(-1)));
         }
+
         public virtual HashSet<Occurrence> GetOccurrences<T>(DateTime dt) where T : IRecurringComponent
         {
-            return GetOccurrences<T>(
-                new iCalDateTime(dt.Date),
-                new iCalDateTime(dt.Date.AddDays(1).AddTicks(-1)));
+            return GetOccurrences<T>(new iCalDateTime(dt.Date), new iCalDateTime(dt.Date.AddDays(1).AddTicks(-1)));
         }
 
         /// <summary>
@@ -765,18 +778,16 @@ namespace DDay.iCal
         {
             var occurrences = new HashSet<Occurrence>();
 
-            occurrences = new HashSet<Occurrence>(RecurringItems
-                .OfType<T>()
-                .SelectMany(recurrable => recurrable.GetOccurrences(startTime, endTime))
-            );
+            occurrences = new HashSet<Occurrence>(RecurringItems.OfType<T>().SelectMany(recurrable => recurrable.GetOccurrences(startTime, endTime)));
 
-            occurrences.ExceptWith(occurrences
-                .Where(o => o.Source is IUniqueComponent)
-                .Where(o => o.Source.RecurrenceID != null)
-                .Where(o => o.Source.RecurrenceID.Equals(o.Period.StartTime)));
+            occurrences.ExceptWith(
+                occurrences.Where(o => o.Source is IUniqueComponent)
+                    .Where(o => o.Source.RecurrenceID != null)
+                    .Where(o => o.Source.RecurrenceID.Equals(o.Period.StartTime)));
 
             return occurrences;
         }
+
         public virtual HashSet<Occurrence> GetOccurrences<T>(DateTime startTime, DateTime endTime) where T : IRecurringComponent
         {
             return GetOccurrences<T>(new iCalDateTime(startTime), new iCalDateTime(endTime));
@@ -801,11 +812,11 @@ namespace DDay.iCal
         /// <returns>An object of the type specified</returns>
         public T Create<T>() where T : ICalendarComponent
         {
-            var obj = Activator.CreateInstance(typeof(T)) as ICalendarObject;
+            var obj = Activator.CreateInstance(typeof (T)) as ICalendarObject;
             if (obj is T)
             {
                 this.AddChild(obj);
-                return (T)obj;
+                return (T) obj;
             }
             return default(T);
         }
@@ -829,7 +840,9 @@ namespace DDay.iCal
             if (c != null)
             {
                 if (Name == null)
+                {
                     Name = c.Name;
+                }
 
                 Method = c.Method;
                 Version = c.Version;
@@ -839,20 +852,26 @@ namespace DDay.iCal
                 foreach (var p in c.Properties)
                 {
                     if (!Properties.ContainsKey(p.Name))
+                    {
                         Properties.Add(p.Copy<ICalendarProperty>());
+                    }
                 }
                 foreach (var child in c.Children)
                 {
                     if (child is IUniqueComponent)
                     {
-                        if (!UniqueComponents.ContainsKey(((IUniqueComponent)child).UID))
+                        if (!UniqueComponents.ContainsKey(((IUniqueComponent) child).UID))
+                        {
                             this.AddChild(child.Copy<ICalendarObject>());
+                        }
                     }
                     else if (child is ITimeZone)
                     {
-                        var tz = GetTimeZone(((ITimeZone)child).TZID);
+                        var tz = GetTimeZone(((ITimeZone) child).TZID);
                         if (tz == null)
+                        {
                             this.AddChild(child.Copy<ICalendarObject>());
+                        }
                     }
                     else
                     {

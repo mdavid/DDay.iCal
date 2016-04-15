@@ -4,12 +4,11 @@ using System.Text.RegularExpressions;
 
 namespace DDay.iCal.Serialization.iCalendar
 {
-    public class RequestStatusSerializer :
-        StringSerializer
+    public class RequestStatusSerializer : StringSerializer
     {
         public override Type TargetType
         {
-            get { return typeof(RequestStatus); }
+            get { return typeof (RequestStatus); }
         }
 
         public override string SerializeToString(object obj)
@@ -27,13 +26,15 @@ namespace DDay.iCal.Serialization.iCalendar
                         var factory = GetService<ISerializerFactory>();
                         if (factory != null)
                         {
-                            var serializer = factory.Build(typeof(IStatusCode), SerializationContext) as IStringSerializer;
+                            var serializer = factory.Build(typeof (IStatusCode), SerializationContext) as IStringSerializer;
                             if (serializer != null)
                             {
                                 var value = Escape(serializer.SerializeToString(rs.StatusCode));
                                 value += ";" + Escape(rs.Description);
                                 if (!string.IsNullOrEmpty(rs.ExtraData))
+                                {
                                     value += ";" + Escape(rs.ExtraData);
+                                }
 
                                 return Encode(rs, value);
                             }
@@ -43,7 +44,7 @@ namespace DDay.iCal.Serialization.iCalendar
                     {
                         // Pop the object off the serialization stack
                         SerializationContext.Pop();
-                    }                    
+                    }
                 }
 
                 return null;
@@ -77,17 +78,21 @@ namespace DDay.iCal.Serialization.iCalendar
                     {
                         var match = _narrowRequestMatch.Match(value);
                         if (!match.Success)
+                        {
                             match = _broadRequestMatch.Match(value);
+                        }
 
                         if (match.Success)
                         {
-                            var serializer = factory.Build(typeof(IStatusCode), SerializationContext) as IStringSerializer;
+                            var serializer = factory.Build(typeof (IStatusCode), SerializationContext) as IStringSerializer;
                             if (serializer != null)
                             {
                                 rs.StatusCode = serializer.Deserialize(new StringReader(Unescape(match.Groups[1].Value))) as IStatusCode;
                                 rs.Description = Unescape(match.Groups[2].Value);
                                 if (match.Groups.Count == 4)
+                                {
                                     rs.ExtraData = Unescape(match.Groups[3].Value);
+                                }
 
                                 return rs;
                             }

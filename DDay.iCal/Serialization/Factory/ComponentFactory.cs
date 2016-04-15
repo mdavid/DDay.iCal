@@ -3,8 +3,7 @@ using DDay.iCal.Serialization;
 
 namespace DDay.iCal
 {
-    public class ComponentFactory :
-        ICalendarComponentFactory
+    public class ComponentFactory : ICalendarComponentFactory
     {
         #region ICalendarComponentFactory Members
 
@@ -16,29 +15,29 @@ namespace DDay.iCal
             switch (objectName.ToUpper())
             {
                 case Components.ALARM:
-                    type = typeof(Alarm);
+                    type = typeof (Alarm);
                     break;
-                case Components.EVENT: 
-                    type = typeof(Event);
+                case Components.EVENT:
+                    type = typeof (Event);
                     break;
                 case Components.FREEBUSY:
-                    type = typeof(FreeBusy);
+                    type = typeof (FreeBusy);
                     break;
                 case Components.JOURNAL:
-                    type = typeof(Journal);
+                    type = typeof (Journal);
                     break;
                 case Components.TIMEZONE:
-                    type = typeof(iCalTimeZone);
+                    type = typeof (iCalTimeZone);
                     break;
                 case Components.TODO:
-                    type = typeof(Todo);
+                    type = typeof (Todo);
                     break;
                 case Components.DAYLIGHT:
                 case Components.STANDARD:
-                    type = typeof(iCalTimeZoneInfo);
+                    type = typeof (iCalTimeZoneInfo);
                     break;
                 default:
-                    type = typeof(CalendarComponent);
+                    type = typeof (CalendarComponent);
                     break;
             }
 

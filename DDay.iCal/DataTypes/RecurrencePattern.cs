@@ -13,16 +13,15 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public partial class RecurrencePattern :
-        EncodableDataType,
-        IRecurrencePattern
+    public partial class RecurrencePattern : EncodableDataType, IRecurrencePattern
     {
         #region Private Fields
 
 #if !SILVERLIGHT
         [NonSerialized]
 #endif
-        private FrequencyType _Frequency;
+            private FrequencyType _Frequency;
+
         private DateTime _Until = DateTime.MinValue;
         private int _Count = int.MinValue;
         private int _Interval = int.MinValue;
@@ -66,7 +65,9 @@ namespace DDay.iCal
             get
             {
                 if (_Interval == int.MinValue)
+                {
                     return 1;
+                }
                 return _Interval;
             }
             set { _Interval = value; }
@@ -137,13 +138,18 @@ namespace DDay.iCal
             get
             {
                 // NOTE: Fixes bug #1924358 - Cannot evaluate Secondly patterns
-                if (_RestrictionType != null &&
-                    _RestrictionType.HasValue)
+                if (_RestrictionType != null && _RestrictionType.HasValue)
+                {
                     return _RestrictionType.Value;
+                }
                 else if (Calendar != null)
+                {
                     return Calendar.RecurrenceRestriction;
+                }
                 else
+                {
                     return RecurrenceRestrictionType.Default;
+                }
             }
             set { _RestrictionType = value; }
         }
@@ -153,13 +159,18 @@ namespace DDay.iCal
             get
             {
                 // NOTE: Fixes bug #1924358 - Cannot evaluate Secondly patterns
-                if (_EvaluationMode != null &&
-                    _EvaluationMode.HasValue)
+                if (_EvaluationMode != null && _EvaluationMode.HasValue)
+                {
                     return _EvaluationMode.Value;
+                }
                 else if (Calendar != null)
+                {
                     return Calendar.RecurrenceEvaluationMode;
+                }
                 else
+                {
                     return RecurrenceEvaluationModeType.Default;
+                }
             }
             set { _EvaluationMode = value; }
         }
@@ -191,19 +202,15 @@ namespace DDay.iCal
             Initialize();
         }
 
-        public RecurrencePattern(FrequencyType frequency) : this(frequency, 1)
-        {
-        }
+        public RecurrencePattern(FrequencyType frequency) : this(frequency, 1) {}
 
-        public RecurrencePattern(FrequencyType frequency, int interval) :
-            this()
+        public RecurrencePattern(FrequencyType frequency, int interval) : this()
         {
             Frequency = frequency;
             Interval = interval;
         }
 
-        public RecurrencePattern(string value) : 
-            this()
+        public RecurrencePattern(string value) : this()
         {
             if (value != null)
             {
@@ -232,28 +239,40 @@ namespace DDay.iCal
         {
             if (obj is RecurrencePattern)
             {
-                var r = (RecurrencePattern)obj;
-                if (!CollectionEquals(r.ByDay, ByDay) ||
-                    !CollectionEquals(r.ByHour, ByHour) ||
-                    !CollectionEquals(r.ByMinute, ByMinute) ||
-                    !CollectionEquals(r.ByMonth, ByMonth) ||
-                    !CollectionEquals(r.ByMonthDay, ByMonthDay) ||
-                    !CollectionEquals(r.BySecond, BySecond) ||
-                    !CollectionEquals(r.BySetPosition, BySetPosition) ||
-                    !CollectionEquals(r.ByWeekNo, ByWeekNo) ||
-                    !CollectionEquals(r.ByYearDay, ByYearDay))
+                var r = (RecurrencePattern) obj;
+                if (!CollectionEquals(r.ByDay, ByDay) || !CollectionEquals(r.ByHour, ByHour) || !CollectionEquals(r.ByMinute, ByMinute) ||
+                    !CollectionEquals(r.ByMonth, ByMonth) || !CollectionEquals(r.ByMonthDay, ByMonthDay) || !CollectionEquals(r.BySecond, BySecond) ||
+                    !CollectionEquals(r.BySetPosition, BySetPosition) || !CollectionEquals(r.ByWeekNo, ByWeekNo) || !CollectionEquals(r.ByYearDay, ByYearDay))
+                {
                     return false;
-                if (r.Count != Count) return false;
-                if (r.Frequency != Frequency) return false;
-                if (r.Interval != Interval) return false;
+                }
+                if (r.Count != Count)
+                {
+                    return false;
+                }
+                if (r.Frequency != Frequency)
+                {
+                    return false;
+                }
+                if (r.Interval != Interval)
+                {
+                    return false;
+                }
                 if (r.Until != DateTime.MinValue)
                 {
                     if (!r.Until.Equals(Until))
+                    {
                         return false;
+                    }
                 }
                 else if (Until != DateTime.MinValue)
+                {
                     return false;
-                if (r.FirstDayOfWeek != FirstDayOfWeek) return false;
+                }
+                if (r.FirstDayOfWeek != FirstDayOfWeek)
+                {
+                    return false;
+                }
                 return true;
             }
             return base.Equals(obj);
@@ -267,16 +286,19 @@ namespace DDay.iCal
 
         public override int GetHashCode()
         {
-            var hashCode =
-                ByDay.GetHashCode() ^ ByHour.GetHashCode() ^ ByMinute.GetHashCode() ^
-                ByMonth.GetHashCode() ^ ByMonthDay.GetHashCode() ^ BySecond.GetHashCode() ^
-                BySetPosition.GetHashCode() ^ ByWeekNo.GetHashCode() ^ ByYearDay.GetHashCode() ^
-                Count.GetHashCode() ^ Frequency.GetHashCode();
+            var hashCode = ByDay.GetHashCode() ^ ByHour.GetHashCode() ^ ByMinute.GetHashCode() ^ ByMonth.GetHashCode() ^ ByMonthDay.GetHashCode() ^
+                           BySecond.GetHashCode() ^ BySetPosition.GetHashCode() ^ ByWeekNo.GetHashCode() ^ ByYearDay.GetHashCode() ^ Count.GetHashCode() ^
+                           Frequency.GetHashCode();
 
             if (Interval.Equals(1))
+            {
                 hashCode ^= 0x1;
-            else hashCode ^= Interval.GetHashCode();
-                        
+            }
+            else
+            {
+                hashCode ^= Interval.GetHashCode();
+            }
+
             hashCode ^= Until.GetHashCode();
             hashCode ^= FirstDayOfWeek.GetHashCode();
             return hashCode;
@@ -287,7 +309,7 @@ namespace DDay.iCal
             base.CopyFrom(obj);
             if (obj is IRecurrencePattern)
             {
-                var r = (IRecurrencePattern)obj;
+                var r = (IRecurrencePattern) obj;
 
                 Frequency = r.Frequency;
                 Until = r.Until;
@@ -305,21 +327,27 @@ namespace DDay.iCal
                 FirstDayOfWeek = r.FirstDayOfWeek;
                 RestrictionType = r.RestrictionType;
                 EvaluationMode = r.EvaluationMode;
-            }            
+            }
         }
 
         private bool CollectionEquals<T>(IList<T> c1, IList<T> c2)
         {
             // NOTE: fixes a bug where collections weren't properly compared
-            if (c1 == null ||
-                c2 == null)
+            if (c1 == null || c2 == null)
             {
                 if (c1 == c2)
+                {
                     return true;
-                else return false;
+                }
+                else
+                {
+                    return false;
+                }
             }
             if (!c1.Count.Equals(c2.Count))
+            {
                 return false;
+            }
 
             IEnumerator e1 = c1.GetEnumerator();
             IEnumerator e2 = c2.GetEnumerator();
@@ -327,7 +355,9 @@ namespace DDay.iCal
             while (e1.MoveNext() && e2.MoveNext())
             {
                 if (!object.Equals(e1.Current, e2.Current))
+                {
                     return false;
+                }
             }
             return true;
         }
@@ -336,7 +366,6 @@ namespace DDay.iCal
 
         #region Protected Methods
 
-       
         #endregion
     }
 }

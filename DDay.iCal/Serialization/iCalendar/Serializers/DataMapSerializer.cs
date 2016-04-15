@@ -3,18 +3,13 @@ using System.IO;
 
 namespace DDay.iCal.Serialization.iCalendar
 {
-    public class DataMapSerializer :
-        SerializerBase
+    public class DataMapSerializer : SerializerBase
     {
         #region Constructors
 
-        public DataMapSerializer()
-        {            
-        }
+        public DataMapSerializer() {}
 
-        public DataMapSerializer(ISerializationContext ctx) : base(ctx)
-        {
-        }
+        public DataMapSerializer(ISerializationContext ctx) : base(ctx) {}
 
         #endregion
 
@@ -24,8 +19,7 @@ namespace DDay.iCal.Serialization.iCalendar
         {
             var sf = GetService<ISerializerFactory>();
             var mapper = GetService<IDataTypeMapper>();
-            if (sf != null &&
-                mapper != null)
+            if (sf != null && mapper != null)
             {
                 var obj = SerializationContext.Peek();
 
@@ -33,9 +27,13 @@ namespace DDay.iCal.Serialization.iCalendar
                 var type = mapper.GetPropertyMapping(obj);
 
                 if (type != null)
+                {
                     return sf.Build(type, SerializationContext) as IStringSerializer;
+                }
                 else
+                {
                     return new StringSerializer(SerializationContext);
+                }
             }
             return null;
         }
@@ -50,7 +48,9 @@ namespace DDay.iCal.Serialization.iCalendar
             {
                 ISerializer serializer = GetMappedSerializer();
                 if (serializer != null)
+                {
                     return serializer.TargetType;
+                }
                 return null;
             }
         }
@@ -59,7 +59,9 @@ namespace DDay.iCal.Serialization.iCalendar
         {
             var serializer = GetMappedSerializer();
             if (serializer != null)
+            {
                 return serializer.SerializeToString(obj);
+            }
             return null;
         }
 
@@ -78,8 +80,8 @@ namespace DDay.iCal.Serialization.iCalendar
                 // as try/catch is much slower than other means.
                 return returnValue ?? value;
             }
-            return null;            
-        } 
+            return null;
+        }
 
         #endregion
     }

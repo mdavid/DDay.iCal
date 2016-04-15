@@ -11,10 +11,8 @@ namespace DDay.Collections
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class GroupedValueListProxy<TGroup, TInterface, TItem, TOriginalValue, TNewValue> :
-        IGroupedValueListProxy<TInterface, TNewValue>
-        where TInterface : class, IGroupedObject<TGroup>, IValueObject<TOriginalValue>
-        where TItem : new()        
+    public class GroupedValueListProxy<TGroup, TInterface, TItem, TOriginalValue, TNewValue> : IGroupedValueListProxy<TInterface, TNewValue>
+        where TInterface : class, IGroupedObject<TGroup>, IValueObject<TOriginalValue> where TItem : new()
     {
         #region Private Fields
 
@@ -48,8 +46,10 @@ namespace DDay.Collections
                 {
                     var container = new TItem();
                     if (!(container is TInterface))
-                        throw new Exception("Could not create a container for the value - the container is not of type " + typeof(TInterface).GetType().Name);
-                    _Container = (TInterface)(object)container;
+                    {
+                        throw new Exception("Could not create a container for the value - the container is not of type " + typeof (TInterface).GetType().Name);
+                    }
+                    _Container = (TInterface) (object) container;
                     _Container.Group = _Group;
                     _RealObject.Add(_Container);
                 }
@@ -63,11 +63,15 @@ namespace DDay.Collections
             foreach (var obj in _RealObject)
             {
                 // Get the number of items of the target value i this object
-                var count = obj.Values != null ? obj.Values.OfType<TNewValue>().Count() : 0;
+                var count = obj.Values != null
+                    ? obj.Values.OfType<TNewValue>().Count()
+                    : 0;
 
                 // Perform some action on this item
                 if (!action(obj, i, count))
+                {
                     return;
+                }
 
                 i += count;
             }
@@ -79,27 +83,24 @@ namespace DDay.Collections
             var retVal = -1;
 
             IterateValues((o, i, count) =>
+            {
+                // Determine if this index is found within this object
+                if (index >= i && index < count)
                 {
-                    // Determine if this index is found within this object
-                    if (index >= i && index < count)
-                    {
-                        retVal = index - i;
-                        obj = o;
-                        return false;
-                    }
-                    return true;
-                });
+                    retVal = index - i;
+                    obj = o;
+                    return false;
+                }
+                return true;
+            });
 
             relativeIndex = retVal;
-            return obj;            
+            return obj;
         }
 
         IEnumerator<TNewValue> GetEnumeratorInternal()
         {
-            return Items
-                .Where(o => o.ValueCount > 0)
-                .SelectMany(o => o.Values.OfType<TNewValue>())
-                .GetEnumerator();
+            return Items.Where(o => o.ValueCount > 0).SelectMany(o => o.Values.OfType<TNewValue>()).GetEnumerator();
         }
 
         #endregion
@@ -111,7 +112,7 @@ namespace DDay.Collections
             // Add the value to the object
             if (item is TOriginalValue)
             {
-                var value = (TOriginalValue)(object)item;
+                var value = (TOriginalValue) (object) item;
                 EnsureContainer().AddValue(value);
             }
         }
@@ -131,28 +132,19 @@ namespace DDay.Collections
         {
             if (item is TOriginalValue)
             {
-                return Items
-                    .Where(o => o.ContainsValue((TOriginalValue)(object)item))
-                    .Any();
+                return Items.Where(o => o.ContainsValue((TOriginalValue) (object) item)).Any();
             }
             return false;
         }
 
         public virtual void CopyTo(TNewValue[] array, int arrayIndex)
         {
-            Items                
-                .Where(o => o.Values != null)
-                .SelectMany(o => o.Values)
-                .ToArray()
-                .CopyTo(array, arrayIndex);
+            Items.Where(o => o.Values != null).SelectMany(o => o.Values).ToArray().CopyTo(array, arrayIndex);
         }
-        
+
         public virtual int Count
         {
-            get
-            {
-                return Items.Sum(o => o.ValueCount);
-            }
+            get { return Items.Sum(o => o.ValueCount); }
         }
 
         public virtual bool IsReadOnly
@@ -164,11 +156,9 @@ namespace DDay.Collections
         {
             if (item is TOriginalValue)
             {
-                var value = (TOriginalValue)(object)item;
+                var value = (TOriginalValue) (object) item;
 
-                var container = Items
-                    .Where(o => o.ContainsValue(value))
-                    .FirstOrDefault();
+                var container = Items.Where(o => o.ContainsValue(value)).FirstOrDefault();
 
                 if (container != null)
                 {
@@ -181,7 +171,7 @@ namespace DDay.Collections
 
         public virtual IEnumerator<TNewValue> GetEnumerator()
         {
-            return GetEnumeratorInternal();        
+            return GetEnumeratorInternal();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -195,17 +185,17 @@ namespace DDay.Collections
 
             if (item is TOriginalValue)
             {
-                var value = (TOriginalValue)(object)item;
+                var value = (TOriginalValue) (object) item;
                 IterateValues((o, i, count) =>
+                {
+                    if (o.Values != null && o.Values.Contains(value))
                     {
-                        if (o.Values != null && o.Values.Contains(value))
-                        {
-                            var list = o.Values.ToList();
-                            index = i + list.IndexOf(value);
-                            return false;
-                        }
-                        return true;
-                    });
+                        var list = o.Values.ToList();
+                        index = i + list.IndexOf(value);
+                        return false;
+                    }
+                    return true;
+                });
             }
 
             return index;
@@ -214,22 +204,22 @@ namespace DDay.Collections
         public virtual void Insert(int index, TNewValue item)
         {
             IterateValues((o, i, count) =>
-                {
-                    var value = (TOriginalValue)(object)item;
+            {
+                var value = (TOriginalValue) (object) item;
 
-                    // Determine if this index is found within this object
-                    if (index >= i && index < count)
-                    {
-                        // Convert the items to a list
-                        var items = o.Values.ToList();
-                        // Insert the item at the relative index within the list
-                        items.Insert(index - i, value);
-                        // Set the new list
-                        o.SetValue(items);
-                        return false;
-                    }
-                    return true;
-                });
+                // Determine if this index is found within this object
+                if (index >= i && index < count)
+                {
+                    // Convert the items to a list
+                    var items = o.Values.ToList();
+                    // Insert the item at the relative index within the list
+                    items.Insert(index - i, value);
+                    // Set the new list
+                    o.SetValue(items);
+                    return false;
+                }
+                return true;
+            });
         }
 
         public virtual void RemoveAt(int index)
@@ -257,16 +247,14 @@ namespace DDay.Collections
             {
                 if (index >= 0 && index < Count)
                 {
-                    return this
-                        .Skip(index)
-                        .FirstOrDefault();
+                    return this.Skip(index).FirstOrDefault();
                 }
                 return default(TNewValue);
             }
             set
             {
                 if (index >= 0 && index < Count)
-                {   
+                {
                     if (!object.Equals(value, default(TNewValue)))
                     {
                         Insert(index, value);
@@ -286,12 +274,16 @@ namespace DDay.Collections
             get
             {
                 if (_Group != null)
+                {
                     return _RealObject.AllOf(_Group);
+                }
                 else
+                {
                     return _RealObject;
+                }
             }
         }
 
-        #endregion 
+        #endregion
     }
 }

@@ -15,9 +15,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class RecurringComponent : 
-        UniqueComponent,
-        IRecurringComponent
+    public class RecurringComponent : UniqueComponent, IRecurringComponent
     {
         #region Static Public Methods
 
@@ -32,20 +30,27 @@ namespace DDay.iCal
             foreach (var t in list)
             {
                 if (t is IRecurringComponent)
-                    items.Add((IRecurringComponent)(object)t);
+                {
+                    items.Add((IRecurringComponent) (object) t);
+                }
             }
 
             // Sort the list by date
             items.Sort(new RecurringComponentDateSorter());
             foreach (var rc in items)
-                yield return (T)(object)rc;
+            {
+                yield return (T) (object) rc;
+            }
         }
 
-        #endregion        
+        #endregion
 
         #region Protected Properties
 
-        protected virtual bool EvaluationIncludesReferenceDate { get { return false; } }
+        protected virtual bool EvaluationIncludesReferenceDate
+        {
+            get { return false; }
+        }
 
         #endregion
 
@@ -92,7 +97,7 @@ namespace DDay.iCal
         /// </summary>
         public virtual IDateTime DTStart
         {
-            get { return Properties.Get<IDateTime>("DTSTART"); }            
+            get { return Properties.Get<IDateTime>("DTSTART"); }
             set { Properties.Set("DTSTART", value); }
         }
 
@@ -194,14 +199,16 @@ namespace DDay.iCal
             SetService(new RecurringEvaluator(this));
         }
 
-        #endregion   
-     
+        #endregion
+
         #region Private Methods
 
         private void EnsureProperties()
         {
             if (!Properties.ContainsKey("SEQUENCE"))
+            {
                 Sequence = 0;
+            }
         }
 
         #endregion
@@ -255,7 +262,9 @@ namespace DDay.iCal
             if (Alarms != null)
             {
                 foreach (var alarm in Alarms)
+                {
                     occurrences.AddRange(alarm.Poll(startTime, endTime));
+                }
             }
             return occurrences;
         }
@@ -272,7 +281,7 @@ namespace DDay.iCal
 
         public int Compare(IRecurringComponent x, IRecurringComponent y)
         {
-            return x.Start.CompareTo(y.Start);            
+            return x.Start.CompareTo(y.Start);
         }
 
         #endregion

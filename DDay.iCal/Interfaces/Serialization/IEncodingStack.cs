@@ -2,7 +2,7 @@
 
 namespace DDay.iCal.Serialization
 {
-    public interface IEncodingStack        
+    public interface IEncodingStack
     {
         Encoding Current { get; }
         void Push(Encoding encoding);

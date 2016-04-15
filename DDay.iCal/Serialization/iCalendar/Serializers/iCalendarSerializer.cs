@@ -5,8 +5,7 @@ using System.IO;
 
 namespace DDay.iCal.Serialization.iCalendar
 {
-    public class iCalendarSerializer :
-        ComponentSerializer
+    public class iCalendarSerializer : ComponentSerializer
     {
         #region Private Fields
 
@@ -16,18 +15,14 @@ namespace DDay.iCal.Serialization.iCalendar
 
         #region Constructors
 
-        public iCalendarSerializer() : base()
-        {
-        }
+        public iCalendarSerializer() : base() {}
 
         public iCalendarSerializer(IICalendar iCal)
         {
             m_ICalendar = iCal;
         }
 
-        public iCalendarSerializer(ISerializationContext ctx) : base(ctx)
-        {
-        }
+        public iCalendarSerializer(ISerializationContext ctx) : base(ctx) {}
 
         #endregion
 
@@ -37,7 +32,9 @@ namespace DDay.iCal.Serialization.iCalendar
         public virtual void Serialize(string filename)
         {
             if (m_ICalendar != null)
+            {
                 Serialize(m_ICalendar, filename);
+            }
         }
 
         [Obsolete("Use the SerializeToString(ICalendarObject obj) method instead.")]
@@ -52,7 +49,7 @@ namespace DDay.iCal.Serialization.iCalendar
             {
                 Serialize(iCal, fs, new UTF8Encoding());
             }
-        }        
+        }
 
         #endregion
 
@@ -60,10 +57,7 @@ namespace DDay.iCal.Serialization.iCalendar
 
         protected override IComparer<ICalendarProperty> PropertySorter
         {
-            get
-            {
-                return new CalendarPropertySorter();
-            }
+            get { return new CalendarPropertySorter(); }
         }
 
         public override string SerializeToString(object obj)
@@ -75,9 +69,13 @@ namespace DDay.iCal.Serialization.iCalendar
                 // as they are required by RFC5545.
                 var copy = iCal.Copy<IICalendar>();
                 if (string.IsNullOrEmpty(copy.Version))
-                    copy.Version = CalendarVersions.v2_0;                    
+                {
+                    copy.Version = CalendarVersions.v2_0;
+                }
                 if (string.IsNullOrEmpty(copy.ProductID))
+                {
                     copy.ProductID = CalendarProductIDs.Default;
+                }
 
                 return base.SerializeToString(copy);
             }
@@ -110,26 +108,35 @@ namespace DDay.iCal.Serialization.iCalendar
 
         #endregion
 
-        private class CalendarPropertySorter :
-            IComparer<ICalendarProperty>
+        private class CalendarPropertySorter : IComparer<ICalendarProperty>
         {
             #region IComparer<ICalendarProperty> Members
 
             public int Compare(ICalendarProperty x, ICalendarProperty y)
             {
                 if (x == y || (x == null && y == null))
+                {
                     return 0;
+                }
                 else if (x == null)
+                {
                     return -1;
+                }
                 else if (y == null)
+                {
                     return 1;
+                }
                 else
                 {
                     // Alphabetize all properties except VERSION, which should appear first. 
                     if (string.Equals("VERSION", x.Name, StringComparison.InvariantCultureIgnoreCase))
+                    {
                         return -1;
+                    }
                     else if (string.Equals("VERSION", y.Name, StringComparison.InvariantCultureIgnoreCase))
+                    {
                         return 1;
+                    }
                     return string.Compare(x.Name, y.Name);
                 }
             }

@@ -2,8 +2,7 @@
 
 namespace DDay.Collections
 {
-    public interface IGroupedValueListProxy<TItem, TValue> :
-        IList<TValue>
+    public interface IGroupedValueListProxy<TItem, TValue> : IList<TValue>
     {
         IEnumerable<TItem> Items { get; }
     }

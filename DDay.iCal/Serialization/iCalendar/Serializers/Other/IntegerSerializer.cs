@@ -3,12 +3,11 @@ using System.IO;
 
 namespace DDay.iCal.Serialization.iCalendar
 {
-    public class IntegerSerializer :
-        EncodableDataTypeSerializer
+    public class IntegerSerializer : EncodableDataTypeSerializer
     {
         public override Type TargetType
         {
-            get { return typeof(int); }
+            get { return typeof (int); }
         }
 
         public override string SerializeToString(object integer)
@@ -50,7 +49,9 @@ namespace DDay.iCal.Serialization.iCalendar
 
                 int i;
                 if (Int32.TryParse(value, out i))
+                {
                     return i;
+                }
             }
             catch {}
 

@@ -11,9 +11,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class CalendarParameter : 
-        CalendarObject,
-        ICalendarParameter
+    public class CalendarParameter : CalendarObject, ICalendarParameter
     {
         #region Private Fields
 
@@ -23,30 +21,29 @@ namespace DDay.iCal
 
         #region Constructors
 
-        public CalendarParameter() 
+        public CalendarParameter()
         {
             Initialize();
         }
 
-        public CalendarParameter(string name)
-            : base(name)
+        public CalendarParameter(string name) : base(name)
         {
             Initialize();
         }
 
-        public CalendarParameter(string name, string value)
-            : base(name)
+        public CalendarParameter(string name, string value) : base(name)
         {
             Initialize();
             AddValue(value);
         }
 
-        public CalendarParameter(string name, IEnumerable<string> values)
-            : base(name)
+        public CalendarParameter(string name, IEnumerable<string> values) : base(name)
         {
             Initialize();
             foreach (var v in values)
-                AddValue(v);                
+            {
+                AddValue(v);
+            }
         }
 
         void Initialize()
@@ -73,7 +70,9 @@ namespace DDay.iCal
             if (p != null)
             {
                 if (p.Values != null)
+                {
                     _Values = new List<string>(p.Values);
+                }
             }
         }
 
@@ -81,13 +80,15 @@ namespace DDay.iCal
 
         #region IValueObject<string> Members
 
-        [field:NonSerialized]
+        [field: NonSerialized]
         public event EventHandler<ValueChangedEventArgs<string>> ValueChanged;
 
         protected void OnValueChanged(IEnumerable<string> removedValues, IEnumerable<string> addedValues)
         {
             if (ValueChanged != null)
+            {
                 ValueChanged(this, new ValueChangedEventArgs<string>(removedValues, addedValues));
+            }
         }
 
         public virtual IEnumerable<string> Values
@@ -104,7 +105,9 @@ namespace DDay.iCal
         {
             get
             {
-                return _Values != null ? _Values.Count : 0;
+                return _Values != null
+                    ? _Values.Count
+                    : 0;
             }
         }
 
@@ -114,14 +117,14 @@ namespace DDay.iCal
             {
                 // Our list doesn't contain any values.  Let's add one!
                 _Values.Add(value);
-                OnValueChanged(null, new string[] { value });
+                OnValueChanged(null, new string[] {value});
             }
             else if (value != null)
-            {                
+            {
                 // Our list contains values.  Let's set the first value!
                 var oldValue = _Values[0];
                 _Values[0] = value;
-                OnValueChanged(new string[] { oldValue }, new string[] { value });
+                OnValueChanged(new string[] {oldValue}, new string[] {value});
             }
             else
             {
@@ -133,7 +136,7 @@ namespace DDay.iCal
         }
 
         public virtual void SetValue(IEnumerable<string> values)
-        {                        
+        {
             // Remove all previous values
             var removedValues = _Values.ToList();
             _Values.Clear();
@@ -146,17 +149,15 @@ namespace DDay.iCal
             if (value != null)
             {
                 _Values.Add(value);
-                OnValueChanged(null, new string[] { value });
+                OnValueChanged(null, new string[] {value});
             }
         }
 
         public virtual void RemoveValue(string value)
         {
-            if (value != null &&
-                _Values.Contains(value) &&
-                _Values.Remove(value))
+            if (value != null && _Values.Contains(value) && _Values.Remove(value))
             {
-                OnValueChanged(new string[] { value }, null);
+                OnValueChanged(new string[] {value}, null);
             }
         }
 
@@ -169,13 +170,12 @@ namespace DDay.iCal
             get
             {
                 if (Values != null)
+                {
                     return Values.FirstOrDefault();
+                }
                 return default(string);
             }
-            set
-            {
-                SetValue(value);
-            }
+            set { SetValue(value); }
         }
 
         #endregion

@@ -9,8 +9,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public abstract class CalendarDataType :
-        ICalendarDataType
+    public abstract class CalendarDataType : ICalendarDataType
     {
         #region Private Fields
 
@@ -65,12 +64,10 @@ namespace DDay.iCal
             Initialize();
         }
 
-        protected virtual void OnDeserialized(StreamingContext context)
-        {
-        }
+        protected virtual void OnDeserialized(StreamingContext context) {}
 
         #endregion
-    
+
         #region ICalendarDataType Members
 
         public virtual Type GetValueType()
@@ -80,22 +77,35 @@ namespace DDay.iCal
             {
                 switch (_Proxy.Get("VALUE"))
                 {
-                    case "BINARY": return typeof(byte[]);
-                    case "BOOLEAN": return typeof(bool);
-                    case "CAL-ADDRESS": return typeof(Uri);
-                    case "DATE": return typeof(IDateTime);
-                    case "DATE-TIME": return typeof(IDateTime);
-                    case "DURATION": return typeof(TimeSpan);
-                    case "FLOAT": return typeof(double);
-                    case "INTEGER": return typeof(int);
-                    case "PERIOD": return typeof(IPeriod);
-                    case "RECUR": return typeof(IRecurrencePattern);
-                    case "TEXT": return typeof(string);
+                    case "BINARY":
+                        return typeof (byte[]);
+                    case "BOOLEAN":
+                        return typeof (bool);
+                    case "CAL-ADDRESS":
+                        return typeof (Uri);
+                    case "DATE":
+                        return typeof (IDateTime);
+                    case "DATE-TIME":
+                        return typeof (IDateTime);
+                    case "DURATION":
+                        return typeof (TimeSpan);
+                    case "FLOAT":
+                        return typeof (double);
+                    case "INTEGER":
+                        return typeof (int);
+                    case "PERIOD":
+                        return typeof (IPeriod);
+                    case "RECUR":
+                        return typeof (IRecurrencePattern);
+                    case "TEXT":
+                        return typeof (string);
                     case "TIME":
                         // FIXME: implement ISO.8601.2004
                         throw new NotImplementedException();
-                    case "URI": return typeof(Uri);
-                    case "UTC-OFFSET": return typeof(IUTCOffset);
+                    case "URI":
+                        return typeof (Uri);
+                    case "UTC-OFFSET":
+                        return typeof (IUTCOffset);
                     default:
                         return null;
                 }
@@ -106,7 +116,11 @@ namespace DDay.iCal
         public virtual void SetValueType(string type)
         {
             if (_Proxy != null)
-                _Proxy.Set("VALUE", type != null ? type : type.ToUpper());
+            {
+                _Proxy.Set("VALUE", type != null
+                    ? type
+                    : type.ToUpper());
+            }
         }
 
         public virtual ICalendarObject AssociatedObject
@@ -121,7 +135,9 @@ namespace DDay.iCal
                     {
                         _Proxy.SetParent(_AssociatedObject);
                         if (_AssociatedObject is ICalendarParameterCollectionContainer)
-                            _Proxy.SetProxiedObject(((ICalendarParameterCollectionContainer)_AssociatedObject).Parameters);
+                        {
+                            _Proxy.SetProxiedObject(((ICalendarParameterCollectionContainer) _AssociatedObject).Parameters);
+                        }
                     }
                     else
                     {
@@ -137,7 +153,9 @@ namespace DDay.iCal
             get
             {
                 if (_AssociatedObject != null)
+                {
                     return _AssociatedObject.Calendar;
+                }
                 return null;
             }
         }
@@ -160,7 +178,7 @@ namespace DDay.iCal
         {
             if (obj is ICalendarDataType)
             {
-                var dt = (ICalendarDataType)obj;                
+                var dt = (ICalendarDataType) obj;
                 _AssociatedObject = dt.AssociatedObject;
                 _Proxy.SetParent(_AssociatedObject);
                 _Proxy.SetProxiedObject(dt.Parameters);
@@ -181,7 +199,7 @@ namespace DDay.iCal
             if (obj is T)
             {
                 obj.CopyFrom(this);
-                return (T)obj;
+                return (T) obj;
             }
             return default(T);
         }

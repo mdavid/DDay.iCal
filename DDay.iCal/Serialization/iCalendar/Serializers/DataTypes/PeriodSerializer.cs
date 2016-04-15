@@ -4,18 +4,17 @@ using System.IO;
 
 namespace DDay.iCal.Serialization.iCalendar
 {
-    public class PeriodSerializer : 
-        EncodableDataTypeSerializer
+    public class PeriodSerializer : EncodableDataTypeSerializer
     {
         #region Overrides
 
         public override Type TargetType
         {
-            get { return typeof(Period); }
+            get { return typeof (Period); }
         }
 
         public override string SerializeToString(object obj)
-        {    
+        {
             var p = obj as IPeriod;
             var factory = GetService<ISerializerFactory>();
 
@@ -26,8 +25,8 @@ namespace DDay.iCal.Serialization.iCalendar
 
                 try
                 {
-                    var dtSerializer = factory.Build(typeof(IDateTime), SerializationContext) as IStringSerializer;
-                    var timeSpanSerializer = factory.Build(typeof(TimeSpan), SerializationContext) as IStringSerializer;
+                    var dtSerializer = factory.Build(typeof (IDateTime), SerializationContext) as IStringSerializer;
+                    var timeSpanSerializer = factory.Build(typeof (TimeSpan), SerializationContext) as IStringSerializer;
                     if (dtSerializer != null && timeSpanSerializer != null)
                     {
                         var sb = new StringBuilder();
@@ -63,8 +62,8 @@ namespace DDay.iCal.Serialization.iCalendar
             var factory = GetService<ISerializerFactory>();
             if (p != null && factory != null)
             {
-                var dtSerializer = factory.Build(typeof(IDateTime), SerializationContext) as IStringSerializer;
-                var durationSerializer = factory.Build(typeof(TimeSpan), SerializationContext) as IStringSerializer;
+                var dtSerializer = factory.Build(typeof (IDateTime), SerializationContext) as IStringSerializer;
+                var durationSerializer = factory.Build(typeof (TimeSpan), SerializationContext) as IStringSerializer;
                 if (dtSerializer != null && durationSerializer != null)
                 {
                     // Decode the value as necessary
@@ -72,16 +71,22 @@ namespace DDay.iCal.Serialization.iCalendar
 
                     var values = value.Split('/');
                     if (values.Length != 2)
+                    {
                         return false;
+                    }
 
                     p.StartTime = dtSerializer.Deserialize(new StringReader(values[0])) as IDateTime;
                     p.EndTime = dtSerializer.Deserialize(new StringReader(values[1])) as IDateTime;
                     if (p.EndTime == null)
-                        p.Duration = (TimeSpan)durationSerializer.Deserialize(new StringReader(values[1]));
+                    {
+                        p.Duration = (TimeSpan) durationSerializer.Deserialize(new StringReader(values[1]));
+                    }
 
                     // Only return an object if it has been deserialized correctly.
                     if (p.StartTime != null && p.Duration != null)
+                    {
                         return p;
+                    }
                 }
             }
 

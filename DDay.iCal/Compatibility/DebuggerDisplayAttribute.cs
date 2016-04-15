@@ -1,6 +1,5 @@
 ﻿namespace System.Diagnostics
 {
-
 #if NETCF
     [AttributeUsageAttribute(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Delegate, AllowMultiple = true)]
     [ComVisibleAttribute(true)]
@@ -11,5 +10,4 @@
         }
     }
 #endif
-
 }

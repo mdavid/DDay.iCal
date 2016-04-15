@@ -3,16 +3,14 @@ using System.IO;
 using DDay.iCal.Serialization.iCalendar;
 
 namespace DDay.iCal
-{    
+{
     /// <summary>
     /// An iCalendar status code.
     /// </summary>
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class StatusCode : 
-        EncodableDataType,
-        IStatusCode
+    public class StatusCode : EncodableDataType, IStatusCode
     {
         #region Private Fields
 
@@ -33,7 +31,9 @@ namespace DDay.iCal
             get
             {
                 if (m_Parts.Length > 0)
+                {
                     return m_Parts[0];
+                }
                 return 0;
             }
         }
@@ -43,7 +43,9 @@ namespace DDay.iCal
             get
             {
                 if (m_Parts.Length > 1)
+                {
                     return m_Parts[1];
+                }
                 return 0;
             }
         }
@@ -53,7 +55,9 @@ namespace DDay.iCal
             get
             {
                 if (m_Parts.Length > 2)
+                {
                     return m_Parts[2];
+                }
                 return 0;
             }
         }
@@ -62,9 +66,9 @@ namespace DDay.iCal
 
         #region Constructors
 
-        public StatusCode() { }
-        public StatusCode(string value)
-            : this()
+        public StatusCode() {}
+
+        public StatusCode(string value) : this()
         {
             var serializer = new StatusCodeSerializer();
             CopyFrom(serializer.Deserialize(new StringReader(value)) as ICopyable);
@@ -79,7 +83,7 @@ namespace DDay.iCal
             base.CopyFrom(obj);
             if (obj is IStatusCode)
             {
-                var sc = (IStatusCode)obj;
+                var sc = (IStatusCode) obj;
                 Parts = new int[sc.Parts.Length];
                 sc.Parts.CopyTo(Parts, 0);
             }
@@ -115,7 +119,9 @@ namespace DDay.iCal
 
         public override int GetHashCode()
         {
-            return (m_Parts != null ? m_Parts.GetHashCode() : 0);
+            return (m_Parts != null
+                ? m_Parts.GetHashCode()
+                : 0);
         }
 
         #endregion

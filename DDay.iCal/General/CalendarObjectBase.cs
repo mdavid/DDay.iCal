@@ -5,9 +5,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class CalendarObjectBase :
-        ICopyable,        
-        ILoadable
+    public class CalendarObjectBase : ICopyable, ILoadable
     {
         #region Private Fields
 
@@ -33,9 +31,7 @@ namespace DDay.iCal
         /// Copies values from the target object to the
         /// current object.
         /// </summary>
-        public virtual void CopyFrom(ICopyable c)
-        {
-        }
+        public virtual void CopyFrom(ICopyable c) {}
 
         /// <summary>
         /// Creates a copy of the object.
@@ -51,12 +47,12 @@ namespace DDay.iCal
             if (obj is T)
             {
                 obj.CopyFrom(this);
-                return (T)obj;
+                return (T) obj;
             }
             return default(T);
         }
 
-        #endregion        
+        #endregion
 
         #region ILoadable Members
 
@@ -64,15 +60,17 @@ namespace DDay.iCal
         {
             get { return m_IsLoaded; }
         }
-        
-        [field:NonSerialized]
+
+        [field: NonSerialized]
         public event EventHandler Loaded;
 
         public virtual void OnLoaded()
         {
             m_IsLoaded = true;
             if (Loaded != null)
+            {
                 Loaded(this, EventArgs.Empty);
+            }
         }
 
         #endregion

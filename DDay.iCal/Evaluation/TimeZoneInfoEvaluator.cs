@@ -3,8 +3,7 @@ using System.Collections.Generic;
 
 namespace DDay.iCal
 {
-    public class TimeZoneInfoEvaluator :
-        RecurringEvaluator
+    public class TimeZoneInfoEvaluator : RecurringEvaluator
     {
         #region Protected Properties
 
@@ -18,12 +17,10 @@ namespace DDay.iCal
 
         #region Constructors
 
-        public TimeZoneInfoEvaluator(ITimeZoneInfo tzi) : base(tzi)
-        {
-        }
+        public TimeZoneInfoEvaluator(ITimeZoneInfo tzi) : base(tzi) {}
 
-        #endregion       
- 
+        #endregion
+
         #region Overrides
 
         public override HashSet<IPeriod> Evaluate(IDateTime referenceDate, DateTime periodStart, DateTime periodEnd, bool includeReferenceDateInResults)
@@ -37,7 +34,7 @@ namespace DDay.iCal
                 return periods;
             }
 
-            return new HashSet<IPeriod>();            
+            return new HashSet<IPeriod>();
         }
 
         #endregion

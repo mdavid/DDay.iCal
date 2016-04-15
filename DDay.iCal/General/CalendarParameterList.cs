@@ -7,9 +7,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class CalendarParameterList :
-        GroupedValueList<string, ICalendarParameter, CalendarParameter, string>,
-        ICalendarParameterCollection
+    public class CalendarParameterList : GroupedValueList<string, ICalendarParameter, CalendarParameter, string>, ICalendarParameterCollection
     {
         #region Private Fields
 
@@ -20,9 +18,7 @@ namespace DDay.iCal
 
         #region Constructors
 
-        public CalendarParameterList()
-        {
-        }
+        public CalendarParameterList() {}
 
         public CalendarParameterList(ICalendarObject parent, bool caseInsensitive)
         {
@@ -55,7 +51,9 @@ namespace DDay.iCal
         protected override string GroupModifier(string group)
         {
             if (m_CaseInsensitive && group != null)
+            {
                 return group.ToUpper();
+            }
             return group;
         }
 

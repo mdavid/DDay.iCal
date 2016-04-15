@@ -2,8 +2,7 @@
 
 namespace DDay.iCal
 {
-    public interface ITimeZone :
-        ICalendarComponent
+    public interface ITimeZone : ICalendarComponent
     {
         string ID { get; set; }
         string TZID { get; set; }

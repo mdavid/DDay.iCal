@@ -4,12 +4,11 @@ using System.Linq;
 
 namespace DDay.iCal
 {
-    public class TimeZoneEvaluator :
-        Evaluator
+    public class TimeZoneEvaluator : Evaluator
     {
         #region Private Fields
 
-        private HashSet<Occurrence> m_Occurrences;        
+        private HashSet<Occurrence> m_Occurrences;
 
         #endregion
 
@@ -50,7 +49,9 @@ namespace DDay.iCal
             for (var i = 0; i < sortedOccurrences.Count; i++)
             {
                 var curr = sortedOccurrences[i];
-                var next = i < m_Occurrences.Count - 1 ? (Occurrence?)sortedOccurrences[i + 1] : null;
+                var next = i < m_Occurrences.Count - 1
+                    ? (Occurrence?) sortedOccurrences[i + 1]
+                    : null;
 
                 // Determine end times for our periods, overwriting previously calculated end times.
                 // This is important because we don't want to overcalculate our time zone information,
@@ -82,18 +83,19 @@ namespace DDay.iCal
         {
             // Ensure the reference date is associated with the time zone
             if (referenceDate.AssociatedObject == null)
+            {
                 referenceDate.AssociatedObject = TimeZone;
+            }
 
             var infos = new List<ITimeZoneInfo>(TimeZone.TimeZoneInfos);
 
             // Evaluate extra time periods, without re-evaluating ones that were already evaluated
-            if ((EvaluationStartBounds == DateTime.MaxValue && EvaluationEndBounds == DateTime.MinValue) ||
-                (periodEnd.Equals(EvaluationStartBounds)) ||
+            if ((EvaluationStartBounds == DateTime.MaxValue && EvaluationEndBounds == DateTime.MinValue) || (periodEnd.Equals(EvaluationStartBounds)) ||
                 (periodStart.Equals(EvaluationEndBounds)))
             {
                 foreach (var curr in infos)
                 {
-                    var evaluator = curr.GetService(typeof(IEvaluator)) as IEvaluator;
+                    var evaluator = curr.GetService(typeof (IEvaluator)) as IEvaluator;
 
                     // Time zones must include an effective start date/time
                     // and must provide an evaluator.
@@ -101,40 +103,46 @@ namespace DDay.iCal
                     {
                         // Set the start bounds
                         if (EvaluationStartBounds > periodStart)
+                        {
                             EvaluationStartBounds = periodStart;
+                        }
 
                         // FIXME: 5 years is an arbitrary number, to eliminate the need
                         // to recalculate time zone information as much as possible.
-                        var offsetEnd = periodEnd.AddYears(5); 
+                        var offsetEnd = periodEnd.AddYears(5);
 
                         // Determine the UTC occurrences of the Time Zone observances
-                        var periods = evaluator.Evaluate(
-                            referenceDate,
-                            periodStart,
-                            offsetEnd,
-                            includeReferenceDateInResults);
+                        var periods = evaluator.Evaluate(referenceDate, periodStart, offsetEnd, includeReferenceDateInResults);
 
                         foreach (var period in periods)
                         {
                             if (!Periods.Contains(period))
+                            {
                                 Periods.Add(period);
+                            }
 
                             var o = new Occurrence(curr, period);
                             if (!m_Occurrences.Contains(o))
+                            {
                                 m_Occurrences.Add(o);
+                            }
                         }
 
                         if (EvaluationEndBounds == DateTime.MinValue || EvaluationEndBounds < offsetEnd)
+                        {
                             EvaluationEndBounds = offsetEnd;
+                        }
                     }
                 }
-                
+
                 ProcessOccurrences(referenceDate);
             }
             else
             {
                 if (EvaluationEndBounds != DateTime.MinValue && periodEnd > EvaluationEndBounds)
+                {
                     Evaluate(referenceDate, EvaluationEndBounds, periodEnd, includeReferenceDateInResults);
+                }
             }
 
             return Periods;

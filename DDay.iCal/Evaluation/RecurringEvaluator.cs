@@ -4,8 +4,7 @@ using System.Linq;
 
 namespace DDay.iCal
 {
-    public class RecurringEvaluator :
-        Evaluator
+    public class RecurringEvaluator : Evaluator
     {
         #region Private Fields
 
@@ -33,10 +32,12 @@ namespace DDay.iCal
             // or a calendar data type, so we need to assign
             // the associated object manually
             if (obj is ICalendarObject)
-                AssociatedObject = (ICalendarObject)obj;
+            {
+                AssociatedObject = (ICalendarObject) obj;
+            }
             if (obj is ICalendarDataType)
             {
-                var dt = (ICalendarDataType)obj;
+                var dt = (ICalendarDataType) obj;
                 AssociatedObject = dt.AssociatedObject;
             }
         }
@@ -55,12 +56,11 @@ namespace DDay.iCal
         protected virtual void EvaluateRRule(IDateTime referenceDate, DateTime periodStart, DateTime periodEnd, bool includeReferenceDateInResults)
         {
             // Handle RRULEs
-            if (Recurrable.RecurrenceRules != null &&
-                Recurrable.RecurrenceRules.Count > 0)
+            if (Recurrable.RecurrenceRules != null && Recurrable.RecurrenceRules.Count > 0)
             {
                 foreach (var rrule in Recurrable.RecurrenceRules)
                 {
-                    var evaluator = rrule.GetService(typeof(IEvaluator)) as IEvaluator;
+                    var evaluator = rrule.GetService(typeof (IEvaluator)) as IEvaluator;
                     if (evaluator != null)
                     {
                         var periods = evaluator.Evaluate(referenceDate, periodStart, periodEnd, includeReferenceDateInResults);
@@ -73,7 +73,7 @@ namespace DDay.iCal
                 // If no RRULEs were found, then we still need to add
                 // the initial reference date to the results.
                 IPeriod p = new Period(referenceDate.Copy<IDateTime>());
-                Periods.UnionWith(new [] {p});
+                Periods.UnionWith(new[] {p});
             }
         }
 
@@ -90,7 +90,7 @@ namespace DDay.iCal
             {
                 foreach (var rdate in Recurrable.RecurrenceDates)
                 {
-                    var evaluator = rdate.GetService(typeof(IEvaluator)) as IEvaluator;
+                    var evaluator = rdate.GetService(typeof (IEvaluator)) as IEvaluator;
                     if (evaluator != null)
                     {
                         var periods = evaluator.Evaluate(referenceDate, periodStart, periodEnd, false);
@@ -114,11 +114,11 @@ namespace DDay.iCal
                 return;
             }
 
-            var excluded = Recurrable.ExceptionRules
-                .Select(rule => rule.GetService(typeof(IEvaluator)) as IEvaluator)
-                .Where(evaluator => evaluator != null)
-                .SelectMany(evaluator => evaluator.Evaluate(referenceDate,periodStart, periodEnd, false))
-                .ToList();
+            var excluded =
+                Recurrable.ExceptionRules.Select(rule => rule.GetService(typeof (IEvaluator)) as IEvaluator)
+                    .Where(evaluator => evaluator != null)
+                    .SelectMany(evaluator => evaluator.Evaluate(referenceDate, periodStart, periodEnd, false))
+                    .ToList();
 
             Periods.ExceptWith(excluded);
         }
@@ -140,7 +140,7 @@ namespace DDay.iCal
 
             foreach (var exdate in Recurrable.ExceptionDates)
             {
-                var evaluator = exdate.GetService(typeof(IEvaluator)) as IEvaluator;
+                var evaluator = exdate.GetService(typeof (IEvaluator)) as IEvaluator;
                 if (evaluator == null)
                 {
                     continue;
@@ -162,8 +162,7 @@ namespace DDay.iCal
         public override HashSet<IPeriod> Evaluate(IDateTime referenceDate, DateTime periodStart, DateTime periodEnd, bool includeReferenceDateInResults)
         {
             // Evaluate extra time periods, without re-evaluating ones that were already evaluated
-            if ((EvaluationStartBounds == DateTime.MaxValue && EvaluationEndBounds == DateTime.MinValue) ||
-                (periodEnd.Equals(EvaluationStartBounds)) ||
+            if ((EvaluationStartBounds == DateTime.MaxValue && EvaluationEndBounds == DateTime.MinValue) || (periodEnd.Equals(EvaluationStartBounds)) ||
                 (periodStart.Equals(EvaluationEndBounds)))
             {
                 EvaluateRRule(referenceDate, periodStart, periodEnd, includeReferenceDateInResults);
@@ -171,16 +170,24 @@ namespace DDay.iCal
                 EvaluateExRule(referenceDate, periodStart, periodEnd);
                 EvaluateExDate(referenceDate, periodStart, periodEnd);
                 if (EvaluationStartBounds == DateTime.MaxValue || EvaluationStartBounds > periodStart)
+                {
                     EvaluationStartBounds = periodStart;
+                }
                 if (EvaluationEndBounds == DateTime.MinValue || EvaluationEndBounds < periodEnd)
+                {
                     EvaluationEndBounds = periodEnd;
+                }
             }
-            else 
+            else
             {
                 if (EvaluationStartBounds != DateTime.MaxValue && periodStart < EvaluationStartBounds)
+                {
                     Evaluate(referenceDate, periodStart, EvaluationStartBounds, includeReferenceDateInResults);
+                }
                 if (EvaluationEndBounds != DateTime.MinValue && periodEnd > EvaluationEndBounds)
+                {
                     Evaluate(referenceDate, EvaluationEndBounds, periodEnd, includeReferenceDateInResults);
+                }
             }
 
             return Periods;

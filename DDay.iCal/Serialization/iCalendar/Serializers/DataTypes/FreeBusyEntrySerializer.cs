@@ -3,14 +3,13 @@ using System.IO;
 
 namespace DDay.iCal.Serialization.iCalendar
 {
-    public class FreeBusyEntrySerializer : 
-        PeriodSerializer
+    public class FreeBusyEntrySerializer : PeriodSerializer
     {
         #region Overrides
 
         public override Type TargetType
         {
-            get { return typeof(FreeBusyEntry); }
+            get { return typeof (FreeBusyEntry); }
         }
 
         public override string SerializeToString(object obj)
@@ -50,11 +49,20 @@ namespace DDay.iCal.Serialization.iCalendar
                     {
                         switch (value.ToUpperInvariant())
                         {
-                            case "FREE": entry.Status = FreeBusyStatus.Free; break;
-                            case "BUSY": entry.Status = FreeBusyStatus.Busy; break;
-                            case "BUSY-UNAVAILABLE": entry.Status = FreeBusyStatus.BusyUnavailable; break;
-                            case "BUSY-TENTATIVE": entry.Status = FreeBusyStatus.BusyTentative; break;
-                            default: break;
+                            case "FREE":
+                                entry.Status = FreeBusyStatus.Free;
+                                break;
+                            case "BUSY":
+                                entry.Status = FreeBusyStatus.Busy;
+                                break;
+                            case "BUSY-UNAVAILABLE":
+                                entry.Status = FreeBusyStatus.BusyUnavailable;
+                                break;
+                            case "BUSY-TENTATIVE":
+                                entry.Status = FreeBusyStatus.BusyTentative;
+                                break;
+                            default:
+                                break;
                         }
                     }
                 }

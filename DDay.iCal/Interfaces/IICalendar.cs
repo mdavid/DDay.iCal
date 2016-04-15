@@ -2,11 +2,7 @@
 
 namespace DDay.iCal
 {
-    public interface IICalendar :
-        ICalendarComponent,
-        IGetOccurrencesTyped,
-        IGetFreeBusy,
-        IMergeable
+    public interface IICalendar : ICalendarComponent, IGetOccurrencesTyped, IGetFreeBusy, IMergeable
     {
         /// <summary>
         /// Gets/sets the calendar version.  Defaults to "2.0".
@@ -81,7 +77,7 @@ namespace DDay.iCal
         /// <summary>
         /// Gets a list of To-do items contained in the calendar.
         /// </summary>
-        IUniqueComponentList<ITodo> Todos { get; }        
+        IUniqueComponentList<ITodo> Todos { get; }
 
 #if !SILVERLIGHT
         /// <summary>
@@ -92,6 +88,7 @@ namespace DDay.iCal
         /// <param name="tzi">A System.TimeZoneInfo object to add to the calendar.</param>
         /// <returns>The time zone added to the calendar.</returns>
         ITimeZone AddTimeZone(System.TimeZoneInfo tzi);
+
         ITimeZone AddTimeZone(System.TimeZoneInfo tzi, DateTime earliestDateTimeToSupport, bool includeHistoricalData);
 
         /// <summary>
@@ -101,6 +98,7 @@ namespace DDay.iCal
         /// </summary>
         /// <returns>The time zone added to the calendar.</returns>
         ITimeZone AddLocalTimeZone();
+
         ITimeZone AddLocalTimeZone(DateTime earliestDateTimeToSupport, bool includeHistoricalData);
 #endif
     }

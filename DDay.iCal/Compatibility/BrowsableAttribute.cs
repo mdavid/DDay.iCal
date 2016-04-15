@@ -1,6 +1,5 @@
 ﻿namespace System.ComponentModel
 {
-
 #if NETCF
     [AttributeUsageAttribute(AttributeTargets.All)]
     public sealed class BrowsableAttribute : Attribute
@@ -10,5 +9,4 @@
         }
     }
 #endif
-
 }

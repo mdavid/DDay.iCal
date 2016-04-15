@@ -4,8 +4,7 @@ using DDay.Collections;
 
 namespace DDay.iCal
 {
-    public interface IUniqueComponent :
-        ICalendarComponent
+    public interface IUniqueComponent : ICalendarComponent
     {
         event EventHandler<ObjectEventArgs<string, string>> UIDChanged;
         string UID { get; set; }

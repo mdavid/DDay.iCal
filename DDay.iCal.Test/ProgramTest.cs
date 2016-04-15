@@ -18,9 +18,7 @@ namespace DDay.iCal.Test
             var iCal = iCalendar.LoadFromFile(@"Calendars\Serialization\USHolidays.ics")[0];
             Assert.IsNotNull(iCal, "iCalendar did not load.  Are you connected to the internet?");
 
-            var occurrences = iCal.GetOccurrences(
-                new iCalDateTime(2006, 1, 1, "US-Eastern"),
-                new iCalDateTime(2006, 12, 31, "US-Eastern"));
+            var occurrences = iCal.GetOccurrences(new iCalDateTime(2006, 1, 1, "US-Eastern"), new iCalDateTime(2006, 12, 31, "US-Eastern"));
 
             //foreach (var o in occurrences)
             //{
@@ -69,9 +67,13 @@ namespace DDay.iCal.Test
         {
             Assert.IsNotNull(iCal, "The iCalendar was not loaded");
             if (iCal.Events.Count > 0)
+            {
                 Assert.IsTrue(iCal.Events.Count == 1, "Calendar should contain 1 event; however, the iCalendar loaded " + iCal.Events.Count + " events");
+            }
             else if (iCal.Todos.Count > 0)
+            {
                 Assert.IsTrue(iCal.Todos.Count == 1, "Calendar should contain 1 todo; however, the iCalendar loaded " + iCal.Todos.Count + " todos");
+            }
         }
 
         [Test]
@@ -93,7 +95,7 @@ namespace DDay.iCal.Test
             var uri = new Uri(path);
             var iCal = iCalendar.LoadFromUri(uri)[0];
             Assert.AreEqual(14, iCal.Events.Count);
-        }        
+        }
 
         /// <summary>
         /// The following test is an aggregate of MonthlyCountByMonthDay3() and MonthlyByDay1() in the
@@ -113,37 +115,19 @@ namespace DDay.iCal.Test
             var evt2 = iCal1.Events.Skip(1).First();
 
             // Get occurrences for the first event
-            var occurrences = evt1.GetOccurrences(
-                new iCalDateTime(1996, 1, 1, tzid),
-                new iCalDateTime(2000, 1, 1, tzid)).OrderBy(o => o.Period.StartTime).ToList();
+            var occurrences =
+                evt1.GetOccurrences(new iCalDateTime(1996, 1, 1, tzid), new iCalDateTime(2000, 1, 1, tzid)).OrderBy(o => o.Period.StartTime).ToList();
 
             var DateTimes = new iCalDateTime[]
             {
-                new iCalDateTime(1997, 9, 10, 9, 0, 0, tzid),
-                new iCalDateTime(1997, 9, 11, 9, 0, 0, tzid),
-                new iCalDateTime(1997, 9, 12, 9, 0, 0, tzid),
-                new iCalDateTime(1997, 9, 13, 9, 0, 0, tzid),
-                new iCalDateTime(1997, 9, 14, 9, 0, 0, tzid),
-                new iCalDateTime(1997, 9, 15, 9, 0, 0, tzid),
-                new iCalDateTime(1999, 3, 10, 9, 0, 0, tzid),
-                new iCalDateTime(1999, 3, 11, 9, 0, 0, tzid),
-                new iCalDateTime(1999, 3, 12, 9, 0, 0, tzid),
+                new iCalDateTime(1997, 9, 10, 9, 0, 0, tzid), new iCalDateTime(1997, 9, 11, 9, 0, 0, tzid), new iCalDateTime(1997, 9, 12, 9, 0, 0, tzid),
+                new iCalDateTime(1997, 9, 13, 9, 0, 0, tzid), new iCalDateTime(1997, 9, 14, 9, 0, 0, tzid), new iCalDateTime(1997, 9, 15, 9, 0, 0, tzid),
+                new iCalDateTime(1999, 3, 10, 9, 0, 0, tzid), new iCalDateTime(1999, 3, 11, 9, 0, 0, tzid), new iCalDateTime(1999, 3, 12, 9, 0, 0, tzid),
                 new iCalDateTime(1999, 3, 13, 9, 0, 0, tzid),
             };
 
             var TimeZones = new string[]
-            {
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern"
-            };
+            {"US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern"};
 
             for (var i = 0; i < DateTimes.Length; i++)
             {
@@ -165,52 +149,22 @@ namespace DDay.iCal.Test
             Assert.IsTrue(occurrences.Count == DateTimes.Length, "There should be exactly " + DateTimes.Length + " occurrences; there were " + occurrences.Count);
 
             // Get occurrences for the 2nd event
-            occurrences = evt2.GetOccurrences(
-                new iCalDateTime(1996, 1, 1, tzid),
-                new iCalDateTime(1998, 4, 1, tzid)).OrderBy(o => o.Period.StartTime).ToList();
+            occurrences = evt2.GetOccurrences(new iCalDateTime(1996, 1, 1, tzid), new iCalDateTime(1998, 4, 1, tzid)).OrderBy(o => o.Period.StartTime).ToList();
 
             var DateTimes1 = new iCalDateTime[]
             {
-                new iCalDateTime(1997, 9, 2, 9, 0, 0, tzid),
-                new iCalDateTime(1997, 9, 9, 9, 0, 0, tzid),
-                new iCalDateTime(1997, 9, 16, 9, 0, 0, tzid),
-                new iCalDateTime(1997, 9, 23, 9, 0, 0, tzid),
-                new iCalDateTime(1997, 9, 30, 9, 0, 0, tzid),
-                new iCalDateTime(1997, 11, 4, 9, 0, 0, tzid),
-                new iCalDateTime(1997, 11, 11, 9, 0, 0, tzid),
-                new iCalDateTime(1997, 11, 18, 9, 0, 0, tzid),
-                new iCalDateTime(1997, 11, 25, 9, 0, 0, tzid),
-                new iCalDateTime(1998, 1, 6, 9, 0, 0, tzid),
-                new iCalDateTime(1998, 1, 13, 9, 0, 0, tzid),
-                new iCalDateTime(1998, 1, 20, 9, 0, 0, tzid),
-                new iCalDateTime(1998, 1, 27, 9, 0, 0, tzid),
-                new iCalDateTime(1998, 3, 3, 9, 0, 0, tzid),
-                new iCalDateTime(1998, 3, 10, 9, 0, 0, tzid),
-                new iCalDateTime(1998, 3, 17, 9, 0, 0, tzid),
-                new iCalDateTime(1998, 3, 24, 9, 0, 0, tzid),
-                new iCalDateTime(1998, 3, 31, 9, 0, 0, tzid)
+                new iCalDateTime(1997, 9, 2, 9, 0, 0, tzid), new iCalDateTime(1997, 9, 9, 9, 0, 0, tzid), new iCalDateTime(1997, 9, 16, 9, 0, 0, tzid),
+                new iCalDateTime(1997, 9, 23, 9, 0, 0, tzid), new iCalDateTime(1997, 9, 30, 9, 0, 0, tzid), new iCalDateTime(1997, 11, 4, 9, 0, 0, tzid),
+                new iCalDateTime(1997, 11, 11, 9, 0, 0, tzid), new iCalDateTime(1997, 11, 18, 9, 0, 0, tzid), new iCalDateTime(1997, 11, 25, 9, 0, 0, tzid),
+                new iCalDateTime(1998, 1, 6, 9, 0, 0, tzid), new iCalDateTime(1998, 1, 13, 9, 0, 0, tzid), new iCalDateTime(1998, 1, 20, 9, 0, 0, tzid),
+                new iCalDateTime(1998, 1, 27, 9, 0, 0, tzid), new iCalDateTime(1998, 3, 3, 9, 0, 0, tzid), new iCalDateTime(1998, 3, 10, 9, 0, 0, tzid),
+                new iCalDateTime(1998, 3, 17, 9, 0, 0, tzid), new iCalDateTime(1998, 3, 24, 9, 0, 0, tzid), new iCalDateTime(1998, 3, 31, 9, 0, 0, tzid)
             };
 
             var TimeZones1 = new string[]
             {
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern",                
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern",
-                "US-Eastern"
+                "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern",
+                "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern", "US-Eastern"
             };
 
             for (var i = 0; i < DateTimes1.Length; i++)
@@ -221,7 +175,8 @@ namespace DDay.iCal.Test
                 Assert.IsTrue(dt.TimeZoneName == TimeZones1[i], "Event " + dt + " should occur in the " + TimeZones1[i] + " timezone");
             }
 
-            Assert.AreEqual(DateTimes1.Length, occurrences.Count, "There should be exactly " + DateTimes1.Length + " occurrences; there were " + occurrences.Count);
+            Assert.AreEqual(DateTimes1.Length, occurrences.Count,
+                "There should be exactly " + DateTimes1.Length + " occurrences; there were " + occurrences.Count);
         }
 
         //[Test]     //Broken in dday
@@ -288,7 +243,7 @@ namespace DDay.iCal.Test
             dt1 = new iCalDateTime(2004, 4, 4, 1, 59, 59, tz.TZID, iCal);
             dt2 = new iCalDateTime(2004, 4, 4, 2, 0, 0, tz.TZID, iCal);
             result = dt2 - dt1;
-            Assert.AreEqual(TimeSpan.FromHours(-1) + TimeSpan.FromSeconds(1), result);            
+            Assert.AreEqual(TimeSpan.FromHours(-1) + TimeSpan.FromSeconds(1), result);
         }
 
         /// <summary>
@@ -339,11 +294,11 @@ namespace DDay.iCal.Test
                 tzinfo = null;
                 try
                 {
-                    tzinfo = System.TimeZoneInfo.FindSystemTimeZoneById(zone.Id);                    
+                    tzinfo = System.TimeZoneInfo.FindSystemTimeZoneById(zone.Id);
                 }
                 catch (Exception e)
                 {
-                    Assert.Fail("Not found: " + zone.StandardName);                    
+                    Assert.Fail("Not found: " + zone.StandardName);
                 }
 
                 if (tzinfo != null)

@@ -10,9 +10,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class CalendarObject :
-        CalendarObjectBase,
-        ICalendarObject
+    public class CalendarObject : CalendarObjectBase, ICalendarObject
     {
         #region Private Fields
 
@@ -20,7 +18,7 @@ namespace DDay.iCal
         private ICalendarObjectList<ICalendarObject> _Children;
         private ServiceProvider _ServiceProvider;
         private string _Name;
-        
+
         private int _Line;
         private int _Column;
 
@@ -33,8 +31,7 @@ namespace DDay.iCal
             Initialize();
         }
 
-        public CalendarObject(string name)
-            : this()
+        public CalendarObject(string name) : this()
         {
             Name = name;
         }
@@ -52,7 +49,7 @@ namespace DDay.iCal
 
             _Children.ItemAdded += new EventHandler<ObjectEventArgs<ICalendarObject, int>>(_Children_ItemAdded);
             _Children.ItemRemoved += new EventHandler<ObjectEventArgs<ICalendarObject, int>>(_Children_ItemRemoved);
-        }        
+        }
 
         #endregion
 
@@ -79,9 +76,7 @@ namespace DDay.iCal
             Initialize();
         }
 
-        protected virtual void OnDeserialized(StreamingContext context)
-        {
-        }
+        protected virtual void OnDeserialized(StreamingContext context) {}
 
         #endregion
 
@@ -105,15 +100,22 @@ namespace DDay.iCal
         {
             var o = obj as ICalendarObject;
             if (o != null)
+            {
                 return object.Equals(o.Name, Name);
+            }
             return base.Equals(obj);
         }
 
         public override int GetHashCode()
         {
             if (Name != null)
+            {
                 return Name.GetHashCode();
-            else return base.GetHashCode();
+            }
+            else
+            {
+                return base.GetHashCode();
+            }
         }
 
         public override void CopyFrom(ICopyable c)
@@ -126,18 +128,20 @@ namespace DDay.iCal
                 this.Parent = obj.Parent;
                 this.Line = obj.Line;
                 this.Column = obj.Column;
-                
+
                 // Add each child
                 this.Children.Clear();
                 foreach (var child in obj.Children)
+                {
                     this.AddChild(child.Copy<ICalendarObject>());
+                }
             }
-        }        
+        }
 
         #endregion
 
         #region ICalendarObject Members
-        
+
         /// <summary>
         /// Returns the parent iCalObject that owns this one.
         /// </summary>
@@ -152,10 +156,7 @@ namespace DDay.iCal
         /// </summary>
         public virtual ICalendarObjectList<ICalendarObject> Children
         {
-            get
-            {
-                return _Children;
-            }
+            get { return _Children; }
         }
 
         /// <summary>
@@ -192,16 +193,17 @@ namespace DDay.iCal
             {
                 ICalendarObject obj = this;
                 while (!(obj is IICalendar) && obj.Parent != null)
+                {
                     obj = obj.Parent;
+                }
 
                 if (obj is IICalendar)
-                    return (IICalendar)obj;
+                {
+                    return (IICalendar) obj;
+                }
                 return null;
             }
-            protected set
-            {
-                _Parent = value;
-            }
+            protected set { _Parent = value; }
         }
 
         public virtual IICalendar iCalendar
@@ -222,7 +224,7 @@ namespace DDay.iCal
             set { _Column = value; }
         }
 
-        #endregion       
+        #endregion
 
         #region IServiceProvider Members
 
@@ -233,7 +235,7 @@ namespace DDay.iCal
 
         public virtual object GetService(string name)
         {
-            return _ServiceProvider.GetService(name);            
+            return _ServiceProvider.GetService(name);
         }
 
         public virtual T GetService<T>()
@@ -276,7 +278,9 @@ namespace DDay.iCal
         protected void OnGroupChanged(string @old, string @new)
         {
             if (GroupChanged != null)
+            {
                 GroupChanged(this, new ObjectEventArgs<string, string>(@old, @new));
+            }
         }
 
         public virtual string Group

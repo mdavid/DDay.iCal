@@ -9,7 +9,7 @@ namespace DDay.iCal.Test
 
         [TestFixtureSetUp]
         public void InitAll()
-        {            
+        {
             tzid = "US-Eastern";
         }
 
@@ -60,7 +60,7 @@ namespace DDay.iCal.Test
         public void CopyDuration1()
         {
             CopyCalendarTest("Duration1.ics");
-        }        
+        }
 
         [Test, Category("Copy")]
         public void CopyEncoding1()

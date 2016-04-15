@@ -10,9 +10,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class RequestStatus :
-        EncodableDataType,
-        IRequestStatus
+    public class RequestStatus : EncodableDataType, IRequestStatus
     {
         #region Private Fields
 
@@ -46,9 +44,9 @@ namespace DDay.iCal
 
         #region Constructors
 
-        public RequestStatus() { }
-        public RequestStatus(string value)
-            : this()
+        public RequestStatus() {}
+
+        public RequestStatus(string value) : this()
         {
             var serializer = new RequestStatusSerializer();
             CopyFrom(serializer.Deserialize(new StringReader(value)) as ICopyable);
@@ -63,9 +61,11 @@ namespace DDay.iCal
             base.CopyFrom(obj);
             if (obj is IRequestStatus)
             {
-                var rs = (IRequestStatus)obj;                
+                var rs = (IRequestStatus) obj;
                 if (rs.StatusCode != null)
+                {
                     StatusCode = rs.StatusCode.Copy<IStatusCode>();
+                }
                 Description = rs.Description;
                 rs.ExtraData = rs.ExtraData;
             }
@@ -104,9 +104,15 @@ namespace DDay.iCal
         {
             unchecked
             {
-                var hashCode = (m_Description != null ? m_Description.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (m_ExtraData != null ? m_ExtraData.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (m_StatusCode != null ? m_StatusCode.GetHashCode() : 0);
+                var hashCode = (m_Description != null
+                    ? m_Description.GetHashCode()
+                    : 0);
+                hashCode = (hashCode * 397) ^ (m_ExtraData != null
+                    ? m_ExtraData.GetHashCode()
+                    : 0);
+                hashCode = (hashCode * 397) ^ (m_StatusCode != null
+                    ? m_StatusCode.GetHashCode()
+                    : 0);
                 return hashCode;
             }
         }

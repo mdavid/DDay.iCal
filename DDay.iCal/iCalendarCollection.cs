@@ -9,23 +9,25 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class iCalendarCollection :
-        List<IICalendar>,
-        IICalendarCollection
+    public class iCalendarCollection : List<IICalendar>, IICalendarCollection
     {
         #region IGetOccurrences Members
 
         public void ClearEvaluation()
         {
             foreach (var iCal in this)
+            {
                 iCal.ClearEvaluation();
+            }
         }
 
         public HashSet<Occurrence> GetOccurrences(IDateTime dt)
         {
             var occurrences = new HashSet<Occurrence>();
             foreach (var iCal in this)
+            {
                 occurrences.UnionWith(iCal.GetOccurrences(dt));
+            }
             return occurrences;
         }
 
@@ -33,7 +35,9 @@ namespace DDay.iCal
         {
             var occurrences = new HashSet<Occurrence>();
             foreach (var iCal in this)
+            {
                 occurrences.UnionWith(iCal.GetOccurrences(dt));
+            }
             return occurrences;
         }
 
@@ -41,7 +45,9 @@ namespace DDay.iCal
         {
             var occurrences = new HashSet<Occurrence>();
             foreach (var iCal in this)
+            {
                 occurrences.UnionWith(iCal.GetOccurrences(startTime, endTime));
+            }
             return occurrences;
         }
 
@@ -49,7 +55,9 @@ namespace DDay.iCal
         {
             var occurrences = new HashSet<Occurrence>();
             foreach (var iCal in this)
+            {
                 occurrences.UnionWith(iCal.GetOccurrences(startTime, endTime));
+            }
             return occurrences;
         }
 
@@ -57,7 +65,9 @@ namespace DDay.iCal
         {
             var occurrences = new HashSet<Occurrence>();
             foreach (var iCal in this)
+            {
                 occurrences.UnionWith(iCal.GetOccurrences<T>(dt));
+            }
             return occurrences;
         }
 
@@ -65,7 +75,9 @@ namespace DDay.iCal
         {
             var occurrences = new HashSet<Occurrence>();
             foreach (var iCal in this)
+            {
                 occurrences.UnionWith(iCal.GetOccurrences<T>(dt));
+            }
             return occurrences;
         }
 
@@ -73,7 +85,9 @@ namespace DDay.iCal
         {
             var occurrences = new HashSet<Occurrence>();
             foreach (var iCal in this)
+            {
                 occurrences.UnionWith(iCal.GetOccurrences<T>(startTime, endTime));
+            }
             return occurrences;
         }
 
@@ -81,7 +95,9 @@ namespace DDay.iCal
         {
             var occurrences = new HashSet<Occurrence>();
             foreach (var iCal in this)
+            {
                 occurrences.UnionWith(iCal.GetOccurrences<T>(startTime, endTime));
+            }
             return occurrences;
         }
 
@@ -92,7 +108,9 @@ namespace DDay.iCal
         IFreeBusy CombineFreeBusy(IFreeBusy main, IFreeBusy current)
         {
             if (main != null)
+            {
                 main.MergeWith(current);
+            }
             return current;
         }
 
@@ -104,7 +122,9 @@ namespace DDay.iCal
         {
             IFreeBusy fb = null;
             foreach (var iCal in this)
+            {
                 fb = CombineFreeBusy(fb, iCal.GetFreeBusy(freeBusyRequest));
+            }
             return fb;
         }
 
@@ -112,7 +132,9 @@ namespace DDay.iCal
         {
             IFreeBusy fb = null;
             foreach (var iCal in this)
+            {
                 fb = CombineFreeBusy(fb, iCal.GetFreeBusy(fromInclusive, toExclusive));
+            }
             return fb;
         }
 
@@ -120,7 +142,9 @@ namespace DDay.iCal
         {
             IFreeBusy fb = null;
             foreach (var iCal in this)
+            {
                 fb = CombineFreeBusy(fb, iCal.GetFreeBusy(organizer, contacts, fromInclusive, toExclusive));
+            }
             return fb;
         }
 

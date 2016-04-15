@@ -2,10 +2,7 @@
 
 namespace DDay.iCal
 {
-    public interface IRecurringComponent :
-        IUniqueComponent,
-        IRecurrable,
-        IAlarmContainer
+    public interface IRecurringComponent : IUniqueComponent, IRecurrable, IAlarmContainer
     {
         IList<IAttachment> Attachments { get; set; }
         IList<string> Categories { get; set; }

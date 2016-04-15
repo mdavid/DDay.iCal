@@ -16,9 +16,7 @@ namespace DDay.iCal
     [Serializable]
 #endif
     [DebuggerDisplay("Component: {Name}")]
-    public class CalendarComponent :
-        CalendarObject,
-        ICalendarComponent
+    public class CalendarComponent : CalendarObject, ICalendarComponent
     {
         #region Static Public Methods
 
@@ -43,13 +41,14 @@ namespace DDay.iCal
             return LoadFromStream(stream, encoding, new ComponentSerializer());
         }
 
-        public static T LoadFromStream<T>(Stream stream, Encoding encoding)
-            where T : ICalendarComponent
+        public static T LoadFromStream<T>(Stream stream, Encoding encoding) where T : ICalendarComponent
         {
-            var serializer = new ComponentSerializer();            
+            var serializer = new ComponentSerializer();
             object obj = LoadFromStream(stream, encoding, serializer);
             if (obj is T)
-                return (T)obj;
+            {
+                return (T) obj;
+            }
             return default(T);
         }
 
@@ -76,19 +75,21 @@ namespace DDay.iCal
         {
             object obj = LoadFromStream(tr);
             if (obj is T)
-                return (T)obj;
+            {
+                return (T) obj;
+            }
             return default(T);
         }
 
-        #endregion        
+        #endregion
 
         #endregion
 
         #endregion
 
         #region Private Fields
-                
-        private ICalendarPropertyList m_Properties;        
+
+        private ICalendarPropertyList m_Properties;
 
         #endregion
 
@@ -100,21 +101,25 @@ namespace DDay.iCal
         public virtual ICalendarPropertyList Properties
         {
             get { return m_Properties; }
-            protected set
-            {
-                this.m_Properties = value;
-            }
+            protected set { this.m_Properties = value; }
         }
 
         #endregion
 
         #region Constructors
 
-        public CalendarComponent() : base() { Initialize(); }
-        public CalendarComponent(string name) : base(name) { Initialize(); }
+        public CalendarComponent() : base()
+        {
+            Initialize();
+        }
+
+        public CalendarComponent(string name) : base(name)
+        {
+            Initialize();
+        }
 
         private void Initialize()
-        {            
+        {
             m_Properties = new CalendarPropertyList(this, true);
         }
 
@@ -138,7 +143,9 @@ namespace DDay.iCal
             {
                 Properties.Clear();
                 foreach (var p in c.Properties)
+                {
                     Properties.Add(p.Copy<ICalendarProperty>());
+                }
             }
         }
 
@@ -164,6 +171,6 @@ namespace DDay.iCal
             Properties.Set(p.Name, p);
         }
 
-        #endregion        
+        #endregion
     }
 }

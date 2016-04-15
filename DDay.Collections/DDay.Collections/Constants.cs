@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace DDay.Collections
 {
+
     #region EventArgs
 
-    public class ObjectEventArgs<T> :
-        EventArgs
+    public class ObjectEventArgs<T> : EventArgs
     {
         public T Object { get; set; }
 
@@ -16,8 +16,7 @@ namespace DDay.Collections
         }
     }
 
-    public class ObjectEventArgs<T, U> :
-        EventArgs
+    public class ObjectEventArgs<T, U> : EventArgs
     {
         public T First { get; set; }
         public U Second { get; set; }
@@ -29,8 +28,7 @@ namespace DDay.Collections
         }
     }
 
-    public class ValueChangedEventArgs<T> :
-        EventArgs
+    public class ValueChangedEventArgs<T> : EventArgs
     {
         public IEnumerable<T> RemovedValues { get; protected set; }
         public IEnumerable<T> AddedValues { get; protected set; }
@@ -41,6 +39,6 @@ namespace DDay.Collections
             AddedValues = addedValues ?? new T[0];
         }
     }
-    
+
     #endregion
 }

@@ -5,30 +5,22 @@ using System.IO;
 
 namespace DDay.iCal.Serialization.iCalendar
 {
-    public class ComponentSerializer :
-        SerializerBase
+    public class ComponentSerializer : SerializerBase
     {
         #region Protected Properties
 
         protected virtual IComparer<ICalendarProperty> PropertySorter
         {
-            get
-            {
-                return new PropertyAlphabetizer();
-            }
+            get { return new PropertyAlphabetizer(); }
         }
 
         #endregion
 
         #region Constructor
 
-        public ComponentSerializer()
-        {
-        }
+        public ComponentSerializer() {}
 
-        public ComponentSerializer(ISerializationContext ctx) : base(ctx)
-        {
-        }
+        public ComponentSerializer(ISerializationContext ctx) : base(ctx) {}
 
         #endregion
 
@@ -36,7 +28,7 @@ namespace DDay.iCal.Serialization.iCalendar
 
         public override Type TargetType
         {
-            get { return typeof(CalendarComponent); }
+            get { return typeof (CalendarComponent); }
         }
 
         public override string SerializeToString(object obj)
@@ -53,10 +45,10 @@ namespace DDay.iCal.Serialization.iCalendar
                 // Sort the calendar properties in alphabetical order before
                 // serializing them!
                 var properties = new List<ICalendarProperty>(c.Properties);
-                
+
                 // FIXME: remove this try/catch
                 try
-                {                    
+                {
                     properties.Sort(PropertySorter);
                 }
                 catch (Exception e)
@@ -70,7 +62,9 @@ namespace DDay.iCal.Serialization.iCalendar
                     // Get a serializer for each property.
                     var serializer = sf.Build(p.GetType(), SerializationContext) as IStringSerializer;
                     if (serializer != null)
+                    {
                         sb.Append(serializer.SerializeToString(p));
+                    }
                 }
 
                 // Serialize child objects
@@ -81,7 +75,9 @@ namespace DDay.iCal.Serialization.iCalendar
                         // Get a serializer for each child object.
                         var serializer = sf.Build(child.GetType(), SerializationContext) as IStringSerializer;
                         if (serializer != null)
+                        {
                             sb.Append(serializer.SerializeToString(child));
+                        }
                     }
                 }
 
@@ -134,13 +130,21 @@ namespace DDay.iCal.Serialization.iCalendar
             public int Compare(ICalendarProperty x, ICalendarProperty y)
             {
                 if (x == y || (x == null && y == null))
+                {
                     return 0;
+                }
                 else if (x == null)
+                {
                     return -1;
+                }
                 else if (y == null)
+                {
                     return 1;
+                }
                 else
+                {
                     return string.Compare(x.Name, y.Name, true);
+                }
             }
 
             #endregion

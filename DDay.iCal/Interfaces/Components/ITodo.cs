@@ -3,8 +3,7 @@ using System.Collections.Generic;
 
 namespace DDay.iCal
 {
-    public interface ITodo :
-        IRecurringComponent
+    public interface ITodo : IRecurringComponent
     {
         /// <summary>
         /// The date/time the todo was completed.

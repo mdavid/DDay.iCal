@@ -12,9 +12,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class Organizer :
-        EncodableDataType,
-        IOrganizer
+    public class Organizer : EncodableDataType, IOrganizer
     {
         #region IOrganizer Members
 
@@ -24,9 +22,13 @@ namespace DDay.iCal
             set
             {
                 if (value != null)
+                {
                     Parameters.Set("SENT-BY", value.OriginalString);
+                }
                 else
-                    Parameters.Set("SENT-BY", (string)null);
+                {
+                    Parameters.Set("SENT-BY", (string) null);
+                }
             }
         }
 
@@ -42,9 +44,13 @@ namespace DDay.iCal
             set
             {
                 if (value != null)
+                {
                     Parameters.Set("DIR", value.OriginalString);
+                }
                 else
-                    Parameters.Set("DIR", (string)null);
+                {
+                    Parameters.Set("DIR", (string) null);
+                }
             }
         }
 
@@ -54,9 +60,9 @@ namespace DDay.iCal
 
         #region Constructors
 
-        public Organizer() : base() { }
-        public Organizer(string value)
-            : this()
+        public Organizer() : base() {}
+
+        public Organizer(string value) : this()
         {
             var serializer = new OrganizerSerializer();
             CopyFrom(serializer.Deserialize(new StringReader(value)) as ICopyable);
@@ -65,7 +71,7 @@ namespace DDay.iCal
         #endregion
 
         #region Overrides
-        
+
         protected bool Equals(Organizer other)
         {
             return Equals(Value, other.Value);
@@ -90,7 +96,9 @@ namespace DDay.iCal
 
         public override int GetHashCode()
         {
-            return (Value != null ? Value.GetHashCode() : 0);
+            return (Value != null
+                ? Value.GetHashCode()
+                : 0);
         }
 
         public override void CopyFrom(ICopyable obj)

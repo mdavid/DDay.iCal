@@ -21,7 +21,7 @@ namespace DDay.iCal
 
         public int Seconds => Math.Abs(Offset.Seconds);
 
-        public UTCOffset() { }
+        public UTCOffset() {}
 
         public UTCOffset(string value) : this()
         {
@@ -60,7 +60,7 @@ namespace DDay.iCal
             {
                 return false;
             }
-            return Equals((UTCOffset)obj);
+            return Equals((UTCOffset) obj);
         }
 
         public override int GetHashCode()
@@ -73,15 +73,18 @@ namespace DDay.iCal
             base.CopyFrom(obj);
             if (obj is IUTCOffset)
             {
-                var utco = (IUTCOffset)obj;
+                var utco = (IUTCOffset) obj;
                 Offset = utco.Offset;
             }
         }
 
         public override string ToString()
         {
-            return (Positive ? "+" : "-") + Hours.ToString("00") + Minutes.ToString("00") +
-                   (Seconds != 0 ? Seconds.ToString("00") : string.Empty);
+            return (Positive
+                ? "+"
+                : "-") + Hours.ToString("00") + Minutes.ToString("00") + (Seconds != 0
+                    ? Seconds.ToString("00")
+                    : string.Empty);
         }
     }
 }

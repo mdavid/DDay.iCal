@@ -2,11 +2,7 @@
 
 namespace DDay.iCal
 {
-    public interface ICalendarObject :
-        IGroupedObject<string>,
-        ILoadable,
-        ICopyable,
-        IServiceProvider
+    public interface ICalendarObject : IGroupedObject<string>, ILoadable, ICopyable, IServiceProvider
     {
         /// <summary>
         /// The name of the calendar object.
@@ -30,6 +26,7 @@ namespace DDay.iCal
         /// is associated with.
         /// </summary>
         IICalendar Calendar { get; }
+
         IICalendar iCalendar { get; }
 
         /// <summary>

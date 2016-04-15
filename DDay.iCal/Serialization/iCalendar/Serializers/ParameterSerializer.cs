@@ -4,18 +4,13 @@ using System.IO;
 
 namespace DDay.iCal.Serialization.iCalendar
 {
-    public class ParameterSerializer :
-        SerializerBase
+    public class ParameterSerializer : SerializerBase
     {
         #region Constructors
 
-        public ParameterSerializer()
-        {
-        }
+        public ParameterSerializer() {}
 
-        public ParameterSerializer(ISerializationContext ctx) : base(ctx)
-        {
-        }
+        public ParameterSerializer(ISerializationContext ctx) : base(ctx) {}
 
         #endregion
 
@@ -23,7 +18,7 @@ namespace DDay.iCal.Serialization.iCalendar
 
         public override Type TargetType
         {
-            get { return typeof(CalendarParameter); }
+            get { return typeof (CalendarParameter); }
         }
 
         public override string SerializeToString(object obj)
@@ -40,8 +35,10 @@ namespace DDay.iCal.Serialization.iCalendar
 
                 // Surround the parameter value with double quotes, if the value
                 // contains any problematic characters.
-                if (value.IndexOfAny(new char[] { ';', ':', ',' }) >= 0)
+                if (value.IndexOfAny(new char[] {';', ':', ','}) >= 0)
+                {
                     value = "\"" + value + "\"";
+                }
                 return result + value;
             }
             return string.Empty;
@@ -64,7 +61,7 @@ namespace DDay.iCal.Serialization.iCalendar
 
             // Return the parsed parameter
             return p;
-        } 
+        }
 
         #endregion
     }

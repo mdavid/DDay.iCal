@@ -9,14 +9,12 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class WeekDay : 
-        EncodableDataType,
-        IWeekDay        
+    public class WeekDay : EncodableDataType, IWeekDay
     {
         #region Private Fields
 
-        private int m_Num = int.MinValue;            
-        private DayOfWeek m_DayOfWeek;            
+        private int m_Num = int.MinValue;
+        private DayOfWeek m_DayOfWeek;
 
         #endregion
 
@@ -43,27 +41,21 @@ namespace DDay.iCal
             Offset = int.MinValue;
         }
 
-        public WeekDay(DayOfWeek day)
-            : this()
+        public WeekDay(DayOfWeek day) : this()
         {
             this.DayOfWeek = day;
         }
 
-        public WeekDay(DayOfWeek day, int num)
-            : this(day)
+        public WeekDay(DayOfWeek day, int num) : this(day)
         {
             this.Offset = num;
         }
 
-        public WeekDay(DayOfWeek day, FrequencyOccurrence type)
-            : this(day, (int)type)
-        {
-        }
+        public WeekDay(DayOfWeek day, FrequencyOccurrence type) : this(day, (int) type) {}
 
         public WeekDay(string value)
         {
-            var serializer =
-                new DDay.iCal.Serialization.iCalendar.WeekDaySerializer();
+            var serializer = new DDay.iCal.Serialization.iCalendar.WeekDaySerializer();
             CopyFrom(serializer.Deserialize(new StringReader(value)) as ICopyable);
         }
 
@@ -75,9 +67,8 @@ namespace DDay.iCal
         {
             if (obj is WeekDay)
             {
-                var ds = (WeekDay)obj;
-                return ds.Offset == Offset &&
-                    ds.DayOfWeek == DayOfWeek;
+                var ds = (WeekDay) obj;
+                return ds.Offset == Offset && ds.DayOfWeek == DayOfWeek;
             }
             return base.Equals(obj);
         }
@@ -92,7 +83,7 @@ namespace DDay.iCal
             base.CopyFrom(obj);
             if (obj is IWeekDay)
             {
-                var bd = (IWeekDay)obj;
+                var bd = (IWeekDay) obj;
                 this.Offset = bd.Offset;
                 this.DayOfWeek = bd.DayOfWeek;
             }
@@ -106,21 +97,29 @@ namespace DDay.iCal
         {
             IWeekDay bd = null;
             if (obj is string)
+            {
                 bd = new WeekDay(obj.ToString());
+            }
             else if (obj is IWeekDay)
-                bd = (IWeekDay)obj;
+            {
+                bd = (IWeekDay) obj;
+            }
 
             if (bd == null)
+            {
                 throw new ArgumentException();
-            else 
+            }
+            else
             {
                 var compare = this.DayOfWeek.CompareTo(bd.DayOfWeek);
                 if (compare == 0)
+                {
                     compare = this.Offset.CompareTo(bd.Offset);
+                }
                 return compare;
             }
         }
 
         #endregion
-    }    
+    }
 }

@@ -15,37 +15,43 @@ namespace DDay.iCal
 
         public static IDateTime StartOfDay(IDateTime dt)
         {
-            return dt.
-                AddHours(-dt.Hour).
-                AddMinutes(-dt.Minute).
-                AddSeconds(-dt.Second);
+            return dt.AddHours(-dt.Hour).AddMinutes(-dt.Minute).AddSeconds(-dt.Second);
         }
 
         public static IDateTime EndOfDay(IDateTime dt)
         {
             return StartOfDay(dt).AddDays(1).AddTicks(-1);
-        }     
+        }
 
         public static DateTime GetSimpleDateTimeData(IDateTime dt)
         {
-            return DateTime.SpecifyKind(dt.Value, dt.IsUniversalTime ? DateTimeKind.Utc : DateTimeKind.Local);
+            return DateTime.SpecifyKind(dt.Value, dt.IsUniversalTime
+                ? DateTimeKind.Utc
+                : DateTimeKind.Local);
         }
 
         public static DateTime SimpleDateTimeToMatch(IDateTime dt, IDateTime toMatch)
         {
             if (toMatch.IsUniversalTime && dt.IsUniversalTime)
+            {
                 return dt.Value;
+            }
             else if (toMatch.IsUniversalTime)
+            {
                 return dt.Value.ToUniversalTime();
+            }
             else if (dt.IsUniversalTime)
+            {
                 return dt.Value.ToLocalTime();
+            }
             else
+            {
                 return dt.Value;
+            }
         }
 
         public static IDateTime MatchTimeZone(IDateTime dt1, IDateTime dt2)
         {
-
             // Associate the date/time with the first.
             var copy = dt2.Copy<IDateTime>();
             copy.AssociateWith(dt1);
@@ -56,8 +62,15 @@ namespace DDay.iCal
             if (dt1.TzId != null)
             {
                 if (!string.Equals(dt1.TzId, copy.TzId))
-                    return (dt1.TimeZoneObservance != null) ? copy.ToTimeZone(dt1.TimeZoneObservance.Value) : copy.ToTimeZone(dt1.TzId);
-                else return copy;
+                {
+                    return (dt1.TimeZoneObservance != null)
+                        ? copy.ToTimeZone(dt1.TimeZoneObservance.Value)
+                        : copy.ToTimeZone(dt1.TzId);
+                }
+                else
+                {
+                    return copy;
+                }
             }
             else if (dt1.IsUniversalTime)
             {
@@ -77,7 +90,9 @@ namespace DDay.iCal
             // NOTE: simplified the execution of this - fixes bug #3119920 - missing weekly occurences also
             dt = dt.AddDays(interval * 7);
             while (dt.DayOfWeek != firstDayOfWeek)
+            {
                 dt = dt.AddDays(-1);
+            }
 
             return dt;
         }
@@ -166,8 +181,8 @@ namespace DDay.iCal
         public static ZonedDateTime ToZonedDateTimeLeniently(DateTime dateTime, string tzId)
         {
             var zone = GetZone(tzId);
-            var localDt = LocalDateTime.FromDateTime(dateTime);//19:00 UTC
-            var lenientZonedDateTime = localDt.InZoneLeniently(zone).WithZone(zone);//15:00 Eastern
+            var localDt = LocalDateTime.FromDateTime(dateTime); //19:00 UTC
+            var lenientZonedDateTime = localDt.InZoneLeniently(zone).WithZone(zone); //15:00 Eastern
             return lenientZonedDateTime;
         }
 

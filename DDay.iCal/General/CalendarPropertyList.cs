@@ -7,9 +7,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class CalendarPropertyList :
-        GroupedValueList<string, ICalendarProperty, CalendarProperty, object>,
-        ICalendarPropertyList
+    public class CalendarPropertyList : GroupedValueList<string, ICalendarProperty, CalendarProperty, object>, ICalendarPropertyList
     {
         #region Private Fields
 
@@ -20,9 +18,7 @@ namespace DDay.iCal
 
         #region Constructors
 
-        public CalendarPropertyList()
-        {
-        }
+        public CalendarPropertyList() {}
 
         public CalendarPropertyList(ICalendarObject parent, bool caseInsensitive)
         {
@@ -33,7 +29,7 @@ namespace DDay.iCal
         }
 
         #endregion
-        
+
         #region Event Handlers
 
         void CalendarPropertyList_ItemRemoved(object sender, ObjectEventArgs<ICalendarProperty, int> e)
@@ -51,7 +47,9 @@ namespace DDay.iCal
         protected override string GroupModifier(string group)
         {
             if (m_CaseInsensitive && group != null)
+            {
                 return group.ToUpper();
+            }
             return group;
         }
 
@@ -61,11 +59,10 @@ namespace DDay.iCal
             {
                 if (ContainsKey(name))
                 {
-                    return AllOf(name)
-                        .FirstOrDefault();
+                    return AllOf(name).FirstOrDefault();
                 }
                 return null;
-            }            
+            }
         }
     }
 }

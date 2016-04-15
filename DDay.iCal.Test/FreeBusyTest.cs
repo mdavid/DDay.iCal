@@ -12,7 +12,7 @@ namespace DDay.iCal.Test
         {
             tzid = "US-Eastern";
         }
-        
+
         /// <summary>
         /// Ensures that GetFreeBusyStatus() return the correct status.
         /// </summary>

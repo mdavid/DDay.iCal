@@ -4,8 +4,7 @@ using System.Linq;
 
 namespace DDay.iCal
 {
-    public class EventEvaluator :
-        RecurringEvaluator
+    public class EventEvaluator : RecurringEvaluator
     {
         #region Protected Properties
 
@@ -19,9 +18,7 @@ namespace DDay.iCal
 
         #region Constructors
 
-        public EventEvaluator(IEvent evt) : base(evt)
-        {
-        }
+        public EventEvaluator(IEvent evt) : base(evt) {}
 
         #endregion
 
@@ -45,11 +42,12 @@ namespace DDay.iCal
         /// <param name="includeReferenceDateInResults"></param>
         /// <returns></returns>
         public override HashSet<IPeriod> Evaluate(IDateTime referenceTime, DateTime periodStart, DateTime periodEnd, bool includeReferenceDateInResults)
-        {   
+        {
             // Evaluate recurrences normally
             base.Evaluate(referenceTime, periodStart, periodEnd, includeReferenceDateInResults);
 
-            foreach (var period in Periods.Where(period => period.EndTime == null)) {
+            foreach (var period in Periods.Where(period => period.EndTime == null))
+            {
                 period.Duration = Event.Duration;
                 period.EndTime = period.Duration == null
                     ? period.StartTime

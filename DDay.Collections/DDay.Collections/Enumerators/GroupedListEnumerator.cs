@@ -2,8 +2,7 @@
 
 namespace DDay.Collections
 {
-    public class GroupedListEnumerator<TType> :
-        IEnumerator<TType>
+    public class GroupedListEnumerator<TType> : IEnumerator<TType>
     {
         IList<IMultiLinkedList<TType>> _Lists;
         IEnumerator<IMultiLinkedList<TType>> _ListsEnumerator;
@@ -19,7 +18,9 @@ namespace DDay.Collections
             get
             {
                 if (_ListEnumerator != null)
+                {
                     return _ListEnumerator.Current;
+                }
                 return default(TType);
             }
         }
@@ -43,7 +44,9 @@ namespace DDay.Collections
             get
             {
                 if (_ListEnumerator != null)
+                {
                     return _ListEnumerator.Current;
+                }
                 return default(TType);
             }
         }
@@ -83,20 +86,23 @@ namespace DDay.Collections
                 {
                     DisposeListEnumerator();
                     if (MoveNextList())
+                    {
                         return MoveNext();
+                    }
                 }
             }
             else
             {
                 if (MoveNextList())
+                {
                     return MoveNext();
+                }
             }
             return false;
         }
 
         public virtual void Reset()
         {
-
             if (_ListsEnumerator != null)
             {
                 _ListsEnumerator.Dispose();

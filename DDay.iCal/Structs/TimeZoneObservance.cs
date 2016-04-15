@@ -19,7 +19,9 @@ namespace DDay.iCal
         public bool Contains(IDateTime dt)
         {
             if (Period != null)
+            {
                 return Period.Contains(dt);
+            }
             return false;
         }
     }

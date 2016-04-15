@@ -13,13 +13,12 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public struct AlarmOccurrence : 
-        IComparable<AlarmOccurrence>
+    public struct AlarmOccurrence : IComparable<AlarmOccurrence>
     {
         #region Private Fields
 
         private IPeriod m_Period;
-        private IRecurringComponent m_Component; 
+        private IRecurringComponent m_Component;
         private IAlarm m_Alarm;
 
         #endregion
@@ -36,7 +35,7 @@ namespace DDay.iCal
         {
             get { return m_Component; }
             set { m_Component = value; }
-        } 
+        }
 
         public IAlarm Alarm
         {

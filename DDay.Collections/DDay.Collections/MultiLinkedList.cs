@@ -2,9 +2,7 @@
 
 namespace DDay.Collections
 {
-    public class MultiLinkedList<TType> :
-        List<TType>,
-        IMultiLinkedList<TType>
+    public class MultiLinkedList<TType> : List<TType>, IMultiLinkedList<TType>
     {
         #region Private Fields
 
@@ -27,12 +25,22 @@ namespace DDay.Collections
 
         public virtual int StartIndex
         {
-            get { return _Previous != null ? _Previous.ExclusiveEnd : 0; }
+            get
+            {
+                return _Previous != null
+                    ? _Previous.ExclusiveEnd
+                    : 0;
+            }
         }
 
         public virtual int ExclusiveEnd
         {
-            get { return Count > 0 ? StartIndex + Count : StartIndex; }
+            get
+            {
+                return Count > 0
+                    ? StartIndex + Count
+                    : StartIndex;
+            }
         }
 
         #endregion

@@ -3,8 +3,7 @@ using System.IO;
 
 namespace DDay.iCal.Serialization.iCalendar
 {
-    public class EnumSerializer :
-        EncodableDataTypeSerializer
+    public class EnumSerializer : EncodableDataTypeSerializer
     {
         #region Private Fields
 
@@ -64,7 +63,7 @@ namespace DDay.iCal.Serialization.iCalendar
                 // Remove "-" characters while parsing Enum values.
                 return Enum.Parse(m_EnumType, value.Replace("-", ""), true);
             }
-            catch { }
+            catch {}
 
             return value;
         }

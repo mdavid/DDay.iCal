@@ -2,9 +2,5 @@
 
 namespace DDay.iCal
 {
-    public interface ICalendarParameterCollectionProxy :
-        ICalendarParameterCollection,
-        IGroupedCollectionProxy<string, ICalendarParameter, ICalendarParameter>
-    {                
-    }
+    public interface ICalendarParameterCollectionProxy : ICalendarParameterCollection, IGroupedCollectionProxy<string, ICalendarParameter, ICalendarParameter> {}
 }

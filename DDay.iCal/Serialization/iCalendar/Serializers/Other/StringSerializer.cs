@@ -6,18 +6,13 @@ using System.Collections;
 
 namespace DDay.iCal.Serialization.iCalendar
 {
-    public class StringSerializer :
-        EncodableDataTypeSerializer
+    public class StringSerializer : EncodableDataTypeSerializer
     {
         #region Constructors
 
-        public StringSerializer()
-        {
-        }
+        public StringSerializer() {}
 
-        public StringSerializer(ISerializationContext ctx) : base(ctx)
-        {
-        }
+        public StringSerializer(ISerializationContext ctx) : base(ctx) {}
 
         #endregion
 
@@ -73,26 +68,28 @@ namespace DDay.iCal.Serialization.iCalendar
 
         public override Type TargetType
         {
-            get { return typeof(string); }
+            get { return typeof (string); }
         }
 
         public override string SerializeToString(object obj)
         {
             if (obj != null)
             {
-                var settings = GetService<ISerializationSettings>();                
+                var settings = GetService<ISerializationSettings>();
 
                 var values = new List<string>();
                 if (obj is string)
                 {
                     // Object to be serialied is a string already
-                    values.Add((string)obj);
+                    values.Add((string) obj);
                 }
                 else if (obj is IEnumerable)
                 {
                     // Object is a list of objects (probably IList<string>).
-                    foreach (var child in (IEnumerable)obj)
+                    foreach (var child in (IEnumerable) obj)
+                    {
                         values.Add(child.ToString());
+                    }
                 }
                 else
                 {
@@ -107,13 +104,17 @@ namespace DDay.iCal.Serialization.iCalendar
                     var dt = new EncodableDataType();
                     dt.AssociatedObject = co;
                     for (var i = 0; i < values.Count; i++)
+                    {
                         values[i] = Encode(dt, Escape(values[i]));
+                    }
 
                     return string.Join(",", values.ToArray());
                 }
-                
+
                 for (var i = 0; i < values.Count; i++)
+                {
                     values[i] = Escape(values[i]);
+                }
                 return string.Join(",", values.ToArray());
             }
             return null;
@@ -137,7 +138,9 @@ namespace DDay.iCal.Serialization.iCalendar
                 // with multiple values per line.
                 var co = SerializationContext.Peek() as ICalendarObject;
                 if (co is ICalendarProperty)
+                {
                     serializeAsList = GetService<IDataTypeMapper>().GetPropertyAllowsMultipleValues(co);
+                }
 
                 value = TextUtil.Normalize(value, SerializationContext).ReadToEnd();
 
@@ -158,7 +161,9 @@ namespace DDay.iCal.Serialization.iCalendar
                     var matches = _unescapedCommas.Matches(value);
                     foreach (Match match in matches)
                     {
-                        var newValue = dt != null ? Decode(dt, value.Substring(i, match.Index - i + 1)) : value.Substring(i, match.Index - i + 1);
+                        var newValue = dt != null
+                            ? Decode(dt, value.Substring(i, match.Index - i + 1))
+                            : value.Substring(i, match.Index - i + 1);
                         escapedValues.Add(newValue);
                         values.Add(Unescape(newValue));
                         i = match.Index + 2;
@@ -167,7 +172,9 @@ namespace DDay.iCal.Serialization.iCalendar
 
                 if (i < value.Length)
                 {
-                    var newValue = dt != null ? Decode(dt, value.Substring(i, value.Length - i)) : value.Substring(i, value.Length - i);
+                    var newValue = dt != null
+                        ? Decode(dt, value.Substring(i, value.Length - i))
+                        : value.Substring(i, value.Length - i);
                     escapedValues.Add(newValue);
                     values.Add(Unescape(newValue));
                 }
@@ -176,23 +183,26 @@ namespace DDay.iCal.Serialization.iCalendar
                 {
                     // Determine if our we're supposed to store extra information during
                     // the serialization process.  If so, let's store the escaped value.
-                    var property = (ICalendarProperty)co;
+                    var property = (ICalendarProperty) co;
                     var settings = GetService<ISerializationSettings>();
-                    if (settings != null &&
-                        settings.StoreExtraSerializationData)
+                    if (settings != null && settings.StoreExtraSerializationData)
                     {
                         // Store the escaped value
-                        co.SetService("EscapedValue", escapedValues.Count == 1 ? 
-                            (object)escapedValues[0] :
-                            (object)escapedValues);
+                        co.SetService("EscapedValue", escapedValues.Count == 1
+                            ? (object) escapedValues[0]
+                            : (object) escapedValues);
                     }
                 }
 
                 // Return either a single value, or the entire list.
                 if (values.Count == 1)
+                {
                     return values[0];
+                }
                 else
-                    return values;                
+                {
+                    return values;
+                }
             }
             return null;
         }

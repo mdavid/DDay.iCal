@@ -12,14 +12,12 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class Todo : 
-        RecurringComponent,
-        ITodo
+    public class Todo : RecurringComponent, ITodo
     {
         #region Private Fields
 
         TodoEvaluator m_Evaluator;
-        
+
         #endregion
 
         #region Public Properties
@@ -38,10 +36,7 @@ namespace DDay.iCal
         /// </summary>
         public override IDateTime DTStart
         {
-            get
-            {
-                return base.DTStart;
-            }
+            get { return base.DTStart; }
             set
             {
                 base.DTStart = value;
@@ -126,8 +121,13 @@ namespace DDay.iCal
                     if (IsLoaded)
                     {
                         if (value == TodoStatus.Completed)
+                        {
                             Completed = iCalDateTime.Now;
-                        else Completed = null;
+                        }
+                        else
+                        {
+                            Completed = null;
+                        }
                     }
 
                     Properties.Set("STATUS", value);
@@ -171,9 +171,10 @@ namespace DDay.iCal
         {
             if (Status == TodoStatus.Completed)
             {
-                if (Completed == null ||
-                    Completed.GreaterThan(currDt))
+                if (Completed == null || Completed.GreaterThan(currDt))
+                {
                     return true;
+                }
 
                 // Evaluate to the previous occurrence.
                 m_Evaluator.EvaluateToPreviousOccurrence(Completed, currDt);
@@ -181,8 +182,10 @@ namespace DDay.iCal
                 foreach (Period p in m_Evaluator.Periods)
                 {
                     if (p.StartTime.GreaterThan(Completed) && // The item has recurred after it was completed
-                        currDt.GreaterThanOrEqual(p.StartTime))     // and the current date is after or on the recurrence date.
+                        currDt.GreaterThanOrEqual(p.StartTime)) // and the current date is after or on the recurrence date.
+                    {
                         return false;
+                    }
                 }
                 return true;
             }
@@ -198,10 +201,17 @@ namespace DDay.iCal
         public virtual bool IsActive(IDateTime currDt)
         {
             if (DTStart == null)
+            {
                 return !IsCompleted(currDt) && !IsCancelled();
+            }
             else if (currDt.GreaterThanOrEqual(DTStart))
+            {
                 return !IsCompleted(currDt) && !IsCancelled();
-            else return false;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -219,10 +229,7 @@ namespace DDay.iCal
 
         protected override bool EvaluationIncludesReferenceDate
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
         }
 
         protected override void OnDeserializing(StreamingContext context)
@@ -239,11 +246,17 @@ namespace DDay.iCal
         private void ExtrapolateTimes()
         {
             if (Due == null && DTStart != null && Duration != default(TimeSpan))
+            {
                 Due = DTStart.Add(Duration);
+            }
             else if (Duration == default(TimeSpan) && DTStart != null && Due != null)
+            {
                 Duration = Due.Subtract(DTStart);
+            }
             else if (DTStart == null && Duration != default(TimeSpan) && Due != null)
+            {
                 DTStart = Due.Subtract(Duration);
+            }
         }
 
         #endregion

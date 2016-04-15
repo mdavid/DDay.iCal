@@ -3,12 +3,11 @@ using System.IO;
 
 namespace DDay.iCal.Serialization.iCalendar
 {
-    public class GeographicLocationSerializer :
-        EncodableDataTypeSerializer
+    public class GeographicLocationSerializer : EncodableDataTypeSerializer
     {
         public override Type TargetType
         {
-            get { return typeof(GeographicLocation); }
+            get { return typeof (GeographicLocation); }
         }
 
         public override string SerializeToString(object obj)
@@ -34,7 +33,9 @@ namespace DDay.iCal.Serialization.iCalendar
 
                 var values = value.Split(';');
                 if (values.Length != 2)
+                {
                     return false;
+                }
 
                 double lat;
                 double lon;

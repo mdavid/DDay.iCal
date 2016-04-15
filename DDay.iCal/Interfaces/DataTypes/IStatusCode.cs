@@ -1,7 +1,6 @@
 ﻿namespace DDay.iCal
 {
-    public interface IStatusCode :
-        IEncodableDataType
+    public interface IStatusCode : IEncodableDataType
     {
         int[] Parts { get; set; }
         int Primary { get; }

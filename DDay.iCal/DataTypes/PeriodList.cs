@@ -13,9 +13,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class PeriodList : 
-        EncodableDataType,
-        IPeriodList
+    public class PeriodList : EncodableDataType, IPeriodList
     {
         #region Private Fields
 
@@ -46,6 +44,7 @@ namespace DDay.iCal
         {
             Initialize();
         }
+
         public PeriodList(string value) : this()
         {
             var serializer = new PeriodListSerializer();
@@ -72,7 +71,7 @@ namespace DDay.iCal
         {
             if (obj is IPeriodList)
             {
-                var r = (IPeriodList)obj;
+                var r = (IPeriodList) obj;
 
                 var p1Enum = GetEnumerator();
                 var p2Enum = r.GetEnumerator();
@@ -80,14 +79,20 @@ namespace DDay.iCal
                 while (p1Enum.MoveNext())
                 {
                     if (!p2Enum.MoveNext())
+                    {
                         return false;
+                    }
 
                     if (!object.Equals(p1Enum.Current, p2Enum.Current))
+                    {
                         return false;
+                    }
                 }
 
                 if (p2Enum.MoveNext())
+                {
                     return false;
+                }
 
                 return true;
             }
@@ -98,18 +103,22 @@ namespace DDay.iCal
         {
             var hashCode = 0;
             foreach (var p in this)
+            {
                 hashCode ^= p.GetHashCode();
+            }
             return hashCode;
         }
- 
+
         public override void CopyFrom(ICopyable obj)
         {
             base.CopyFrom(obj);
             if (obj is IPeriodList)
             {
-                var rdt = (IPeriodList)obj;
+                var rdt = (IPeriodList) obj;
                 foreach (var p in rdt)
+                {
                     Add(p.Copy<IPeriod>());
+                }
             }
         }
 
@@ -128,15 +137,22 @@ namespace DDay.iCal
             var periods = new List<Period>();
 
             if (StartDate > FromDate)
+            {
                 FromDate = StartDate;
+            }
 
-            if (EndDate < FromDate ||
-                FromDate > EndDate)
+            if (EndDate < FromDate || FromDate > EndDate)
+            {
                 return periods;
+            }
 
             foreach (Period p in Periods)
+            {
                 if (!periods.Contains(p))
+                {
                     periods.Add(p);
+                }
+            }
 
             return periods;
         }
@@ -157,14 +173,8 @@ namespace DDay.iCal
 
         public IPeriod this[int index]
         {
-            get
-            {
-                return m_Periods[index];
-            }
-            set
-            {
-                m_Periods[index] = value;
-            }
+            get { return m_Periods[index]; }
+            set { m_Periods[index] = value; }
         }
 
         #endregion

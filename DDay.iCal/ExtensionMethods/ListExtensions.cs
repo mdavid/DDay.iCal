@@ -9,7 +9,9 @@ namespace DDay.iCal
             if (values != null)
             {
                 foreach (var item in values)
+                {
                     list.Add(item);
+                }
             }
         }
     }

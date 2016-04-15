@@ -3,12 +3,11 @@ using System.IO;
 
 namespace DDay.iCal.Serialization.iCalendar
 {
-    public class TriggerSerializer :
-        StringSerializer
+    public class TriggerSerializer : StringSerializer
     {
         public override Type TargetType
         {
-            get { return typeof(Trigger); }
+            get { return typeof (Trigger); }
         }
 
         public override string SerializeToString(object obj)
@@ -25,11 +24,13 @@ namespace DDay.iCal.Serialization.iCalendar
                         var factory = GetService<ISerializerFactory>();
                         if (factory != null)
                         {
-                            var valueType = t.GetValueType() ?? typeof(TimeSpan);
+                            var valueType = t.GetValueType() ?? typeof (TimeSpan);
                             var serializer = factory.Build(valueType, SerializationContext) as IStringSerializer;
                             if (serializer != null)
                             {
-                                var value = (valueType == typeof(IDateTime)) ? (object)t.DateTime : (object)t.Duration;
+                                var value = (valueType == typeof (IDateTime))
+                                    ? (object) t.DateTime
+                                    : (object) t.Duration;
                                 return serializer.SerializeToString(value);
                             }
                         }
@@ -63,8 +64,7 @@ namespace DDay.iCal.Serialization.iCalendar
                     value = Decode(t, value);
 
                     // Set the trigger relation
-                    if (t.Parameters.ContainsKey("RELATED") &&
-                        t.Parameters.Get("RELATED").Equals("END"))
+                    if (t.Parameters.ContainsKey("RELATED") && t.Parameters.Get("RELATED").Equals("END"))
                     {
                         t.Related = TriggerRelation.End;
                     }
@@ -72,7 +72,7 @@ namespace DDay.iCal.Serialization.iCalendar
                     var factory = GetService<ISerializerFactory>();
                     if (factory != null)
                     {
-                        var valueType = t.GetValueType() ?? typeof(TimeSpan);
+                        var valueType = t.GetValueType() ?? typeof (TimeSpan);
                         var serializer = factory.Build(valueType, SerializationContext) as IStringSerializer;
                         if (serializer != null)
                         {
@@ -80,9 +80,13 @@ namespace DDay.iCal.Serialization.iCalendar
                             if (obj != null)
                             {
                                 if (obj is IDateTime)
-                                    t.DateTime = (IDateTime)obj;
+                                {
+                                    t.DateTime = (IDateTime) obj;
+                                }
                                 else
-                                    t.Duration = (TimeSpan)obj;
+                                {
+                                    t.Duration = (TimeSpan) obj;
+                                }
 
                                 return t;
                             }

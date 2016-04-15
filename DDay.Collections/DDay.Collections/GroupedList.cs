@@ -10,9 +10,7 @@ namespace DDay.Collections
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class GroupedList<TGroup, TItem> :
-        IGroupedList<TGroup, TItem>
-        where TItem : class, IGroupedObject<TGroup>
+    public class GroupedList<TGroup, TItem> : IGroupedList<TGroup, TItem> where TItem : class, IGroupedObject<TGroup>
     {
         #region Protected Fields
 
@@ -26,14 +24,18 @@ namespace DDay.Collections
         TItem SubscribeToKeyChanges(TItem item)
         {
             if (item != null)
+            {
                 item.GroupChanged += item_GroupChanged;
+            }
             return item;
         }
 
         TItem UnsubscribeFromKeyChanges(TItem item)
         {
             if (item != null)
+            {
                 item.GroupChanged -= item_GroupChanged;
+            }
             return item;
         }
 
@@ -44,7 +46,9 @@ namespace DDay.Collections
         protected virtual TGroup GroupModifier(TGroup group)
         {
             if (group == null)
+            {
                 throw new ArgumentNullException("The item's group cannot be null.");
+            }
 
             return group;
         }
@@ -86,8 +90,7 @@ namespace DDay.Collections
             foreach (var list in _Lists)
             {
                 var startIndex = list.StartIndex;
-                if (list.StartIndex <= index &&
-                    list.ExclusiveEnd > index)
+                if (list.StartIndex <= index && list.ExclusiveEnd > index)
                 {
                     relativeIndex = index - list.StartIndex;
                     return list;
@@ -138,7 +141,9 @@ namespace DDay.Collections
 
                 // If a new group exists, then re-add this item into the hash
                 if (!object.Equals(newValue, default(TGroup)))
+                {
                     Add(obj);
+                }
             }
         }
 
@@ -155,13 +160,17 @@ namespace DDay.Collections
         protected void OnItemAdded(TItem obj, int index)
         {
             if (ItemAdded != null)
+            {
                 ItemAdded(this, new ObjectEventArgs<TItem, int>(obj, index));
+            }
         }
 
         protected void OnItemRemoved(TItem obj, int index)
         {
             if (ItemRemoved != null)
+            {
                 ItemRemoved(this, new ObjectEventArgs<TItem, int>(obj, index));
+            }
         }
 
         public virtual void Add(TItem item)
@@ -193,7 +202,9 @@ namespace DDay.Collections
 
                 // Return the index within the overall KeyedList
                 if (index >= 0)
+                {
                     return list.StartIndex + index;
+                }
             }
             return -1;
         }
@@ -206,7 +217,7 @@ namespace DDay.Collections
             {
                 // Get the list associated with the group
                 var list = _Dictionary[group].ToArray();
-                
+
                 // Save the number of items in the list
                 var count = list.Length;
 
@@ -219,7 +230,9 @@ namespace DDay.Collections
 
                 // Notify that each of these items were removed
                 for (var i = list.Length - 1; i >= 0; i--)
+                {
                     OnItemRemoved(UnsubscribeFromKeyChanges(list[i]), startIndex + i);
+                }
             }
         }
 
@@ -234,7 +247,9 @@ namespace DDay.Collections
 
             // Notify that each item was removed
             for (var i = items.Length - 1; i >= 0; i--)
+            {
                 OnItemRemoved(UnsubscribeFromKeyChanges(items[i]), i);
+            }
         }
 
         public virtual bool ContainsKey(TGroup group)
@@ -245,17 +260,16 @@ namespace DDay.Collections
 
         public virtual int Count
         {
-            get
-            {
-                return _Lists.Sum(list => list.Count);
-            }
+            get { return _Lists.Sum(list => list.Count); }
         }
 
         public virtual int CountOf(TGroup group)
         {
             group = GroupModifier(group);
             if (_Dictionary.ContainsKey(group))
+            {
                 return _Dictionary[group].Count;
+            }
             return 0;
         }
 
@@ -268,10 +282,12 @@ namespace DDay.Collections
         {
             group = GroupModifier(group);
             if (_Dictionary.ContainsKey(group))
+            {
                 return _Dictionary[group];
+            }
             return new TItem[0];
         }
-        
+
         public virtual bool Remove(TItem obj)
         {
             var group = GroupModifier(obj.Group);
@@ -334,7 +350,7 @@ namespace DDay.Collections
                 _Lists.Add(list);
             }
         }
-        
+
         #endregion
 
         #region ICollection<TObject> Members
@@ -343,7 +359,9 @@ namespace DDay.Collections
         {
             var group = GroupModifier(item.Group);
             if (_Dictionary.ContainsKey(group))
+            {
                 return _Dictionary[group].Contains(item);
+            }
             return false;
         }
 
@@ -391,7 +409,9 @@ namespace DDay.Collections
                 int relativeIndex;
                 var list = ListForIndex(index, out relativeIndex);
                 if (list != null)
+                {
                     return list[relativeIndex];
+                }
                 return default(TItem);
             }
             set
@@ -429,5 +449,5 @@ namespace DDay.Collections
         }
 
         #endregion
-    }    
+    }
 }

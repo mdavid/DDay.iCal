@@ -12,7 +12,7 @@ namespace DDay.iCal.Test
         {
             tzid = "US-Eastern";
         }
-        
+
         /// <summary>
         /// Ensures that events can be properly added to a calendar.
         /// </summary>
@@ -20,15 +20,15 @@ namespace DDay.iCal.Test
         public void Add1()
         {
             IICalendar iCal = new iCalendar();
-            
+
             var evt = new Event();
             evt.Summary = "Testing";
             evt.Start = new iCalDateTime(2010, 3, 25);
             evt.End = new iCalDateTime(2010, 3, 26);
-            
+
             iCal.Events.Add(evt);
             Assert.AreEqual(1, iCal.Children.Count);
-            Assert.AreSame(evt, iCal.Children[0]);            
+            Assert.AreSame(evt, iCal.Children[0]);
         }
 
         /// <summary>

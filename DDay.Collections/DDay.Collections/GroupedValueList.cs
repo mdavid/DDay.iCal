@@ -4,17 +4,14 @@ using System.Linq;
 
 namespace DDay.Collections
 {
-    public class GroupedValueList<TGroup, TInterface, TItem, TValueType> :
-        GroupedList<TGroup, TInterface>,
-        IGroupedValueList<TGroup, TInterface, TItem, TValueType>
-        where TInterface : class, IGroupedObject<TGroup>, IValueObject<TValueType>
-        where TItem : new()        
+    public class GroupedValueList<TGroup, TInterface, TItem, TValueType> : GroupedList<TGroup, TInterface>,
+        IGroupedValueList<TGroup, TInterface, TItem, TValueType> where TInterface : class, IGroupedObject<TGroup>, IValueObject<TValueType> where TItem : new()
     {
         #region IKeyedValueList<TGroup, TObject, TValueType> Members
 
         public virtual void Set(TGroup group, TValueType value)
         {
-            Set(group, new TValueType[] { value });
+            Set(group, new TValueType[] {value});
         }
 
         public virtual void Set(TGroup group, IEnumerable<TValueType> values)
@@ -31,7 +28,7 @@ namespace DDay.Collections
             }
 
             // No matching item was found, add a new item to the list
-            var obj = Activator.CreateInstance(typeof(TItem)) as TInterface;
+            var obj = Activator.CreateInstance(typeof (TItem)) as TInterface;
 
             // Set the group for the object
             obj.Group = group;
@@ -46,13 +43,9 @@ namespace DDay.Collections
         public virtual TType Get<TType>(TGroup group)
         {
             var firstItem = AllOf(group).FirstOrDefault();
-            if (firstItem != null &&
-                firstItem.Values != null)
+            if (firstItem != null && firstItem.Values != null)
             {
-                return firstItem
-                    .Values
-                    .OfType<TType>()
-                    .FirstOrDefault();
+                return firstItem.Values.OfType<TType>().FirstOrDefault();
             }
             return default(TType);
         }

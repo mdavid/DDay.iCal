@@ -4,8 +4,7 @@ using DDay.iCal.Serialization.iCalendar;
 
 namespace DDay.iCal.Serialization
 {
-    public class SerializationContext :        
-        ISerializationContext
+    public class SerializationContext : ISerializationContext
     {
         #region Static Private Fields
 
@@ -58,10 +57,10 @@ namespace DDay.iCal.Serialization
             SetService(new ComponentFactory());
             SetService(new DataTypeMapper());
             SetService(new EncodingStack());
-            SetService(new EncodingProvider(this));            
+            SetService(new EncodingProvider(this));
             SetService(new CompositeProcessor<IICalendar>());
             SetService(new CompositeProcessor<ICalendarComponent>());
-            SetService(new CompositeProcessor<ICalendarProperty>());            
+            SetService(new CompositeProcessor<ICalendarProperty>());
         }
 
         #endregion
@@ -71,7 +70,9 @@ namespace DDay.iCal.Serialization
         public virtual void Push(object item)
         {
             if (item != null)
+            {
                 m_Stack.Push(new WeakReference(item));
+            }
         }
 
         public virtual object Pop()
@@ -80,7 +81,9 @@ namespace DDay.iCal.Serialization
             {
                 var r = m_Stack.Pop();
                 if (r.IsAlive)
+                {
                     return r.Target;
+                }
             }
             return null;
         }
@@ -91,7 +94,9 @@ namespace DDay.iCal.Serialization
             {
                 var r = m_Stack.Peek();
                 if (r.IsAlive)
+                {
                     return r.Target;
+                }
             }
             return null;
         }

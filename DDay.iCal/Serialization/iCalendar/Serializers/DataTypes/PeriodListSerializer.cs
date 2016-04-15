@@ -4,12 +4,11 @@ using System.IO;
 
 namespace DDay.iCal.Serialization.iCalendar
 {
-    public class PeriodListSerializer :
-        EncodableDataTypeSerializer
+    public class PeriodListSerializer : EncodableDataTypeSerializer
     {
         public override Type TargetType
         {
-            get { return typeof(PeriodList); }
+            get { return typeof (PeriodList); }
         }
 
         public override string SerializeToString(object obj)
@@ -19,8 +18,8 @@ namespace DDay.iCal.Serialization.iCalendar
 
             if (rdt != null && factory != null)
             {
-                var dtSerializer = factory.Build(typeof(IDateTime), SerializationContext) as IStringSerializer;
-                var periodSerializer = factory.Build(typeof(IPeriod), SerializationContext) as IStringSerializer;
+                var dtSerializer = factory.Build(typeof (IDateTime), SerializationContext) as IStringSerializer;
+                var periodSerializer = factory.Build(typeof (IPeriod), SerializationContext) as IStringSerializer;
                 if (dtSerializer != null && periodSerializer != null)
                 {
                     var parts = new List<string>();
@@ -28,9 +27,13 @@ namespace DDay.iCal.Serialization.iCalendar
                     foreach (var p in rdt)
                     {
                         if (p.EndTime != null)
+                        {
                             parts.Add(periodSerializer.SerializeToString(p));
+                        }
                         else if (p.StartTime != null)
+                        {
                             parts.Add(dtSerializer.SerializeToString(p.StartTime));
+                        }
                     }
 
                     return Encode(rdt, string.Join(",", parts.ToArray()));
@@ -51,8 +54,8 @@ namespace DDay.iCal.Serialization.iCalendar
                 // Decode the value, if necessary
                 value = Decode(rdt, value);
 
-                var dtSerializer = factory.Build(typeof(IDateTime), SerializationContext) as IStringSerializer;
-                var periodSerializer = factory.Build(typeof(IPeriod), SerializationContext) as IStringSerializer;
+                var dtSerializer = factory.Build(typeof (IDateTime), SerializationContext) as IStringSerializer;
+                var periodSerializer = factory.Build(typeof (IPeriod), SerializationContext) as IStringSerializer;
                 if (dtSerializer != null && periodSerializer != null)
                 {
                     var values = value.Split(',');

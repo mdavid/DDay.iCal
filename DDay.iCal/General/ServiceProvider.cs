@@ -17,22 +17,28 @@ namespace DDay.iCal
         public virtual object GetService(Type serviceType)
         {
             if (m_TypedServices.ContainsKey(serviceType))
+            {
                 return m_TypedServices[serviceType];
+            }
             return null;
         }
 
         public virtual object GetService(string name)
         {
             if (m_NamedServices.ContainsKey(name))
+            {
                 return m_NamedServices[name];
+            }
             return null;
         }
 
         public virtual T GetService<T>()
         {
-            var service = GetService(typeof(T));
+            var service = GetService(typeof (T));
             if (service is T)
-                return (T)service;
+            {
+                return (T) service;
+            }
             return default(T);
         }
 
@@ -40,14 +46,18 @@ namespace DDay.iCal
         {
             var service = GetService(name);
             if (service is T)
-                return (T)service;
+            {
+                return (T) service;
+            }
             return default(T);
         }
 
         public virtual void SetService(string name, object obj)
         {
             if (!string.IsNullOrEmpty(name) && obj != null)
+            {
                 m_NamedServices[name] = obj;
+            }
         }
 
         public virtual void SetService(object obj)
@@ -59,7 +69,9 @@ namespace DDay.iCal
 
                 // Get interfaces for the given type
                 foreach (var iface in type.GetInterfaces())
+                {
                     m_TypedServices[iface] = obj;
+                }
             }
         }
 
@@ -68,13 +80,17 @@ namespace DDay.iCal
             if (type != null)
             {
                 if (m_TypedServices.ContainsKey(type))
+                {
                     m_TypedServices.Remove(type);
+                }
 
                 // Get interfaces for the given type
                 foreach (var iface in type.GetInterfaces())
                 {
                     if (m_TypedServices.ContainsKey(iface))
+                    {
                         m_TypedServices.Remove(iface);
+                    }
                 }
             }
         }
@@ -82,7 +98,9 @@ namespace DDay.iCal
         public virtual void RemoveService(string name)
         {
             if (m_NamedServices.ContainsKey(name))
+            {
                 m_NamedServices.Remove(name);
+            }
         }
 
         #endregion

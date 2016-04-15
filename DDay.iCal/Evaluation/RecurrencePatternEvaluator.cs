@@ -44,9 +44,7 @@ namespace DDay.iCal
     /// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
     /// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     /// </summary>
-
-    public class RecurrencePatternEvaluator :
-        Evaluator
+    public class RecurrencePatternEvaluator : Evaluator
     {
         // FIXME: in ical4j this is configurable.
         private static int maxIncrementCount = 1000;
@@ -60,9 +58,9 @@ namespace DDay.iCal
         #region Constructors
 
         public RecurrencePatternEvaluator(IRecurrencePattern pattern)
-	    {
+        {
             Pattern = pattern;
-	    }
+        }
 
         #endregion
 
@@ -75,20 +73,25 @@ namespace DDay.iCal
 
             // Convert the UNTIL value to one that matches the same time information as the reference date
             if (r.Until != DateTime.MinValue)
+            {
                 r.Until = DateUtil.MatchTimeZone(referenceDate, new iCalDateTime(r.Until)).Value;
+            }
 
-            if (r.Frequency > FrequencyType.Secondly &&
-                r.BySecond.Count == 0 &&
-                referenceDate.HasTime /* NOTE: Fixes a bug where all-day events have BySecond/ByMinute/ByHour added incorrectly */)
+            if (r.Frequency > FrequencyType.Secondly && r.BySecond.Count == 0 && referenceDate.HasTime
+                /* NOTE: Fixes a bug where all-day events have BySecond/ByMinute/ByHour added incorrectly */)
+            {
                 r.BySecond.Add(referenceDate.Second);
-            if (r.Frequency > FrequencyType.Minutely &&
-                r.ByMinute.Count == 0 &&
-                referenceDate.HasTime /* NOTE: Fixes a bug where all-day events have BySecond/ByMinute/ByHour added incorrectly */)
+            }
+            if (r.Frequency > FrequencyType.Minutely && r.ByMinute.Count == 0 && referenceDate.HasTime
+                /* NOTE: Fixes a bug where all-day events have BySecond/ByMinute/ByHour added incorrectly */)
+            {
                 r.ByMinute.Add(referenceDate.Minute);
-            if (r.Frequency > FrequencyType.Hourly &&
-                r.ByHour.Count == 0 &&
-                referenceDate.HasTime /* NOTE: Fixes a bug where all-day events have BySecond/ByMinute/ByHour added incorrectly */)
+            }
+            if (r.Frequency > FrequencyType.Hourly && r.ByHour.Count == 0 && referenceDate.HasTime
+                /* NOTE: Fixes a bug where all-day events have BySecond/ByMinute/ByHour added incorrectly */)
+            {
                 r.ByHour.Add(referenceDate.Hour);
+            }
 
             // If BYDAY, BYYEARDAY, or BYWEEKNO is specified, then
             // we don't default BYDAY, BYMONTH or BYMONTHDAY
@@ -99,32 +102,27 @@ namespace DDay.iCal
                 // If BYWEEKNO is specified and BYMONTHDAY/BYYEARDAY is not specified,
                 // then let's add BYDAY to BYWEEKNO.
                 // NOTE: fixes YearlyByWeekNoX() handling
-                if (r.Frequency == FrequencyType.Weekly ||
-                    (
-                        r.ByWeekNo.Count > 0 &&
-                        r.ByMonthDay.Count == 0 &&
-                        r.ByYearDay.Count == 0
-                    ))
+                if (r.Frequency == FrequencyType.Weekly || (r.ByWeekNo.Count > 0 && r.ByMonthDay.Count == 0 && r.ByYearDay.Count == 0))
+                {
                     r.ByDay.Add(new WeekDay(referenceDate.DayOfWeek));
+                }
 
                 // If BYMONTHDAY is not specified,
                 // default to the current day of month.
                 // NOTE: fixes YearlyByMonth1() handling, added BYYEARDAY exclusion
                 // to fix YearlyCountByYearDay1() handling
-                if (r.Frequency > FrequencyType.Weekly &&
-                    r.ByWeekNo.Count == 0 &&
-                    r.ByYearDay.Count == 0 &&
-                    r.ByMonthDay.Count == 0)
+                if (r.Frequency > FrequencyType.Weekly && r.ByWeekNo.Count == 0 && r.ByYearDay.Count == 0 && r.ByMonthDay.Count == 0)
+                {
                     r.ByMonthDay.Add(referenceDate.Day);
+                }
 
                 // If BYMONTH is not specified, default to
                 // the current month.
                 // NOTE: fixes YearlyCountByYearDay1() handling
-                if (r.Frequency > FrequencyType.Monthly &&
-                    r.ByWeekNo.Count == 0 &&
-                    r.ByYearDay.Count == 0 &&
-                    r.ByMonth.Count == 0)
+                if (r.Frequency > FrequencyType.Monthly && r.ByWeekNo.Count == 0 && r.ByYearDay.Count == 0 && r.ByMonth.Count == 0)
+                {
                     r.ByMonth.Add(referenceDate.Month);
+                }
             }
 
             return r;
@@ -143,66 +141,88 @@ namespace DDay.iCal
                         switch (pattern.Frequency)
                         {
                             case FrequencyType.Secondly:
+                            {
+                                switch (evaluationRestriction)
                                 {
-                                    switch (evaluationRestriction)
-                                    {
-                                        case RecurrenceRestrictionType.Default:
-                                        case RecurrenceRestrictionType.RestrictSecondly: pattern.Frequency = FrequencyType.Minutely; break;
-                                        case RecurrenceRestrictionType.RestrictMinutely: pattern.Frequency = FrequencyType.Hourly; break;
-                                        case RecurrenceRestrictionType.RestrictHourly: pattern.Frequency = FrequencyType.Daily; break;
-                                    }
-                                } break;
+                                    case RecurrenceRestrictionType.Default:
+                                    case RecurrenceRestrictionType.RestrictSecondly:
+                                        pattern.Frequency = FrequencyType.Minutely;
+                                        break;
+                                    case RecurrenceRestrictionType.RestrictMinutely:
+                                        pattern.Frequency = FrequencyType.Hourly;
+                                        break;
+                                    case RecurrenceRestrictionType.RestrictHourly:
+                                        pattern.Frequency = FrequencyType.Daily;
+                                        break;
+                                }
+                            }
+                                break;
                             case FrequencyType.Minutely:
+                            {
+                                switch (evaluationRestriction)
                                 {
-                                    switch (evaluationRestriction)
-                                    {
-                                        case RecurrenceRestrictionType.RestrictMinutely: pattern.Frequency = FrequencyType.Hourly; break;
-                                        case RecurrenceRestrictionType.RestrictHourly: pattern.Frequency = FrequencyType.Daily; break;
-                                    }
-                                } break;
+                                    case RecurrenceRestrictionType.RestrictMinutely:
+                                        pattern.Frequency = FrequencyType.Hourly;
+                                        break;
+                                    case RecurrenceRestrictionType.RestrictHourly:
+                                        pattern.Frequency = FrequencyType.Daily;
+                                        break;
+                                }
+                            }
+                                break;
                             case FrequencyType.Hourly:
+                            {
+                                switch (evaluationRestriction)
                                 {
-                                    switch (evaluationRestriction)
-                                    {
-                                        case RecurrenceRestrictionType.RestrictHourly: pattern.Frequency = FrequencyType.Daily; break;
-                                    }
-                                } break;
-                            default: break;
-                        } break;
+                                    case RecurrenceRestrictionType.RestrictHourly:
+                                        pattern.Frequency = FrequencyType.Daily;
+                                        break;
+                                }
+                            }
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
                     case RecurrenceEvaluationModeType.ThrowException:
                     case RecurrenceEvaluationModeType.Default:
                         switch (pattern.Frequency)
                         {
                             case FrequencyType.Secondly:
+                            {
+                                switch (evaluationRestriction)
                                 {
-                                    switch (evaluationRestriction)
-                                    {
-                                        case RecurrenceRestrictionType.Default:
-                                        case RecurrenceRestrictionType.RestrictSecondly:
-                                        case RecurrenceRestrictionType.RestrictMinutely:
-                                        case RecurrenceRestrictionType.RestrictHourly:
-                                            throw new EvaluationEngineException();
-                                    }
-                                } break;
+                                    case RecurrenceRestrictionType.Default:
+                                    case RecurrenceRestrictionType.RestrictSecondly:
+                                    case RecurrenceRestrictionType.RestrictMinutely:
+                                    case RecurrenceRestrictionType.RestrictHourly:
+                                        throw new EvaluationEngineException();
+                                }
+                            }
+                                break;
                             case FrequencyType.Minutely:
+                            {
+                                switch (evaluationRestriction)
                                 {
-                                    switch (evaluationRestriction)
-                                    {
-                                        case RecurrenceRestrictionType.RestrictMinutely:
-                                        case RecurrenceRestrictionType.RestrictHourly:
-                                            throw new EvaluationEngineException();
-                                    }
-                                } break;
+                                    case RecurrenceRestrictionType.RestrictMinutely:
+                                    case RecurrenceRestrictionType.RestrictHourly:
+                                        throw new EvaluationEngineException();
+                                }
+                            }
+                                break;
                             case FrequencyType.Hourly:
+                            {
+                                switch (evaluationRestriction)
                                 {
-                                    switch (evaluationRestriction)
-                                    {
-                                        case RecurrenceRestrictionType.RestrictHourly:
-                                            throw new EvaluationEngineException();
-                                    }
-                                } break;
-                            default: break;
-                        } break;
+                                    case RecurrenceRestrictionType.RestrictHourly:
+                                        throw new EvaluationEngineException();
+                                }
+                            }
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
                 }
             }
         }
@@ -214,14 +234,18 @@ namespace DDay.iCal
          * Wed, Mar 23, 12:19PM, but the recurrence is Mon - Fri, 9:00AM - 5:00PM, the start dates returned should all be at
          * 9:00AM, and not 12:19PM.
          */
-        private HashSet<DateTime> GetDates(IDateTime seed, DateTime periodStart, DateTime periodEnd, int maxCount, IRecurrencePattern pattern, bool includeReferenceDateInResults)
-        {            
+
+        private HashSet<DateTime> GetDates(IDateTime seed, DateTime periodStart, DateTime periodEnd, int maxCount, IRecurrencePattern pattern,
+            bool includeReferenceDateInResults)
+        {
             var dates = new HashSet<DateTime>();
             var originalDate = DateUtil.GetSimpleDateTimeData(seed);
             var seedCopy = DateUtil.GetSimpleDateTimeData(seed);
 
             if (includeReferenceDateInResults)
+            {
                 dates.Add(seedCopy);
+            }
 
             // optimize the start time for selecting candidates
             // (only applicable where a COUNT is not specified)
@@ -244,13 +268,19 @@ namespace DDay.iCal
             while ((maxCount < 0) || (dates.Count < maxCount))
             {
                 if (pattern.Until != DateTime.MinValue && candidate != DateTime.MinValue && candidate > pattern.Until)
+                {
                     break;
+                }
 
                 if (periodEnd != null && candidate != DateTime.MinValue && candidate > periodEnd)
+                {
                     break;
-                                
+                }
+
                 if (pattern.Count >= 1 && (dates.Count + invalidCandidateCount) >= pattern.Count)
-                    break;                
+                {
+                    break;
+                }
 
                 var candidates = GetCandidates(seedCopy, pattern, expandBehavior);
                 if (candidates.Count > 0)
@@ -286,16 +316,18 @@ namespace DDay.iCal
                                 if (!dates.Contains(candidate) && (pattern.Until == DateTime.MinValue || utcCandidate <= pattern.Until))
                                 {
                                     dates.Add(candidate);
-                                }                                
+                                }
                             }
                         }
                     }
-                } 
+                }
                 else
                 {
                     noCandidateIncrementCount++;
                     if ((maxIncrementCount > 0) && (noCandidateIncrementCount > maxIncrementCount))
+                    {
                         break;
+                    }
                 }
 
                 IncrementDate(ref seedCopy, pattern, pattern.Interval);
@@ -304,13 +336,14 @@ namespace DDay.iCal
             // sort final list..
             return dates;
         }
-        
+
         /**
          * Returns a list of possible dates generated from the applicable BY* rules, using the specified date as a seed.
          * @param date the seed date
          * @param value the type of date list to return
          * @return a DateList
          */
+
         private List<DateTime> GetCandidates(DateTime date, IRecurrencePattern pattern, bool?[] expandBehaviors)
         {
             var dates = new List<DateTime>(10) {date};
@@ -331,11 +364,14 @@ namespace DDay.iCal
          * positions are ignored.
          * @param dates
          */
+
         private List<DateTime> ApplySetPosRules(List<DateTime> dates, IRecurrencePattern pattern)
         {
             // return if no SETPOS rules specified..
             if (pattern.BySetPosition.Count == 0)
+            {
                 return dates;
+            }
 
             // sort the list before processing..
             dates.Sort();
@@ -364,10 +400,13 @@ namespace DDay.iCal
          * @param dates
          * @return
          */
+
         private List<DateTime> GetMonthVariants(List<DateTime> dates, IRecurrencePattern pattern, bool? expand)
         {
             if (expand == null || pattern.ByMonth.Count == 0)
+            {
                 return dates;
+            }
 
             if (expand.HasValue && expand.Value)
             {
@@ -394,10 +433,13 @@ namespace DDay.iCal
                     for (var j = 0; j < pattern.ByMonth.Count; j++)
                     {
                         if (date.Month == pattern.ByMonth[j])
+                        {
                             goto Next;
+                        }
                     }
                     dates.RemoveAt(i);
-                Next: ;
+                    Next:
+                    ;
                 }
                 return dates;
             }
@@ -409,10 +451,13 @@ namespace DDay.iCal
          * @param dates
          * @return
          */
+
         private List<DateTime> GetWeekNoVariants(List<DateTime> dates, IRecurrencePattern pattern, bool? expand)
         {
             if (expand == null || pattern.ByWeekNo.Count == 0)
+            {
                 return dates;
+            }
 
             if (expand.HasValue && expand.Value)
             {
@@ -443,7 +488,9 @@ namespace DDay.iCal
 
                         // Step backward single days until we're at the correct DayOfWeek
                         while (date.DayOfWeek != pattern.FirstDayOfWeek)
+                        {
                             date = date.AddDays(-1);
+                        }
 
                         for (var k = 0; k < 7; k++)
                         {
@@ -469,11 +516,14 @@ namespace DDay.iCal
                         var currWeekNo = Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, pattern.FirstDayOfWeek);
 
                         if (weekNo == currWeekNo)
+                        {
                             goto Next;
+                        }
                     }
 
                     dates.RemoveAt(i);
-                Next: ;
+                    Next:
+                    ;
                 }
                 return dates;
             }
@@ -485,10 +535,13 @@ namespace DDay.iCal
          * @param dates
          * @return
          */
+
         private List<DateTime> GetYearDayVariants(List<DateTime> dates, IRecurrencePattern pattern, bool? expand)
         {
             if (expand == null || pattern.ByYearDay.Count == 0)
+            {
                 return dates;
+            }
 
             if (expand.HasValue && expand.Value)
             {
@@ -503,9 +556,13 @@ namespace DDay.iCal
 
                         DateTime newDate;
                         if (yearDay > 0)
+                        {
                             newDate = date.AddDays(-date.DayOfYear + yearDay);
+                        }
                         else
+                        {
                             newDate = date.AddDays(-date.DayOfYear + 1).AddYears(1).AddDays(yearDay);
+                        }
 
                         yearDayDates.Add(newDate);
                     }
@@ -524,16 +581,23 @@ namespace DDay.iCal
 
                         DateTime newDate;
                         if (yearDay > 0)
+                        {
                             newDate = date.AddDays(-date.DayOfYear + yearDay);
+                        }
                         else
+                        {
                             newDate = date.AddDays(-date.DayOfYear + 1).AddYears(1).AddDays(yearDay);
+                        }
 
                         if (newDate.DayOfYear == date.DayOfYear)
+                        {
                             goto Next;
+                        }
                     }
 
                     dates.RemoveAt(i);
-                Next: ;                    
+                    Next:
+                    ;
                 }
 
                 return dates;
@@ -546,10 +610,13 @@ namespace DDay.iCal
          * @param dates
          * @return
          */
+
         private List<DateTime> GetMonthDayVariants(List<DateTime> dates, IRecurrencePattern pattern, bool? expand)
         {
             if (expand == null || pattern.ByMonthDay.Count == 0)
+            {
                 return dates;
+            }
 
             if (expand.HasValue && expand.Value)
             {
@@ -568,9 +635,13 @@ namespace DDay.iCal
                             // Account for positive or negative numbers
                             DateTime newDate;
                             if (monthDay > 0)
+                            {
                                 newDate = date.AddDays(-date.Day + monthDay);
+                            }
                             else
+                            {
                                 newDate = date.AddDays(-date.Day + 1).AddMonths(1).AddDays(monthDay);
+                            }
 
                             monthDayDates.Add(newDate);
                         }
@@ -590,23 +661,32 @@ namespace DDay.iCal
 
                         var daysInMonth = Calendar.GetDaysInMonth(date.Year, date.Month);
                         if (Math.Abs(monthDay) > daysInMonth)
+                        {
                             throw new ArgumentException("Invalid day of month: " + date + " (day " + monthDay + ")");
+                        }
 
                         // Account for positive or negative numbers
                         DateTime newDate;
                         if (monthDay > 0)
+                        {
                             newDate = date.AddDays(-date.Day + monthDay);
+                        }
                         else
+                        {
                             newDate = date.AddDays(-date.Day + 1).AddMonths(1).AddDays(monthDay);
+                        }
 
                         if (newDate.Day.Equals(date.Day))
+                        {
                             goto Next;
+                        }
                     }
 
-                Next: ;
+                    Next:
+                    ;
                     dates.RemoveAt(i);
-                }                
-            
+                }
+
                 return dates;
             }
         }
@@ -617,10 +697,13 @@ namespace DDay.iCal
          * @param dates
          * @return
          */
+
         private List<DateTime> GetDayVariants(List<DateTime> dates, IRecurrencePattern pattern, bool? expand)
         {
             if (expand == null || pattern.ByDay.Count == 0)
+            {
                 return dates;
+            }
 
             if (expand.HasValue && expand.Value)
             {
@@ -651,11 +734,14 @@ namespace DDay.iCal
                             // If no offset is specified, simply test the day of week!
                             // FIXME: test with offset...
                             if (date.DayOfWeek.Equals(weekDay.DayOfWeek))
+                            {
                                 goto Next;
+                            }
                         }
                     }
                     dates.RemoveAt(i);
-                Next: ;
+                    Next:
+                    ;
                 }
 
                 return dates;
@@ -669,6 +755,7 @@ namespace DDay.iCal
          * @param weekDay
          * @return
          */
+
         private List<DateTime> GetAbsWeekDays(DateTime date, IWeekDay weekDay, IRecurrencePattern pattern, bool? expand)
         {
             var days = new List<DateTime>();
@@ -677,7 +764,9 @@ namespace DDay.iCal
             if (pattern.Frequency == FrequencyType.Daily)
             {
                 if (date.DayOfWeek == dayOfWeek)
+                {
                     days.Add(date);
+                }
             }
             else if (pattern.Frequency == FrequencyType.Weekly || pattern.ByWeekNo.Count > 0)
             {
@@ -685,8 +774,10 @@ namespace DDay.iCal
 
                 // construct a list of possible week days..
                 while (date.DayOfWeek != dayOfWeek)
+                {
                     date = date.AddDays(1);
-                
+                }
+
                 while (Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, pattern.FirstDayOfWeek) == weekNo)
                 {
                     days.Add(date);
@@ -700,7 +791,9 @@ namespace DDay.iCal
                 // construct a list of possible month days..
                 date = date.AddDays(-date.Day + 1);
                 while (date.DayOfWeek != dayOfWeek)
+                {
                     date = date.AddDays(1);
+                }
 
                 while (date.Month == month)
                 {
@@ -711,11 +804,13 @@ namespace DDay.iCal
             else if (pattern.Frequency == FrequencyType.Yearly)
             {
                 var year = date.Year;
-                
+
                 // construct a list of possible year days..
                 date = date.AddDays(-date.DayOfYear + 1);
                 while (date.DayOfWeek != dayOfWeek)
+                {
                     date = date.AddDays(1);
+                }
 
                 while (date.Year == year)
                 {
@@ -734,14 +829,17 @@ namespace DDay.iCal
          * @param offset
          * @param sublist
          */
+
         private List<DateTime> GetOffsetDates(List<DateTime> dates, int offset)
         {
-            if (offset == int.MinValue) 
+            if (offset == int.MinValue)
+            {
                 return dates;
-            
+            }
+
             var offsetDates = new List<DateTime>();
             var size = dates.Count;
-            if (offset < 0 && offset >= -size) 
+            if (offset < 0 && offset >= -size)
             {
                 offsetDates.Add(dates[size + offset]);
             }
@@ -758,10 +856,13 @@ namespace DDay.iCal
          * @param dates
          * @return
          */
+
         private List<DateTime> GetHourVariants(List<DateTime> dates, IRecurrencePattern pattern, bool? expand)
         {
             if (expand == null || pattern.ByHour.Count == 0)
+            {
                 return dates;
+            }
 
             if (expand.HasValue && expand.Value)
             {
@@ -789,11 +890,14 @@ namespace DDay.iCal
                     {
                         var hour = pattern.ByHour[j];
                         if (date.Hour == hour)
+                        {
                             goto Next;
+                        }
                     }
                     // Remove unmatched dates
                     dates.RemoveAt(i);
-                Next: ;
+                    Next:
+                    ;
                 }
                 return dates;
             }
@@ -805,10 +909,13 @@ namespace DDay.iCal
          * @param dates
          * @return
          */
+
         private List<DateTime> GetMinuteVariants(List<DateTime> dates, IRecurrencePattern pattern, bool? expand)
         {
             if (expand == null || pattern.ByMinute.Count == 0)
+            {
                 return dates;
+            }
 
             if (expand.HasValue && expand.Value)
             {
@@ -836,11 +943,14 @@ namespace DDay.iCal
                     {
                         var minute = pattern.ByMinute[j];
                         if (date.Minute == minute)
+                        {
                             goto Next;
+                        }
                     }
                     // Remove unmatched dates
                     dates.RemoveAt(i);
-                Next: ;
+                    Next:
+                    ;
                 }
                 return dates;
             }
@@ -852,11 +962,14 @@ namespace DDay.iCal
          * @param dates
          * @return
          */
+
         private List<DateTime> GetSecondVariants(List<DateTime> dates, IRecurrencePattern pattern, bool? expand)
         {
             if (expand == null || pattern.BySecond.Count == 0)
+            {
                 return dates;
-                        
+            }
+
             if (expand.HasValue && expand.Value)
             {
                 // Expand behavior
@@ -883,14 +996,17 @@ namespace DDay.iCal
                     {
                         var second = pattern.BySecond[j];
                         if (date.Second == second)
+                        {
                             goto Next;
+                        }
                     }
                     // Remove unmatched dates
                     dates.RemoveAt(i);
-                Next: ;
+                    Next:
+                    ;
                 }
                 return dates;
-            }            
+            }
         }
 
         #endregion
@@ -946,12 +1062,14 @@ namespace DDay.iCal
             //Periods = new HashSet<IPeriod>();
 
             foreach (var dt in GetDates(referenceDate, periodStart, periodEnd, -1, pattern, includeReferenceDateInResults))
-            {                
+            {
                 // Create a period from the date/time.
                 var p = CreatePeriod(dt, referenceDate);
-                
+
                 if (!Periods.Contains(p))
+                {
                     Periods.Add(p);
+                }
             }
 
             return Periods;

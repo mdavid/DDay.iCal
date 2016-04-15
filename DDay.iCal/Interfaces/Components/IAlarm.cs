@@ -3,8 +3,7 @@ using System.Collections.Generic;
 
 namespace DDay.iCal
 {
-    public interface IAlarm :
-        ICalendarComponent
+    public interface IAlarm : ICalendarComponent
     {
         AlarmAction Action { get; set; }
         IAttachment Attachment { get; set; }
@@ -30,5 +29,5 @@ namespace DDay.iCal
         /// <param name="toDate">The latest date/time to poll trigerred alarms for.</param>
         /// <returns>A list of <see cref="AlarmOccurrence"/> objects, each containing a triggered alarm.</returns>
         IList<AlarmOccurrence> Poll(IDateTime fromDate, IDateTime toDate);
-    }    
+    }
 }

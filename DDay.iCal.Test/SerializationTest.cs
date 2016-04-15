@@ -24,11 +24,17 @@ namespace DDay.iCal.Test
             tzid = "US-Eastern";
         }
 
-        private void SerializeTest(string filename, Type iCalSerializerType) { SerializeTest(filename, typeof(iCalendar), iCalSerializerType); }
+        private void SerializeTest(string filename, Type iCalSerializerType)
+        {
+            SerializeTest(filename, typeof (iCalendar), iCalSerializerType);
+        }
+
         private void SerializeTest(string filename, Type iCalType, Type iCalSerializerType)
         {
             if (!Directory.Exists(@"Calendars\Serialization\Temp"))
+            {
                 Directory.CreateDirectory(@"Calendars\Serialization\Temp");
+            }
 
             var serializer = Activator.CreateInstance(iCalSerializerType) as ISerializer;
             Assert.IsNotNull(serializer);
@@ -41,11 +47,16 @@ namespace DDay.iCal.Test
 
             Assert.IsTrue(iCal1.UniqueComponents.Count > 0, "iCalendar has no unique components; it must to be used in SerializeTest(). Did it load correctly?");
 
-            var fs = new FileStream(@"Calendars\Serialization\Temp\" + Path.GetFileNameWithoutExtension(filename) + "_Serialized" + Path.GetExtension(filename), FileMode.Create, FileAccess.Write);
+            var fs = new FileStream(
+                @"Calendars\Serialization\Temp\" + Path.GetFileNameWithoutExtension(filename) + "_Serialized" + Path.GetExtension(filename), FileMode.Create,
+                FileAccess.Write);
             serializer.Serialize(iCal1, fs, Encoding.UTF8);
             fs.Close();
 
-            var iCal2 = iCalendar.LoadFromFile(@"Calendars\Serialization\Temp\" + Path.GetFileNameWithoutExtension(filename) + "_Serialized" + Path.GetExtension(filename), Encoding.UTF8, serializer)[0];
+            var iCal2 =
+                iCalendar.LoadFromFile(
+                    @"Calendars\Serialization\Temp\" + Path.GetFileNameWithoutExtension(filename) + "_Serialized" + Path.GetExtension(filename), Encoding.UTF8,
+                    serializer)[0];
 
             CompareCalendars(iCal1, iCal2);
         }
@@ -78,19 +89,27 @@ namespace DDay.iCal.Test
                     {
                         Assert.AreEqual(p1, p2, "The properties '" + p1.Name + "' are not equal.");
                         if (p1.Value is IComparable)
-                            Assert.AreEqual(0, ((IComparable)p1.Value).CompareTo(p2.Value), "The '" + p1.Name + "' property values do not match.");
+                        {
+                            Assert.AreEqual(0, ((IComparable) p1.Value).CompareTo(p2.Value), "The '" + p1.Name + "' property values do not match.");
+                        }
                         else if (p1.Value is IEnumerable)
-                            CompareEnumerables((IEnumerable)p1.Value, (IEnumerable)p2.Value, p1.Name);
+                        {
+                            CompareEnumerables((IEnumerable) p1.Value, (IEnumerable) p2.Value, p1.Name);
+                        }
                         else
+                        {
                             Assert.AreEqual(p1.Value, p2.Value, "The '" + p1.Name + "' property values are not equal.");
+                        }
 
                         isMatch = true;
                         break;
                     }
-                    catch { }
+                    catch {}
                 }
 
-                Assert.IsTrue(isMatch, "Could not find a matching property - " + p1.Name + ":" + (p1.Value != null ? p1.Value.ToString() : string.Empty));                    
+                Assert.IsTrue(isMatch, "Could not find a matching property - " + p1.Name + ":" + (p1.Value != null
+                    ? p1.Value.ToString()
+                    : string.Empty));
             }
 
             Assert.AreEqual(cb1.Children.Count, cb2.Children.Count, "The number of children are not equal.");
@@ -99,16 +118,22 @@ namespace DDay.iCal.Test
                 var child1 = cb1.Children[i] as ICalendarComponent;
                 var child2 = cb2.Children[i] as ICalendarComponent;
                 if (child1 != null && child2 != null)
+                {
                     CompareComponents(child1, child2);
+                }
                 else
+                {
                     Assert.AreEqual(child1, child2, "The child objects are not equal.");
+                }
             }
         }
 
         public static void CompareEnumerables(IEnumerable a1, IEnumerable a2, string value)
         {
             if (a1 == null && a2 == null)
+            {
                 return;
+            }
 
             Assert.IsFalse((a1 == null && a2 != null) || (a1 != null && a2 == null), value + " do not match - one item is null");
 
@@ -116,7 +141,9 @@ namespace DDay.iCal.Test
             var enum2 = a2.GetEnumerator();
 
             while (enum1.MoveNext() && enum2.MoveNext())
+            {
                 Assert.AreEqual(enum1.Current, enum2.Current, value + " do not match");
+            }
         }
 
         /// <summary>
@@ -141,7 +168,9 @@ namespace DDay.iCal.Test
 
             var serializer = new iCalendarSerializer();
             if (!Directory.Exists(@"Calendars\Serialization\Temp"))
+            {
                 Directory.CreateDirectory(@"Calendars\Serialization\Temp");
+            }
             serializer.Serialize(iCal, @"Calendars\Serialization\Temp\Attachment1.ics");
 
             iCal = iCalendar.LoadFromFile(@"Calendars\Serialization\Temp\Attachment1.ics")[0];
@@ -170,7 +199,9 @@ namespace DDay.iCal.Test
             var sb = new StringBuilder();
             // If we copy it 300 times, we should end up with a file over 2.5MB in size.
             for (var i = 0; i < 300; i++)
+            {
                 sb.AppendLine(loremIpsum);
+            }
 
             // Add an attachment to this event
             IAttachment attachment = new Attachment();
@@ -179,7 +210,9 @@ namespace DDay.iCal.Test
 
             var serializer = new iCalendarSerializer();
             if (!Directory.Exists(@"Calendars\Serialization\Temp"))
+            {
                 Directory.CreateDirectory(@"Calendars\Serialization\Temp");
+            }
             serializer.Serialize(iCal, @"Calendars\Serialization\Temp\Attachment2.ics");
 
             iCal = iCalendar.LoadFromFile(@"Calendars\Serialization\Temp\Attachment2.ics")[0];
@@ -199,14 +232,14 @@ namespace DDay.iCal.Test
         //[Test, Category("Serialization")]     //Broken in dday
         public void Attachment3()
         {
-            SerializeTest("Attachment3.ics", typeof(iCalendarSerializer));
+            SerializeTest("Attachment3.ics", typeof (iCalendarSerializer));
         }
 
         /// <summary>
         /// At times, this may throw a WebException if an internet connection is not present.
         /// This is safely ignored.
         /// </summary>
-        [Test, ExpectedException(typeof(WebException))]
+        [Test, ExpectedException(typeof (WebException))]
         public void Attachment4()
         {
             var iCal = iCalendar.LoadFromFile(@"Calendars\Serialization\Attachment4.ics")[0];
@@ -233,12 +266,12 @@ namespace DDay.iCal.Test
         [Test, Category("Serialization")]
         public void Attendee1()
         {
-            var iCal = iCalendar.LoadFromFile(typeof(iCalendar), @"Calendars\Serialization\Attendee1.ics", Encoding.UTF8)[0];
+            var iCal = iCalendar.LoadFromFile(typeof (iCalendar), @"Calendars\Serialization\Attendee1.ics", Encoding.UTF8)[0];
             Assert.AreEqual(1, iCal.Events.Count);
-            
+
             var evt = iCal.Events.First();
             // Ensure there are 2 attendees
-            Assert.AreEqual(2, evt.Attendees.Count);            
+            Assert.AreEqual(2, evt.Attendees.Count);
 
             var attendee1 = evt.Attendees[0];
             var attendee2 = evt.Attendees[1];
@@ -270,7 +303,7 @@ namespace DDay.iCal.Test
         [Test, Category("Serialization")]
         public void Attendee2()
         {
-            var iCal = iCalendar.LoadFromFile(typeof(iCalendar), @"Calendars\Serialization\Attendee2.ics", Encoding.UTF8)[0];
+            var iCal = iCalendar.LoadFromFile(typeof (iCalendar), @"Calendars\Serialization\Attendee2.ics", Encoding.UTF8)[0];
             Assert.AreEqual(1, iCal.Events.Count);
 
             var evt = iCal.Events.First();
@@ -297,7 +330,7 @@ namespace DDay.iCal.Test
         [Test, Category("Serialization")]
         public void Bug2033495()
         {
-            var iCal = iCalendar.LoadFromFile(typeof(iCalendar), @"Calendars\Serialization\Bug2033495.ics", Encoding.UTF8)[0];
+            var iCal = iCalendar.LoadFromFile(typeof (iCalendar), @"Calendars\Serialization\Bug2033495.ics", Encoding.UTF8)[0];
             Assert.AreEqual(1, iCal.Events.Count);
             Assert.AreEqual(iCal.Properties["X-LOTUS-CHILD_UID"].Value, "XXX");
         }
@@ -308,7 +341,7 @@ namespace DDay.iCal.Test
         //[Test, Category("Serialization")]     //Broken in dday
         public void Bug2148092()
         {
-            SerializeTest("Bug2148092.ics", typeof(iCalendarSerializer));
+            SerializeTest("Bug2148092.ics", typeof (iCalendarSerializer));
         }
 
         /// <summary>
@@ -384,7 +417,7 @@ namespace DDay.iCal.Test
         //[Test, Category("Serialization")]     //Broken in dday
         public void Calendar1()
         {
-            SerializeTest("Calendar1.ics", typeof(iCalendarSerializer));
+            SerializeTest("Calendar1.ics", typeof (iCalendarSerializer));
         }
 
         /// <summary>
@@ -394,25 +427,25 @@ namespace DDay.iCal.Test
         //[Test, Category("Serialization")]     //Broken in dday
         public void CalendarParameters2()
         {
-            SerializeTest("CalendarParameters2.ics", typeof(iCalendarSerializer));
+            SerializeTest("CalendarParameters2.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void CaseInsensitive1()
         {
-            SerializeTest("CaseInsensitive1.ics", typeof(iCalendarSerializer));
+            SerializeTest("CaseInsensitive1.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void CaseInsensitive2()
         {
-            SerializeTest("CaseInsensitive2.ics", typeof(iCalendarSerializer));
+            SerializeTest("CaseInsensitive2.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void CaseInsensitive3()
         {
-            SerializeTest("CaseInsensitive3.ics", typeof(iCalendarSerializer));
+            SerializeTest("CaseInsensitive3.ics", typeof (iCalendarSerializer));
         }
 
         /// <summary>
@@ -428,7 +461,7 @@ namespace DDay.iCal.Test
         //[Test, Category("Serialization")]     //Broken in dday
         public void Categories1_1()
         {
-            SerializeTest("Categories1.ics", typeof(iCalendarSerializer));
+            SerializeTest("Categories1.ics", typeof (iCalendarSerializer));
         }
 
         [Test, Category("Serialization")]
@@ -440,22 +473,22 @@ namespace DDay.iCal.Test
 
             var items = new ArrayList();
             items.AddRange(new string[]
-            {
-                "One", "Two", "Three",
-                "Four", "Five", "Six",
-                "Seven", "A string of text with nothing less than a comma, semicolon; and a newline\n."
-            });
+            {"One", "Two", "Three", "Four", "Five", "Six", "Seven", "A string of text with nothing less than a comma, semicolon; and a newline\n."});
 
             var found = new Hashtable();
 
             foreach (var s in evt.Categories)
             {
                 if (items.Contains(s))
+                {
                     found[s] = true;
+                }
             }
 
             foreach (string item in items)
+            {
                 Assert.IsTrue(found.ContainsKey(item), "Event should contain CATEGORY '" + item + "', but it was not found.");
+            }
         }
 
         [Test, Category("Serialization")]
@@ -503,20 +536,18 @@ namespace DDay.iCal.Test
             var evt = iCal.Events.First();
 
             Assert.AreEqual(
-"This is a test to try out base64 encoding without being too large.\r\n" +
-"This is a test to try out base64 encoding without being too large.\r\n" +
-"This is a test to try out base64 encoding without being too large.\r\n" +
-"This is a test to try out base64 encoding without being too large.\r\n" +
-"This is a test to try out base64 encoding without being too large.\r\n" +
-"This is a test to try out base64 encoding without being too large.\r\n" +
-"This is a test to try out base64 encoding without being too large.\r\n" +
-"This is a test to try out base64 encoding without being too large.\r\n" +
-"This is a test to try out base64 encoding without being too large.\r\n" +
-"This is a test to try out base64 encoding without being too large.\r\n" +
-"This is a test to try out base64 encoding without being too large.\r\n" +
-"This is a test to try out base64 encoding without being too large.",
-                evt.Attachments[0].Value,
-                "Attached value does not match.");
+                "This is a test to try out base64 encoding without being too large.\r\n" +
+                "This is a test to try out base64 encoding without being too large.\r\n" +
+                "This is a test to try out base64 encoding without being too large.\r\n" +
+                "This is a test to try out base64 encoding without being too large.\r\n" +
+                "This is a test to try out base64 encoding without being too large.\r\n" +
+                "This is a test to try out base64 encoding without being too large.\r\n" +
+                "This is a test to try out base64 encoding without being too large.\r\n" +
+                "This is a test to try out base64 encoding without being too large.\r\n" +
+                "This is a test to try out base64 encoding without being too large.\r\n" +
+                "This is a test to try out base64 encoding without being too large.\r\n" +
+                "This is a test to try out base64 encoding without being too large.\r\n" + "This is a test to try out base64 encoding without being too large.",
+                evt.Attachments[0].Value, "Attached value does not match.");
         }
 
         [Test]
@@ -533,25 +564,25 @@ namespace DDay.iCal.Test
         //[Test, Category("Serialization")]     //Broken in dday
         public void Event1()
         {
-            SerializeTest("Event1.ics", typeof(iCalendarSerializer));
+            SerializeTest("Event1.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void Event2()
         {
-            SerializeTest("Event2.ics", typeof(iCalendarSerializer));
+            SerializeTest("Event2.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void Event3()
         {
-            SerializeTest("Event3.ics", typeof(iCalendarSerializer));
+            SerializeTest("Event3.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void Event4()
         {
-            SerializeTest("Event4.ics", typeof(iCalendarSerializer));
+            SerializeTest("Event4.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
@@ -580,10 +611,13 @@ namespace DDay.iCal.Test
             var eventSerializer = new EventSerializer();
             var evtString = eventSerializer.SerializeToString(evt);
 
-            Assert.IsTrue(evtString.Equals("BEGIN:VEVENT\r\nCREATED:20070319T000000Z\r\nDTEND;VALUE=DATE:20070320\r\nDTSTAMP:20070319T000000Z\r\nDTSTART;VALUE=DATE:20070319\r\nRRULE:FREQ=WEEKLY;INTERVAL=3;COUNT=4;BYDAY=TU,FR,SU\r\nSEQUENCE:0\r\nSUMMARY:Test event title\r\nUID:123456789\r\nEND:VEVENT\r\n"), "ComponentBaseSerializer.SerializeToString() serialized incorrectly");
+            Assert.IsTrue(
+                evtString.Equals(
+                    "BEGIN:VEVENT\r\nCREATED:20070319T000000Z\r\nDTEND;VALUE=DATE:20070320\r\nDTSTAMP:20070319T000000Z\r\nDTSTART;VALUE=DATE:20070319\r\nRRULE:FREQ=WEEKLY;INTERVAL=3;COUNT=4;BYDAY=TU,FR,SU\r\nSEQUENCE:0\r\nSUMMARY:Test event title\r\nUID:123456789\r\nEND:VEVENT\r\n"),
+                "ComponentBaseSerializer.SerializeToString() serialized incorrectly");
 
             serializer.Serialize(iCal, @"Calendars\Serialization\Event5.ics");
-            SerializeTest("Event5.ics", typeof(iCalendarSerializer));
+            SerializeTest("Event5.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
@@ -658,7 +692,7 @@ END:VCALENDAR
             var serializer = new iCalendarSerializer();
             serializer.Serialize(calendar, @"Calendars\Serialization\Event7.ics");
 
-            SerializeTest("Event7.ics", typeof(iCalendarSerializer));
+            SerializeTest("Event7.ics", typeof (iCalendarSerializer));
         }
 
         [Test, Category("Serialization")]
@@ -717,7 +751,7 @@ END:VCALENDAR
             var serializer = new iCalendarSerializer();
             serializer.Serialize(freeBusyCalendar, @"Calendars\Serialization\FreeBusy1.ics");
 
-            SerializeTest("FreeBusy1.ics", typeof(iCalendarSerializer));
+            SerializeTest("FreeBusy1.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
@@ -735,10 +769,7 @@ END:VCALENDAR
             evt.Attendees.Add(attendee);
 
             IICalendar freeBusyCalendar = new iCalendar();
-            var freeBusy = iCal.GetFreeBusy(
-                null, 
-                new IAttendee[] { new Attendee("mailto:test@test.com") }, 
-                new iCalDateTime(2010, 10, 1, 0, 0, 0), 
+            var freeBusy = iCal.GetFreeBusy(null, new IAttendee[] {new Attendee("mailto:test@test.com")}, new iCalDateTime(2010, 10, 1, 0, 0, 0),
                 new iCalDateTime(2010, 10, 7, 11, 59, 59));
 
             freeBusyCalendar.AddChild(freeBusy);
@@ -746,13 +777,13 @@ END:VCALENDAR
             var serializer = new iCalendarSerializer();
             serializer.Serialize(freeBusyCalendar, @"Calendars\Serialization\FreeBusy2.ics");
 
-            SerializeTest("FreeBusy2.ics", typeof(iCalendarSerializer));
+            SerializeTest("FreeBusy2.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void GeographicLocation1_1()
         {
-            SerializeTest("GeographicLocation1.ics", typeof(iCalendarSerializer));
+            SerializeTest("GeographicLocation1.ics", typeof (iCalendarSerializer));
         }
 
         [Test]
@@ -780,15 +811,14 @@ END:VCALENDAR
 
             var DateTimes = new iCalDateTime[]
             {
-                new iCalDateTime(2006, 12, 18, 7, 0, 0, tzid),
-                new iCalDateTime(2006, 12, 19, 7, 0, 0, tzid),
-                new iCalDateTime(2006, 12, 20, 7, 0, 0, tzid),
-                new iCalDateTime(2006, 12, 21, 7, 0, 0, tzid),
-                new iCalDateTime(2006, 12, 22, 7, 0, 0, tzid)
+                new iCalDateTime(2006, 12, 18, 7, 0, 0, tzid), new iCalDateTime(2006, 12, 19, 7, 0, 0, tzid), new iCalDateTime(2006, 12, 20, 7, 0, 0, tzid),
+                new iCalDateTime(2006, 12, 21, 7, 0, 0, tzid), new iCalDateTime(2006, 12, 22, 7, 0, 0, tzid)
             };
 
             for (var i = 0; i < DateTimes.Length; i++)
+            {
                 Assert.AreEqual(DateTimes[i], occurrences[i].Period.StartTime, "Event should occur at " + DateTimes[i]);
+            }
 
             Assert.AreEqual(DateTimes.Length, occurrences.Count, "There should be exactly " + DateTimes.Length + " occurrences; there were " + occurrences.Count);
         }
@@ -802,10 +832,10 @@ END:VCALENDAR
             var iCal = iCalendar.LoadFromFile(@"Calendars\Serialization\RecurrenceDates1.ics")[0];
             Assert.AreEqual(1, iCal.Events.Count);
             Assert.AreEqual(3, iCal.Events.First().RecurrenceDates.Count);
-            
-            Assert.AreEqual((iCalDateTime)new DateTime(1997, 7, 14, 12, 30, 0, DateTimeKind.Utc), iCal.Events.First().RecurrenceDates[0][0].StartTime);
-            Assert.AreEqual((iCalDateTime)new DateTime(1996, 4, 3, 2, 0, 0, DateTimeKind.Utc), iCal.Events.First().RecurrenceDates[1][0].StartTime);
-            Assert.AreEqual((iCalDateTime)new DateTime(1996, 4, 3, 4, 0, 0, DateTimeKind.Utc), iCal.Events.First().RecurrenceDates[1][0].EndTime);
+
+            Assert.AreEqual((iCalDateTime) new DateTime(1997, 7, 14, 12, 30, 0, DateTimeKind.Utc), iCal.Events.First().RecurrenceDates[0][0].StartTime);
+            Assert.AreEqual((iCalDateTime) new DateTime(1996, 4, 3, 2, 0, 0, DateTimeKind.Utc), iCal.Events.First().RecurrenceDates[1][0].StartTime);
+            Assert.AreEqual((iCalDateTime) new DateTime(1996, 4, 3, 4, 0, 0, DateTimeKind.Utc), iCal.Events.First().RecurrenceDates[1][0].EndTime);
             Assert.AreEqual(new iCalDateTime(1997, 1, 1), iCal.Events.First().RecurrenceDates[2][0].StartTime);
             Assert.AreEqual(new iCalDateTime(1997, 1, 20), iCal.Events.First().RecurrenceDates[2][1].StartTime);
             Assert.AreEqual(new iCalDateTime(1997, 2, 17), iCal.Events.First().RecurrenceDates[2][2].StartTime);
@@ -903,7 +933,7 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
             var serializer = new iCalendarSerializer(iCal);
             serializer.Serialize(@"Calendars\Serialization\String1.ics");
 
-            SerializeTest("String1.ics", typeof(iCalendarSerializer));
+            SerializeTest("String1.ics", typeof (iCalendarSerializer));
         }
 
         /// <summary>
@@ -914,16 +944,16 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
         {
             var serializer = new StringSerializer();
             var value = @"test\with\;characters";
-            var unescaped = (string)serializer.Deserialize(new StringReader(value));
+            var unescaped = (string) serializer.Deserialize(new StringReader(value));
 
             Assert.AreEqual(@"test\with;characters", unescaped, "String unescaping was incorrect.");
 
             value = @"C:\Path\To\My\New\Information";
-            unescaped = (string)serializer.Deserialize(new StringReader(value));
+            unescaped = (string) serializer.Deserialize(new StringReader(value));
             Assert.AreEqual("C:\\Path\\To\\My\new\\Information", unescaped, "String unescaping was incorrect.");
 
             value = @"\""This\r\nis\Na\, test\""\;\\;,";
-            unescaped = (string)serializer.Deserialize(new StringReader(value));
+            unescaped = (string) serializer.Deserialize(new StringReader(value));
 
             Assert.AreEqual("\"This\\r\nis\na, test\";\\;,", unescaped, "String unescaping was incorrect.");
         }
@@ -956,7 +986,9 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
 
             var tz = iCal.TimeZones[0];
             foreach (iCalTimeZoneInfo tzi in tz.TimeZoneInfos)
+            {
                 tzi.Start = new iCalDateTime(2007, 1, 1);
+            }
 
             var serializer = new iCalendarSerializer();
             serializer.Serialize(iCal, @"Calendars\Serialization\Temp\TimeZone2.ics");
@@ -966,10 +998,7 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
 
             foreach (iCalTimeZoneInfo tzi in tz.TimeZoneInfos)
             {
-                Assert.AreEqual(
-                    0,
-                    tzi.Properties["DTSTART"].Parameters.CountOf("VALUE"),
-                    "\"DTSTART\" property MUST be represented in local time in timezones");
+                Assert.AreEqual(0, tzi.Properties["DTSTART"].Parameters.CountOf("VALUE"), "\"DTSTART\" property MUST be represented in local time in timezones");
             }
 
             //
@@ -992,15 +1021,14 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
 
             foreach (iCalTimeZoneInfo tzi in tz.TimeZoneInfos)
             {
-                Assert.AreEqual(0, tzi.Properties["DTSTART"].Parameters.CountOf("VALUE"),
-                    "\"DTSTART\" property MUST be represented in local time in timezones");
+                Assert.AreEqual(0, tzi.Properties["DTSTART"].Parameters.CountOf("VALUE"), "\"DTSTART\" property MUST be represented in local time in timezones");
             }
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void TimeZone3()
         {
-            SerializeTest("TimeZone3.ics", typeof(iCalendarSerializer));
+            SerializeTest("TimeZone3.ics", typeof (iCalendarSerializer));
 
             var iCal = new iCalendar();
             var tmp_cal = iCalendar.LoadFromFile(@"Calendars\Serialization\TimeZone3.ics")[0];
@@ -1013,53 +1041,53 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
         //[Test, Category("Serialization")]     //Broken in dday
         public void Todo1()
         {
-            SerializeTest("Todo1.ics", typeof(iCalendarSerializer));
+            SerializeTest("Todo1.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void Todo2()
         {
-            SerializeTest("Todo2.ics", typeof(iCalendarSerializer));
+            SerializeTest("Todo2.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void Todo3()
         {
-            SerializeTest("Todo3.ics", typeof(iCalendarSerializer));
+            SerializeTest("Todo3.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void Todo4()
         {
-            SerializeTest("Todo4.ics", typeof(iCalendarSerializer));
+            SerializeTest("Todo4.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void Todo5()
         {
-            SerializeTest("Todo5.ics", typeof(iCalendarSerializer));
+            SerializeTest("Todo5.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void Todo6()
         {
-            SerializeTest("Todo6.ics", typeof(iCalendarSerializer));
+            SerializeTest("Todo6.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void Todo7()
         {
-            SerializeTest("Todo7.ics", typeof(iCalendarSerializer));
+            SerializeTest("Todo7.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void Transparency1()
         {
             var iCal = iCalendar.LoadFromFile(@"Calendars\Serialization\Transparency1.ics")[0];
-            
+
             Assert.AreEqual(1, iCal.Events.Count);
             var evt = iCal.Events.First();
-            
+
             Assert.AreEqual(TransparencyType.Opaque, evt.Transparency);
         }
 
@@ -1077,19 +1105,19 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
         //[Test, Category("Serialization")]     //Broken in dday
         public void Trigger1()
         {
-            SerializeTest("Trigger1.ics", typeof(iCalendarSerializer));            
+            SerializeTest("Trigger1.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void XProperty1()
         {
-            SerializeTest("XProperty1.ics", typeof(iCalendarSerializer));
+            SerializeTest("XProperty1.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void XProperty2()
         {
-            SerializeTest("XProperty2.ics", typeof(iCalendarSerializer));
+            SerializeTest("XProperty2.ics", typeof (iCalendarSerializer));
         }
 
         /// <summary>
@@ -1105,7 +1133,7 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
             htmlBuilder.Append("<HTML><HEAD><META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html;charset=iso-8859-1\"></HEAD><BODY>");
             htmlBuilder.Append("<B>Test</B>");
             htmlBuilder.Append("</BODY></HTML>");
-                        
+
             ICalendarProperty p = new CalendarProperty("X-ALT-DESC", htmlBuilder.ToString());
             p.Parameters.Add(new CalendarParameter("FMTTYPE", "text/html"));
             evt.Properties.Add(p);
@@ -1113,7 +1141,7 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
             var serializer = new iCalendarSerializer();
             serializer.Serialize(iCal, @"Calendars\Serialization\XProperty3.ics");
 
-            SerializeTest("XProperty3.ics", typeof(iCalendarSerializer));
+            SerializeTest("XProperty3.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
@@ -1141,7 +1169,7 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
 
             Assert.IsFalse(Regex.IsMatch(output, @"\r\n[\r\n]"));
 
-            SerializeTest("XProperty4.ics", typeof(iCalendarSerializer));
+            SerializeTest("XProperty4.ics", typeof (iCalendarSerializer));
         }
 
         // FIXME: re-implement
@@ -1184,16 +1212,6 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
         //    SerializeTest("SERIALIZE17.ics", typeof(CustomICal1), typeof(iCalendarSerializer));
         //}
 
-        
-
-        
-             
-
-        
-
-        
-
-        
 
         // FIXME: re-implement
         //[Test, Category("Serialization")]
@@ -1211,7 +1229,6 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
         //    Assert.IsTrue(customiCal.Events.First().GetType() == typeof(CustomEvent1), "Custom calendar event should be of type CustomEvent1");
         //}
 
-        
 
         // FIXME: remove?
         //[Test, Category("Serialization")]
@@ -1280,31 +1297,31 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
             Assert.IsNotNull(evt);
             Assert.AreEqual(TimeSpan.FromDays(12) + TimeSpan.FromHours(1), evt.Duration, "Duration should be 12 days, 1 hour");
 
-            SerializeTest("Duration1.ics", typeof(iCalendarSerializer));
+            SerializeTest("Duration1.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void USHolidays()
         {
-            SerializeTest("USHolidays.ics", typeof(iCalendarSerializer));
+            SerializeTest("USHolidays.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void Language1()
         {
-            SerializeTest("Language1.ics", typeof(iCalendarSerializer));
+            SerializeTest("Language1.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void Language2()
         {
-            SerializeTest("Language2.ics", typeof(iCalendarSerializer));
+            SerializeTest("Language2.ics", typeof (iCalendarSerializer));
         }
 
         //[Test, Category("Serialization")]     //Broken in dday
         public void Language3()
         {
-            SerializeTest("Language3.ics", typeof(iCalendarSerializer));
+            SerializeTest("Language3.ics", typeof (iCalendarSerializer));
 
             var calendarPath = Path.Combine(Environment.CurrentDirectory, "Calendars");
             calendarPath = Path.Combine(calendarPath, "Serialization");
@@ -1347,10 +1364,11 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
         [Test, Category("Serialization")]
         public void Outlook2007_LineFolds2()
         {
-            var longName = "The Exceptionally Long Named Meeting Room Whose Name Wraps Over Several Lines When Exported From Leading Calendar and Office Software Application Microsoft Office 2007";
+            var longName =
+                "The Exceptionally Long Named Meeting Room Whose Name Wraps Over Several Lines When Exported From Leading Calendar and Office Software Application Microsoft Office 2007";
             var iCal = iCalendar.LoadFromFile(@"Calendars/Serialization/Outlook2007LineFolds.ics")[0];
             var events = iCal.GetOccurrences<Event>(new iCalDateTime(2009, 06, 20), new iCalDateTime(2009, 06, 22)).OrderBy(o => o.Period.StartTime).ToList();
-            Assert.AreEqual(longName, ((IEvent)events[0].Source).Location);
+            Assert.AreEqual(longName, ((IEvent) events[0].Source).Location);
         }
 
         /// <summary>
@@ -1390,13 +1408,13 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
         //[Test]     //Broken in dday
         public void ProdID1()
         {
-            SerializeTest("ProdID1.ics", typeof(iCalendarSerializer));
+            SerializeTest("ProdID1.ics", typeof (iCalendarSerializer));
         }
 
         //[Test]     //Broken in dday
         public void ProdID2()
         {
-            SerializeTest("ProdID2.ics", typeof(iCalendarSerializer));
+            SerializeTest("ProdID2.ics", typeof (iCalendarSerializer));
         }
 
         /// <summary>
@@ -1411,10 +1429,11 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
             Assert.AreEqual(2, props.Count);
 
             for (var i = 0; i < props.Count; i++)
+            {
                 Assert.AreEqual("2." + i, props[i].Value);
+            }
         }
 
-        
 
         // FIXME: re-implement
         ///// <summary>
@@ -1436,8 +1455,7 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
         //    Assert.AreEqual(iCal.Events.First().Properties["DTEND"].Value, "5678");
         //}
 
-        
-                       
+
         /// <summary>
         /// Tests that line/column numbers are correctly tracked for
         /// parsed (deserialized) calendars.
@@ -1447,7 +1465,7 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
         {
             var ctx = new SerializationContext();
 
-            var settings = ctx.GetService(typeof(ISerializationSettings)) as ISerializationSettings;
+            var settings = ctx.GetService(typeof (ISerializationSettings)) as ISerializationSettings;
             settings.EnsureAccurateLineNumbers = true;
 
             var serializer = new iCalendarSerializer();
@@ -1479,7 +1497,7 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
         {
             var ctx = new SerializationContext();
 
-            var settings = ctx.GetService(typeof(ISerializationSettings)) as ISerializationSettings;
+            var settings = ctx.GetService(typeof (ISerializationSettings)) as ISerializationSettings;
             settings.EnsureAccurateLineNumbers = true;
 
             var serializer = new iCalendarSerializer();
@@ -1498,7 +1516,7 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
             using (var reader = new FileStream(fileName, FileMode.Open, FileAccess.Read))
             {
                 binaryData = new byte[reader.Length];
-                reader.Read(binaryData, 0, (int)reader.Length);
+                reader.Read(binaryData, 0, (int) reader.Length);
             }
 
             return binaryData;
@@ -1510,24 +1528,29 @@ Ticketmaster UK Limited Registration in England No 2662632, Registered Office, 4
             using (var reader = new FileStream(fileName, FileMode.Open, FileAccess.Read))
             {
                 binaryData = new byte[reader.Length];
-                reader.Read(binaryData, 0, (int)reader.Length);
+                reader.Read(binaryData, 0, (int) reader.Length);
             }
 
             if (binaryData == null && data == null)
+            {
                 return true;
+            }
             else if (binaryData == null || data == null)
+            {
                 return false;
+            }
 
             for (var i = 0; i < data.Length; i++)
             {
                 if (binaryData[i] != data[i])
+                {
                     return false;
+                }
             }
 
             return true;
         }
 
-        
 
         // FIXME: re-implement
         //[Test, Category("Serialization")]

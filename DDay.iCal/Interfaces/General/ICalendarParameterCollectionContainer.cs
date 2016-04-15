@@ -1,6 +1,6 @@
 ﻿namespace DDay.iCal
 {
-    public interface ICalendarParameterCollectionContainer        
+    public interface ICalendarParameterCollectionContainer
     {
         ICalendarParameterCollection Parameters { get; }
     }

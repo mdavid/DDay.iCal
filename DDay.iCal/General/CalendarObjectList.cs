@@ -9,9 +9,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class CalendarObjectList :
-        GroupedList<string, ICalendarObject>,
-        ICalendarObjectList<ICalendarObject>
+    public class CalendarObjectList : GroupedList<string, ICalendarObject>, ICalendarObjectList<ICalendarObject>
     {
         ICalendarObject _Parent;
 

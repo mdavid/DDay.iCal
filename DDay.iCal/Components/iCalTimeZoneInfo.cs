@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 
 namespace DDay.iCal
-{    
+{
     /// <summary>
     /// A class that contains time zone information, and is usually accessed
     /// from an iCalendar object using the <see cref="DDay.iCal.iCalendar.GetTimeZone"/> method.        
@@ -38,6 +38,7 @@ namespace DDay.iCal
         }
 
         private string _tzId;
+
         public virtual string TzId
         {
             get
@@ -79,6 +80,7 @@ namespace DDay.iCal
         }
 
         private IUTCOffset _offsetFrom;
+
         public virtual IUTCOffset OffsetFrom
         {
             get { return _offsetFrom ?? (_offsetFrom = Properties.Get<IUTCOffset>("TZOFFSETFROM")); }
@@ -86,6 +88,7 @@ namespace DDay.iCal
         }
 
         private IUTCOffset _offsetTo;
+
         public virtual IUTCOffset OffsetTo
         {
             get { return _offsetTo ?? (_offsetTo = Properties.Get<IUTCOffset>("TZOFFSETTO")); }
@@ -93,6 +96,7 @@ namespace DDay.iCal
         }
 
         private IList<string> _tzNames = new List<string>();
+
         public virtual IList<string> TimeZoneNames
         {
             get { return _tzNames ?? (_tzNames = Properties.GetMany<string>("TZNAME")); }
@@ -192,7 +196,7 @@ namespace DDay.iCal
             {
                 return false;
             }
-            return Equals((iCalTimeZoneInfo)obj);
+            return Equals((iCalTimeZoneInfo) obj);
         }
 
         public override int GetHashCode()
@@ -200,9 +204,11 @@ namespace DDay.iCal
             unchecked
             {
                 var hashCode = base.GetHashCode();
-                hashCode = (hashCode * 397) ^ (m_Evaluator != null ? m_Evaluator.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (m_Evaluator != null
+                    ? m_Evaluator.GetHashCode()
+                    : 0);
                 return hashCode;
             }
         }
-    }    
+    }
 }

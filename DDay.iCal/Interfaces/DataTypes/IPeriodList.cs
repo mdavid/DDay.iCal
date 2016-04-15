@@ -2,9 +2,7 @@
 
 namespace DDay.iCal
 {
-    public interface IPeriodList :
-        IEncodableDataType,
-        IList<IPeriod>
+    public interface IPeriodList : IEncodableDataType, IList<IPeriod>
     {
         string TZID { get; set; }
 

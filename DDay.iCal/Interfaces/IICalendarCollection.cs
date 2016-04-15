@@ -2,9 +2,5 @@
 
 namespace DDay.iCal
 {
-    public interface IICalendarCollection :
-        IGetOccurrencesTyped,
-        IList<IICalendar>
-    {        
-    }
+    public interface IICalendarCollection : IGetOccurrencesTyped, IList<IICalendar> {}
 }

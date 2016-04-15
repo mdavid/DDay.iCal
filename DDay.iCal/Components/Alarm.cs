@@ -11,9 +11,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class Alarm :
-        CalendarComponent,
-        IAlarm
+    public class Alarm : CalendarComponent, IAlarm
     {
         #region Private Fields
 
@@ -96,7 +94,7 @@ namespace DDay.iCal
             Occurrences = new List<AlarmOccurrence>();
         }
 
-        #endregion                
+        #endregion
 
         #region Public Methods
 
@@ -117,7 +115,9 @@ namespace DDay.iCal
                 {
                     // Ensure that "FromDate" has already been set
                     if (FromDate == null)
+                    {
                         FromDate = rc.Start.Copy<IDateTime>();
+                    }
 
                     var d = default(TimeSpan);
                     foreach (var o in rc.GetOccurrences(FromDate, ToDate))
@@ -129,12 +129,20 @@ namespace DDay.iCal
                             {
                                 dt = o.Period.EndTime;
                                 if (d == default(TimeSpan))
+                                {
                                     d = o.Period.Duration;
+                                }
                             }
                             // Use the "last-found" duration as a reference point
                             else if (d != default(TimeSpan))
+                            {
                                 dt = o.Period.StartTime.Add(d);
-                            else throw new ArgumentException("Alarm trigger is relative to the END of the occurrence; however, the occurence has no discernible end.");
+                            }
+                            else
+                            {
+                                throw new ArgumentException(
+                                    "Alarm trigger is relative to the END of the occurrence; however, the occurence has no discernible end.");
+                            }
                         }
 
                         Occurrences.Add(new AlarmOccurrence(this, dt.Add(Trigger.Duration.Value), rc));

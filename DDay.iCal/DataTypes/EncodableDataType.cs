@@ -8,9 +8,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class EncodableDataType :
-        CalendarDataType,
-        IEncodableDataType
+    public class EncodableDataType : CalendarDataType, IEncodableDataType
     {
         public virtual string Encoding
         {

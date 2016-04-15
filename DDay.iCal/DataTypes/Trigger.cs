@@ -11,9 +11,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class Trigger : 
-        EncodableDataType,
-        ITrigger
+    public class Trigger : EncodableDataType, ITrigger
     {
         #region Private Fields
 
@@ -66,7 +64,7 @@ namespace DDay.iCal
             get { return m_Related; }
             set { m_Related = value; }
         }
-        
+
         public virtual bool IsRelative
         {
             get { return m_Duration != null; }
@@ -76,13 +74,14 @@ namespace DDay.iCal
 
         #region Constructors
 
-        public Trigger() { }
+        public Trigger() {}
+
         public Trigger(TimeSpan ts)
         {
             Duration = ts;
         }
-        public Trigger(string value)
-            : this()
+
+        public Trigger(string value) : this()
         {
             var serializer = new TriggerSerializer();
             CopyFrom(serializer.Deserialize(new StringReader(value)) as ICopyable);
@@ -97,7 +96,7 @@ namespace DDay.iCal
             base.CopyFrom(obj);
             if (obj is ITrigger)
             {
-                var t = (ITrigger)obj;
+                var t = (ITrigger) obj;
                 DateTime = t.DateTime;
                 Duration = t.Duration;
                 Related = t.Related;
@@ -130,7 +129,9 @@ namespace DDay.iCal
         {
             unchecked
             {
-                var hashCode = (m_DateTime != null ? m_DateTime.GetHashCode() : 0);
+                var hashCode = (m_DateTime != null
+                    ? m_DateTime.GetHashCode()
+                    : 0);
                 hashCode = (hashCode * 397) ^ m_Duration.GetHashCode();
                 hashCode = (hashCode * 397) ^ (int) m_Related;
                 return hashCode;

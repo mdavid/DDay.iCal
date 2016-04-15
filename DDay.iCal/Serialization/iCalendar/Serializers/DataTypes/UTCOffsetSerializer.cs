@@ -4,12 +4,11 @@ using System.Text.RegularExpressions;
 
 namespace DDay.iCal.Serialization.iCalendar
 {
-    public class UTCOffsetSerializer :
-        EncodableDataTypeSerializer
+    public class UTCOffsetSerializer : EncodableDataTypeSerializer
     {
         public override Type TargetType
         {
-            get { return typeof(UTCOffset); }
+            get { return typeof (UTCOffset); }
         }
 
         public override string SerializeToString(object obj)
@@ -17,11 +16,11 @@ namespace DDay.iCal.Serialization.iCalendar
             var offset = obj as IUTCOffset;
             if (offset != null)
             {
-                var value = 
-                    (offset.Positive ? "+" : "-") +
-                    offset.Hours.ToString("00") +
-                    offset.Minutes.ToString("00") +
-                    (offset.Seconds != 0 ? offset.Seconds.ToString("00") : string.Empty);
+                var value = (offset.Positive
+                    ? "+"
+                    : "-") + offset.Hours.ToString("00") + offset.Minutes.ToString("00") + (offset.Seconds != 0
+                        ? offset.Seconds.ToString("00")
+                        : string.Empty);
 
                 // Encode the value as necessary
                 return Encode(offset, value);

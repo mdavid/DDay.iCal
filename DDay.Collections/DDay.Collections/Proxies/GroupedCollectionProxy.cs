@@ -11,10 +11,8 @@ namespace DDay.Collections
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class GroupedCollectionProxy<TGroup, TOriginal, TNew> :
-        IGroupedCollectionProxy<TGroup, TOriginal, TNew>
-        where TOriginal : class, IGroupedObject<TGroup>
-        where TNew : class, TOriginal
+    public class GroupedCollectionProxy<TGroup, TOriginal, TNew> : IGroupedCollectionProxy<TGroup, TOriginal, TNew>
+        where TOriginal : class, IGroupedObject<TGroup> where TNew : class, TOriginal
     {
         #region Private Fields
 
@@ -41,13 +39,17 @@ namespace DDay.Collections
         void _RealObject_ItemRemoved(object sender, ObjectEventArgs<TOriginal, int> e)
         {
             if (e.First is TNew)
-                OnItemRemoved((TNew)e.First, e.Second);
+            {
+                OnItemRemoved((TNew) e.First, e.Second);
+            }
         }
 
         void _RealObject_ItemAdded(object sender, ObjectEventArgs<TOriginal, int> e)
         {
             if (e.First is TNew)
-                OnItemAdded((TNew)e.First, e.Second);
+            {
+                OnItemAdded((TNew) e.First, e.Second);
+            }
         }
 
         #endregion
@@ -60,13 +62,17 @@ namespace DDay.Collections
         protected void OnItemAdded(TNew item, int index)
         {
             if (ItemAdded != null)
+            {
                 ItemAdded(this, new ObjectEventArgs<TNew, int>(item, index));
+            }
         }
 
         protected void OnItemRemoved(TNew item, int index)
         {
             if (ItemRemoved != null)
+            {
                 ItemRemoved(this, new ObjectEventArgs<TNew, int>(item, index));
+            }
         }
 
         public virtual bool Remove(TGroup group)
@@ -81,7 +87,7 @@ namespace DDay.Collections
 
         public virtual bool ContainsKey(TGroup group)
         {
-            return _RealObject.ContainsKey(group);            
+            return _RealObject.ContainsKey(group);
         }
 
         public virtual int CountOf(TGroup group)
@@ -91,12 +97,9 @@ namespace DDay.Collections
 
         public virtual IEnumerable<TNew> AllOf(TGroup group)
         {
-            return _RealObject
-                .AllOf(group)
-                .OfType<TNew>()
-                .Where(_Predicate);
+            return _RealObject.AllOf(group).OfType<TNew>().Where(_Predicate);
         }
-        
+
         public virtual void SortKeys(IComparer<TGroup> comparer = null)
         {
             _RealObject.SortKeys(comparer);
@@ -112,9 +115,7 @@ namespace DDay.Collections
             // Only clear items of this type
             // that match the predicate.
 
-            var items = _RealObject
-                .OfType<TNew>()
-                .ToArray();
+            var items = _RealObject.OfType<TNew>().ToArray();
 
             foreach (var item in items)
             {
@@ -138,12 +139,7 @@ namespace DDay.Collections
 
         public virtual int Count
         {
-            get 
-            { 
-                return _RealObject
-                    .OfType<TNew>()
-                    .Count(); 
-            }
+            get { return _RealObject.OfType<TNew>().Count(); }
         }
 
         public virtual bool IsReadOnly
@@ -158,16 +154,12 @@ namespace DDay.Collections
 
         public virtual IEnumerator<TNew> GetEnumerator()
         {
-            return _RealObject
-                .OfType<TNew>()
-                .GetEnumerator();
+            return _RealObject.OfType<TNew>().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _RealObject
-                .OfType<TNew>()
-                .GetEnumerator();
+            return _RealObject.OfType<TNew>().GetEnumerator();
         }
 
         #endregion

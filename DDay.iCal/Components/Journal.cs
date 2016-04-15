@@ -9,25 +9,21 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class Journal : 
-        RecurringComponent,
-        IJournal
+    public class Journal : RecurringComponent, IJournal
     {
         #region IJournal Members
-        
+
         public JournalStatus Status
         {
             get { return Properties.Get<JournalStatus>("STATUS"); }
             set { Properties.Set("STATUS", value); }
-        } 
+        }
 
         #endregion
 
         #region Constructors
 
-        public Journal()
-        {            
-        }
+        public Journal() {}
 
         void Initialize()
         {
@@ -40,10 +36,7 @@ namespace DDay.iCal
 
         protected override bool EvaluationIncludesReferenceDate
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
         }
 
         protected override void OnDeserializing(StreamingContext context)

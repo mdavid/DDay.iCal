@@ -1,8 +1,6 @@
 ﻿namespace DDay.iCal
 {
-    public class FreeBusyEntry :
-        Period,
-        IFreeBusyEntry
+    public class FreeBusyEntry : Period, IFreeBusyEntry
     {
         #region Private Fields
 
@@ -12,7 +10,11 @@
 
         #region Constructors
 
-        public FreeBusyEntry() : base() { Initialize(); }
+        public FreeBusyEntry() : base()
+        {
+            Initialize();
+        }
+
         public FreeBusyEntry(IPeriod period, FreeBusyStatus status) : base()
         {
             Initialize();

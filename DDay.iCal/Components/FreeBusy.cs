@@ -2,9 +2,7 @@
 
 namespace DDay.iCal
 {
-    public class FreeBusy :
-        UniqueComponent,
-        IFreeBusy
+    public class FreeBusy : UniqueComponent, IFreeBusy
     {
         #region Static Public Methods
 
@@ -12,19 +10,20 @@ namespace DDay.iCal
         {
             if (obj is IGetOccurrencesTyped)
             {
-                var getOccurrences = (IGetOccurrencesTyped)obj;
+                var getOccurrences = (IGetOccurrencesTyped) obj;
                 var occurrences = getOccurrences.GetOccurrences<IEvent>(freeBusyRequest.Start, freeBusyRequest.End);
                 var contacts = new List<string>();
                 var isFilteredByAttendees = false;
-                
-                if (freeBusyRequest.Attendees != null &&
-                    freeBusyRequest.Attendees.Count > 0)
+
+                if (freeBusyRequest.Attendees != null && freeBusyRequest.Attendees.Count > 0)
                 {
                     isFilteredByAttendees = true;
                     foreach (var attendee in freeBusyRequest.Attendees)
                     {
                         if (attendee.Value != null)
-                            contacts.Add(attendee.Value.OriginalString.Trim());                        
+                        {
+                            contacts.Add(attendee.Value.OriginalString.Trim());
+                        }
                     }
                 }
 
@@ -42,10 +41,12 @@ namespace DDay.iCal
                         var evt = uc as IEvent;
                         var accepted = false;
                         var type = FreeBusyStatus.Busy;
-                        
+
                         // We only accept events, and only "opaque" events.
                         if (evt != null && evt.Transparency != TransparencyType.Transparent)
+                        {
                             accepted = true;
+                        }
 
                         // If the result is filtered by attendees, then
                         // we won't accept it until we find an event
@@ -59,7 +60,7 @@ namespace DDay.iCal
                                 {
                                     if (a.ParticipationStatus != null)
                                     {
-                                        switch(a.ParticipationStatus.ToUpperInvariant())
+                                        switch (a.ParticipationStatus.ToUpperInvariant())
                                         {
                                             case ParticipationStatus.Tentative:
                                                 accepted = true;
@@ -97,11 +98,15 @@ namespace DDay.iCal
             fb.DTStart = fromInclusive;
             fb.DTEnd = toExclusive;
             if (organizer != null)
+            {
                 fb.Organizer = organizer.Copy<IOrganizer>();
+            }
             if (contacts != null)
             {
                 foreach (var attendee in contacts)
+                {
                     fb.Attendees.Add(attendee.Copy<IAttendee>());
+                }
             }
 
             return fb;
@@ -154,11 +159,13 @@ namespace DDay.iCal
         {
             var status = FreeBusyStatus.Free;
             if (period != null)
-            {                
+            {
                 foreach (var fbe in Entries)
                 {
                     if (fbe.CollidesWith(period) && status < fbe.Status)
+                    {
                         status = fbe.Status;
+                    }
                 }
             }
             return status;
@@ -172,7 +179,9 @@ namespace DDay.iCal
                 foreach (var fbe in Entries)
                 {
                     if (fbe.Contains(dt) && status < fbe.Status)
+                    {
                         status = fbe.Status;
+                    }
                 }
             }
             return status;
@@ -190,7 +199,9 @@ namespace DDay.iCal
                 foreach (var entry in fb.Entries)
                 {
                     if (!Entries.Contains(entry))
+                    {
                         Entries.Add(entry.Copy<IFreeBusyEntry>());
+                    }
                 }
             }
         }
