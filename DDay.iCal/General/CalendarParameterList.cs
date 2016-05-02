@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Collections;
-using System.Runtime.Serialization;
 using DDay.Collections;
 
 namespace DDay.iCal
@@ -10,9 +7,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class CalendarParameterList :
-        GroupedValueList<string, ICalendarParameter, CalendarParameter, string>,
-        ICalendarParameterCollection
+    public class CalendarParameterList : GroupedValueList<string, ICalendarParameter, CalendarParameter, string>, ICalendarParameterCollection
     {
         #region Private Fields
 
@@ -23,9 +18,7 @@ namespace DDay.iCal
 
         #region Constructors
 
-        public CalendarParameterList()
-        {
-        }
+        public CalendarParameterList() {}
 
         public CalendarParameterList(ICalendarObject parent, bool caseInsensitive)
         {
@@ -58,7 +51,9 @@ namespace DDay.iCal
         protected override string GroupModifier(string group)
         {
             if (m_CaseInsensitive && group != null)
+            {
                 return group.ToUpper();
+            }
             return group;
         }
 
@@ -66,25 +61,25 @@ namespace DDay.iCal
 
         #region ICalendarParameterCollection Members
 
-        virtual public void SetParent(ICalendarObject parent)
+        public virtual void SetParent(ICalendarObject parent)
         {
-            foreach (ICalendarParameter parameter in this)
+            foreach (var parameter in this)
             {
                 parameter.Parent = parent;
             }
         }
 
-        virtual public void Add(string name, string value)
+        public virtual void Add(string name, string value)
         {
             Add(new CalendarParameter(name, value));
         }
 
-        virtual public string Get(string name)
+        public virtual string Get(string name)
         {
             return Get<string>(name);
         }
 
-        virtual public IList<string> GetMany(string name)
+        public virtual IList<string> GetMany(string name)
         {
             return GetMany<string>(name);
         }

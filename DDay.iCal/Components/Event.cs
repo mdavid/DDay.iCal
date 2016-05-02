@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.Serialization;
 
 namespace DDay.iCal
@@ -20,11 +19,9 @@ namespace DDay.iCal
     ///     </list>
     /// </note>
 #if !SILVERLIGHT
-    [Serializable]    
+    [Serializable]
 #endif
-    public class Event : 
-        RecurringComponent,
-        IEvent
+    public class Event : RecurringComponent, IEvent
     {
         #region Public Properties
 
@@ -41,10 +38,7 @@ namespace DDay.iCal
         /// </summary>
         public override IDateTime DTStart
         {
-            get
-            {
-                return base.DTStart;
-            }
+            get { return base.DTStart; }
             set
             {
                 base.DTStart = value;
@@ -63,7 +57,7 @@ namespace DDay.iCal
         /// will be extrapolated.
         /// </note>
         /// </summary>
-        virtual public IDateTime DTEnd
+        public virtual IDateTime DTEnd
         {
             get { return Properties.Get<IDateTime>("DTEND"); }
             set
@@ -97,7 +91,7 @@ namespace DDay.iCal
         //
         // Therefore, Duration is not serialized, as DTEnd
         // should always be extrapolated from the duration.
-        virtual public TimeSpan Duration
+        public virtual TimeSpan Duration
         {
             get { return Properties.Get<TimeSpan>("DURATION"); }
             set
@@ -113,7 +107,7 @@ namespace DDay.iCal
         /// <summary>
         /// An alias to the DTEnd field (i.e. end date/time).
         /// </summary>
-        virtual public IDateTime End
+        public virtual IDateTime End
         {
             get { return DTEnd; }
             set { DTEnd = value; }
@@ -122,7 +116,7 @@ namespace DDay.iCal
         /// <summary>
         /// Returns true if the event is an all-day event.
         /// </summary>
-        virtual public bool IsAllDay
+        public virtual bool IsAllDay
         {
             get { return !Start.HasTime; }
             set
@@ -130,14 +124,15 @@ namespace DDay.iCal
                 // Set whether or not the start date/time
                 // has a time value.
                 if (Start != null)
+                {
                     Start.HasTime = !value;
+                }
                 if (End != null)
+                {
                     End.HasTime = !value;
+                }
 
-                if (value && 
-                    Start != null &&
-                    End != null &&
-                    object.Equals(Start.Date, End.Date))
+                if (value && Start != null && End != null && object.Equals(Start.Date, End.Date))
                 {
                     Duration = default(TimeSpan);
                     End = Start.AddDays(1);
@@ -207,10 +202,9 @@ namespace DDay.iCal
         #region Constructors
 
         /// <summary>
-        /// Constructs an Event object, with an <see cref="iCalObject"/>
+        /// Constructs an Event object, with an iCalObject
         /// (usually an iCalendar object) as its parent.
         /// </summary>
-        /// <param name="parent">An <see cref="iCalObject"/>, usually an iCalendar object.</param>
         public Event() : base()
         {
             Initialize();
@@ -231,25 +225,29 @@ namespace DDay.iCal
         /// <summary>
         /// Use this method to determine if an event occurs on a given date.
         /// <note type="caution">
-        ///     This event should be called only after the <see cref="Evaluate"/>
+        ///     This event should be called only after the Evaluate
         ///     method has calculated the dates for which this event occurs.
         /// </note>
         /// </summary>
         /// <param name="DateTime">The date to test.</param>
         /// <returns>True if the event occurs on the <paramref name="DateTime"/> provided, False otherwise.</returns>
-        virtual public bool OccursOn(IDateTime DateTime)
+        public virtual bool OccursOn(IDateTime DateTime)
         {
-            foreach (IPeriod p in m_Evaluator.Periods)
+            foreach (var p in m_Evaluator.Periods)
+            {
                 // NOTE: removed UTC from date checks, since a date is a date.
-                if (p.StartTime.Date == DateTime.Date ||    // It's the start date OR
-                    (p.StartTime.Date <= DateTime.Date &&   // It's after the start date AND
-                    (p.EndTime.HasTime && p.EndTime.Date >= DateTime.Date || // an end time was specified, and it's after the test date
-                    (!p.EndTime.HasTime && p.EndTime.Date > DateTime.Date)))) // an end time was not specified, and it's before the end date
+                if (p.StartTime.Date == DateTime.Date || // It's the start date OR
+                    (p.StartTime.Date <= DateTime.Date && // It's after the start date AND
+                     (p.EndTime.HasTime && p.EndTime.Date >= DateTime.Date || // an end time was specified, and it's after the test date
+                      (!p.EndTime.HasTime && p.EndTime.Date > DateTime.Date)))) // an end time was not specified, and it's before the end date
+                {
                     // NOTE: fixed bug as follows:
                     // DTSTART;VALUE=DATE:20060704
                     // DTEND;VALUE=DATE:20060705
                     // Event.OccursOn(new iCalDateTime(2006, 7, 5)); // Evals to true; should be false
                     return true;
+                }
+            }
             return false;
         }
 
@@ -258,11 +256,15 @@ namespace DDay.iCal
         /// </summary>
         /// <param name="DateTime">The date and time to test.</param>
         /// <returns>True if the event begins at the given date and time</returns>
-        virtual public bool OccursAt(IDateTime DateTime)
+        public virtual bool OccursAt(IDateTime DateTime)
         {
-            foreach (IPeriod p in m_Evaluator.Periods)
+            foreach (var p in m_Evaluator.Periods)
+            {
                 if (p.StartTime.Equals(DateTime))
+                {
                     return true;
+                }
+            }
             return false;
         }
 
@@ -271,9 +273,9 @@ namespace DDay.iCal
         /// as an upcoming or occurred event.
         /// </summary>
         /// <returns>True if the event has not been cancelled, False otherwise.</returns>
-        virtual public bool IsActive()
+        public virtual bool IsActive()
         {
-            return (Status != EventStatus.Cancelled);            
+            return (Status != EventStatus.Cancelled);
         }
 
         #endregion
@@ -282,10 +284,7 @@ namespace DDay.iCal
 
         protected override bool EvaluationIncludesReferenceDate
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
         }
 
         protected override void OnDeserializing(StreamingContext context)
@@ -300,8 +299,8 @@ namespace DDay.iCal
             base.OnDeserialized(context);
 
             ExtrapolateTimes();
-        }        
-        
+        }
+
         #endregion
 
         #region Private Methods
@@ -309,11 +308,17 @@ namespace DDay.iCal
         private void ExtrapolateTimes()
         {
             if (DTEnd == null && DTStart != null && Duration != default(TimeSpan))
+            {
                 DTEnd = DTStart.Add(Duration);
+            }
             else if (Duration == default(TimeSpan) && DTStart != null && DTEnd != null)
+            {
                 Duration = DTEnd.Subtract(DTStart);
+            }
             else if (DTStart == null && Duration != default(TimeSpan) && DTEnd != null)
+            {
                 DTStart = DTEnd.Subtract(Duration);
+            }
         }
 
         #endregion

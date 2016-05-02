@@ -1,38 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using System.Text.RegularExpressions;
 
 namespace DDay.iCal.Serialization.iCalendar
 {
-    public class TriggerSerializer :
-        StringSerializer
+    public class TriggerSerializer : StringSerializer
     {
         public override Type TargetType
         {
-            get { return typeof(Trigger); }
+            get { return typeof (Trigger); }
         }
 
         public override string SerializeToString(object obj)
         {
             try
             {
-                ITrigger t = obj as ITrigger;
+                var t = obj as ITrigger;
                 if (t != null)
                 {
                     // Push the trigger onto the serialization stack
                     SerializationContext.Push(t);
                     try
                     {
-                        ISerializerFactory factory = GetService<ISerializerFactory>();
+                        var factory = GetService<ISerializerFactory>();
                         if (factory != null)
                         {
-                            Type valueType = t.GetValueType() ?? typeof(TimeSpan);
-                            IStringSerializer serializer = factory.Build(valueType, SerializationContext) as IStringSerializer;
+                            var valueType = t.GetValueType() ?? typeof (TimeSpan);
+                            var serializer = factory.Build(valueType, SerializationContext) as IStringSerializer;
                             if (serializer != null)
                             {
-                                object value = (valueType == typeof(IDateTime)) ? (object)t.DateTime : (object)t.Duration;
+                                var value = (valueType == typeof (IDateTime))
+                                    ? (object) t.DateTime
+                                    : (object) t.Duration;
                                 return serializer.SerializeToString(value);
                             }
                         }
@@ -53,9 +51,9 @@ namespace DDay.iCal.Serialization.iCalendar
 
         public override object Deserialize(TextReader tr)
         {
-            string value = tr.ReadToEnd();
+            var value = tr.ReadToEnd();
 
-            ITrigger t = CreateAndAssociate() as ITrigger;
+            var t = CreateAndAssociate() as ITrigger;
             if (t != null)
             {
                 // Push the trigger onto the serialization stack
@@ -66,26 +64,29 @@ namespace DDay.iCal.Serialization.iCalendar
                     value = Decode(t, value);
 
                     // Set the trigger relation
-                    if (t.Parameters.ContainsKey("RELATED") &&
-                        t.Parameters.Get("RELATED").Equals("END"))
+                    if (t.Parameters.ContainsKey("RELATED") && t.Parameters.Get("RELATED").Equals("END"))
                     {
                         t.Related = TriggerRelation.End;
                     }
 
-                    ISerializerFactory factory = GetService<ISerializerFactory>();
+                    var factory = GetService<ISerializerFactory>();
                     if (factory != null)
                     {
-                        Type valueType = t.GetValueType() ?? typeof(TimeSpan);
-                        IStringSerializer serializer = factory.Build(valueType, SerializationContext) as IStringSerializer;
+                        var valueType = t.GetValueType() ?? typeof (TimeSpan);
+                        var serializer = factory.Build(valueType, SerializationContext) as IStringSerializer;
                         if (serializer != null)
                         {
-                            object obj = serializer.Deserialize(new StringReader(value));
+                            var obj = serializer.Deserialize(new StringReader(value));
                             if (obj != null)
                             {
                                 if (obj is IDateTime)
-                                    t.DateTime = (IDateTime)obj;
+                                {
+                                    t.DateTime = (IDateTime) obj;
+                                }
                                 else
-                                    t.Duration = (TimeSpan)obj;
+                                {
+                                    t.Duration = (TimeSpan) obj;
+                                }
 
                                 return t;
                             }

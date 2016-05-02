@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.Serialization;
 using System.IO;
 using DDay.iCal.Serialization.iCalendar;
 
@@ -14,9 +11,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class Trigger : 
-        EncodableDataType,
-        ITrigger
+    public class Trigger : EncodableDataType, ITrigger
     {
         #region Private Fields
 
@@ -28,7 +23,7 @@ namespace DDay.iCal
 
         #region Public Properties
 
-        virtual public IDateTime DateTime
+        public virtual IDateTime DateTime
         {
             get { return m_DateTime; }
             set
@@ -48,7 +43,7 @@ namespace DDay.iCal
             }
         }
 
-        virtual public TimeSpan? Duration
+        public virtual TimeSpan? Duration
         {
             get { return m_Duration; }
             set
@@ -64,13 +59,13 @@ namespace DDay.iCal
             }
         }
 
-        virtual public TriggerRelation Related
+        public virtual TriggerRelation Related
         {
             get { return m_Related; }
             set { m_Related = value; }
         }
-        
-        virtual public bool IsRelative
+
+        public virtual bool IsRelative
         {
             get { return m_Duration != null; }
         }
@@ -79,15 +74,16 @@ namespace DDay.iCal
 
         #region Constructors
 
-        public Trigger() { }
+        public Trigger() {}
+
         public Trigger(TimeSpan ts)
         {
             Duration = ts;
         }
-        public Trigger(string value)
-            : this()
+
+        public Trigger(string value) : this()
         {
-            TriggerSerializer serializer = new TriggerSerializer();
+            var serializer = new TriggerSerializer();
             CopyFrom(serializer.Deserialize(new StringReader(value)) as ICopyable);
         }
 
@@ -100,25 +96,46 @@ namespace DDay.iCal
             base.CopyFrom(obj);
             if (obj is ITrigger)
             {
-                ITrigger t = (ITrigger)obj;
+                var t = (ITrigger) obj;
                 DateTime = t.DateTime;
                 Duration = t.Duration;
                 Related = t.Related;
             }
         }
 
+        protected bool Equals(Trigger other)
+        {
+            return Equals(m_DateTime, other.m_DateTime) && m_Duration.Equals(other.m_Duration) && m_Related == other.m_Related;
+        }
+
         public override bool Equals(object obj)
         {
-            ITrigger t = obj as ITrigger;
-            if (t != null)
+            if (ReferenceEquals(null, obj))
             {
-                if (DateTime != null && !object.Equals(DateTime, t.DateTime))
-                    return false;
-                if (Duration != null && !object.Equals(Duration, t.Duration))
-                    return false;
-                return object.Equals(Related, t.Related);
+                return false;
             }
-            return base.Equals(obj);
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+            return Equals((Trigger) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = (m_DateTime != null
+                    ? m_DateTime.GetHashCode()
+                    : 0);
+                hashCode = (hashCode * 397) ^ m_Duration.GetHashCode();
+                hashCode = (hashCode * 397) ^ (int) m_Related;
+                return hashCode;
+            }
         }
 
         #endregion

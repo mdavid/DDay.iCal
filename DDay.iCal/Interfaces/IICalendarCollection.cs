@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace DDay.iCal
 {
-    public interface IICalendarCollection :
-        IGetOccurrencesTyped,
-        IList<IICalendar>
-    {        
-    }
+    public interface IICalendarCollection : IGetOccurrencesTyped, IList<IICalendar> {}
 }

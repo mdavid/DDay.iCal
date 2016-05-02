@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DDay.iCal
 {
-    public interface IEvent :
-        IRecurringComponent
+    public interface IEvent : IRecurringComponent
     {
         /// <summary>
         /// The end date/time of the event.

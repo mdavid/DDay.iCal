@@ -1,9 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Collections.Generic;
-using System.Text;
-using DDay.iCal;
-using System.Runtime.Serialization;
 using System.IO;
 using DDay.iCal.Serialization.iCalendar;
 
@@ -16,73 +12,100 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class Organizer :
-        EncodableDataType,
-        IOrganizer
+    public class Organizer : EncodableDataType, IOrganizer
     {
         #region IOrganizer Members
 
-        virtual public Uri SentBy
+        public virtual Uri SentBy
         {
             get { return new Uri(Parameters.Get("SENT-BY")); }
             set
             {
                 if (value != null)
+                {
                     Parameters.Set("SENT-BY", value.OriginalString);
+                }
                 else
-                    Parameters.Set("SENT-BY", (string)null);
+                {
+                    Parameters.Set("SENT-BY", (string) null);
+                }
             }
         }
 
-        virtual public string CommonName
+        public virtual string CommonName
         {
             get { return Parameters.Get("CN"); }
             set { Parameters.Set("CN", value); }
         }
 
-        virtual public Uri DirectoryEntry
+        public virtual Uri DirectoryEntry
         {
             get { return new Uri(Parameters.Get("DIR")); }
             set
             {
                 if (value != null)
+                {
                     Parameters.Set("DIR", value.OriginalString);
+                }
                 else
-                    Parameters.Set("DIR", (string)null);
+                {
+                    Parameters.Set("DIR", (string) null);
+                }
             }
         }
 
-        virtual public Uri Value { get; set; }
+        public virtual Uri Value { get; set; }
 
         #endregion
 
         #region Constructors
 
-        public Organizer() : base() { }
-        public Organizer(string value)
-            : this()
+        public Organizer() : base() {}
+
+        public Organizer(string value) : this()
         {
-            OrganizerSerializer serializer = new OrganizerSerializer();
+            var serializer = new OrganizerSerializer();
             CopyFrom(serializer.Deserialize(new StringReader(value)) as ICopyable);
         }
 
         #endregion
 
         #region Overrides
-        
+
+        protected bool Equals(Organizer other)
+        {
+            return Equals(Value, other.Value);
+        }
+
         public override bool Equals(object obj)
         {
-            IOrganizer o = obj as IOrganizer;
-            if (o != null)
-                return object.Equals(Value, o.Value);
-            return base.Equals(obj);
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+            return Equals((Organizer) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Value != null
+                ? Value.GetHashCode()
+                : 0);
         }
 
         public override void CopyFrom(ICopyable obj)
         {
             base.CopyFrom(obj);
 
-            IOrganizer o = obj as IOrganizer;
+            var o = obj as IOrganizer;
             if (o != null)
             {
                 Value = o.Value;

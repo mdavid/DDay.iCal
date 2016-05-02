@@ -7,107 +7,115 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class Attendee :
-        EncodableDataType,
-        IAttendee
+    public class Attendee : EncodableDataType, IAttendee
     {
         #region IAttendee Members
-        
-        virtual public Uri SentBy
+
+        public virtual Uri SentBy
         {
             get { return new Uri(Parameters.Get("SENT-BY")); }
             set
             {
                 if (value != null)
+                {
                     Parameters.Set("SENT-BY", value.OriginalString);
+                }
                 else
-                    Parameters.Set("SENT-BY", (string)null);
+                {
+                    Parameters.Set("SENT-BY", (string) null);
+                }
             }
         }
 
-        virtual public string CommonName
+        public virtual string CommonName
         {
             get { return Parameters.Get("CN"); }
             set { Parameters.Set("CN", value); }
         }
 
-        virtual public Uri DirectoryEntry
+        public virtual Uri DirectoryEntry
         {
             get { return new Uri(Parameters.Get("DIR")); }
             set
             {
                 if (value != null)
+                {
                     Parameters.Set("DIR", value.OriginalString);
+                }
                 else
-                    Parameters.Set("DIR", (string)null);
+                {
+                    Parameters.Set("DIR", (string) null);
+                }
             }
         }
-        
-        virtual public string Type
+
+        public virtual string Type
         {
             get { return Parameters.Get("CUTYPE"); }
             set { Parameters.Set("CUTYPE", value); }
         }
-        
-        virtual public IList<string> Members
+
+        public virtual IList<string> Members
         {
             get { return Parameters.GetMany("MEMBER"); }
             set { Parameters.Set("MEMBER", value); }
         }
-        
-        virtual public string Role
+
+        public virtual string Role
         {
             get { return Parameters.Get("ROLE"); }
             set { Parameters.Set("ROLE", value); }
         }
-        
-        virtual public string ParticipationStatus
+
+        public virtual string ParticipationStatus
         {
             get { return Parameters.Get("PARTSTAT"); }
             set { Parameters.Set("PARTSTAT", value); }
         }
-        
-        virtual public bool RSVP
+
+        public virtual bool RSVP
         {
             get
             {
                 bool val;
-                string rsvp = Parameters.Get("RSVP");
+                var rsvp = Parameters.Get("RSVP");
                 if (rsvp != null && bool.TryParse(rsvp, out val))
+                {
                     return val;
+                }
                 return false;
             }
             set
             {
-                string val = value.ToString();
+                var val = value.ToString();
                 if (val != null)
+                {
                     val = val.ToUpper();
+                }
                 Parameters.Set("RSVP", val);
             }
         }
-        
-        virtual public IList<string> DelegatedTo
+
+        public virtual IList<string> DelegatedTo
         {
             get { return Parameters.GetMany("DELEGATED-TO"); }
             set { Parameters.Set("DELEGATED-TO", value); }
         }
-         
-        virtual public IList<string> DelegatedFrom
+
+        public virtual IList<string> DelegatedFrom
         {
             get { return Parameters.GetMany("DELEGATED-FROM"); }
             set { Parameters.Set("DELEGATED-FROM", value); }
         }
-        
+
         [DataMember(Order = 1)]
-        virtual public Uri Value { get; set; }
-        
-        #endregion        
-            
+        public virtual Uri Value { get; set; }
+
+        #endregion
+
         #region Constructors
-        
-        public Attendee()
-        {
-        }
+
+        public Attendee() {}
 
         public Attendee(Uri attendee)
         {
@@ -117,27 +125,50 @@ namespace DDay.iCal
         public Attendee(string attendeeUri)
         {
             if (!Uri.IsWellFormedUriString(attendeeUri, UriKind.Absolute))
+            {
                 throw new ArgumentException("attendeeUri");
+            }
             Value = new Uri(attendeeUri);
         }
-        
+
         #endregion
 
         #region Overrides
 
+        protected bool Equals(Attendee other)
+        {
+            return Equals(Value, other.Value);
+        }
+
         public override bool Equals(object obj)
         {
-            IAttendee a = obj as IAttendee;
-            if (a != null)
-                return object.Equals(Value, a.Value);
-            return base.Equals(obj);
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+            return Equals((Attendee) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Value != null
+                ? Value.GetHashCode()
+                : 0);
         }
 
         public override void CopyFrom(ICopyable obj)
         {
             base.CopyFrom(obj);
 
-            IAttendee a = obj as IAttendee;
+            var a = obj as IAttendee;
             if (a != null)
             {
                 Value = a.Value;

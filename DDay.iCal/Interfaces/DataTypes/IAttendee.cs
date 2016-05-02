@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DDay.iCal
 {
-    public interface IAttendee :
-        IEncodableDataType
+    public interface IAttendee : IEncodableDataType
     {
         Uri SentBy { get; set; }
         string CommonName { get; set; }

@@ -1,14 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace DDay.iCal.Test
 {
     // FIXME: fix this custom calendar to function properly
     //[ComponentBaseType(typeof(CustomComponentBase1))]
-    public class CustomICal1 : iCalendar
-    {
-    }
+    public class CustomICal1 : iCalendar {}
 
     //public class CustomComponentBase1 : CalendarComponent
     //{
@@ -29,6 +23,6 @@ namespace DDay.iCal.Test
         {
             get { return Properties.Get<string>("X-NONSTANDARD-PROPERTY"); }
             set { Properties.Set("X-NONSTANDARD-PROPERTY", value); }
-        }                
+        }
     }
 }

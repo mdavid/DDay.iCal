@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Runtime.Serialization;
 using System.Diagnostics;
 using DDay.Collections;
@@ -12,9 +11,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class CalendarParameter : 
-        CalendarObject,
-        ICalendarParameter
+    public class CalendarParameter : CalendarObject, ICalendarParameter
     {
         #region Private Fields
 
@@ -24,30 +21,29 @@ namespace DDay.iCal
 
         #region Constructors
 
-        public CalendarParameter() 
+        public CalendarParameter()
         {
             Initialize();
         }
 
-        public CalendarParameter(string name)
-            : base(name)
+        public CalendarParameter(string name) : base(name)
         {
             Initialize();
         }
 
-        public CalendarParameter(string name, string value)
-            : base(name)
+        public CalendarParameter(string name, string value) : base(name)
         {
             Initialize();
             AddValue(value);
         }
 
-        public CalendarParameter(string name, IEnumerable<string> values)
-            : base(name)
+        public CalendarParameter(string name, IEnumerable<string> values) : base(name)
         {
             Initialize();
-            foreach (string v in values)
-                AddValue(v);                
+            foreach (var v in values)
+            {
+                AddValue(v);
+            }
         }
 
         void Initialize()
@@ -70,11 +66,13 @@ namespace DDay.iCal
         {
             base.CopyFrom(c);
 
-            ICalendarParameter p = c as ICalendarParameter;
+            var p = c as ICalendarParameter;
             if (p != null)
             {
                 if (p.Values != null)
+                {
                     _Values = new List<string>(p.Values);
+                }
             }
         }
 
@@ -82,59 +80,63 @@ namespace DDay.iCal
 
         #region IValueObject<string> Members
 
-        [field:NonSerialized]
+        [field: NonSerialized]
         public event EventHandler<ValueChangedEventArgs<string>> ValueChanged;
 
         protected void OnValueChanged(IEnumerable<string> removedValues, IEnumerable<string> addedValues)
         {
             if (ValueChanged != null)
+            {
                 ValueChanged(this, new ValueChangedEventArgs<string>(removedValues, addedValues));
+            }
         }
 
-        virtual public IEnumerable<string> Values
+        public virtual IEnumerable<string> Values
         {
             get { return _Values; }
         }
 
-        virtual public bool ContainsValue(string value)
+        public virtual bool ContainsValue(string value)
         {
             return _Values.Contains(value);
         }
 
-        virtual public int ValueCount
+        public virtual int ValueCount
         {
             get
             {
-                return _Values != null ? _Values.Count : 0;
+                return _Values != null
+                    ? _Values.Count
+                    : 0;
             }
         }
 
-        virtual public void SetValue(string value)
+        public virtual void SetValue(string value)
         {
             if (_Values.Count == 0)
             {
                 // Our list doesn't contain any values.  Let's add one!
                 _Values.Add(value);
-                OnValueChanged(null, new string[] { value });
+                OnValueChanged(null, new[] {value});
             }
             else if (value != null)
-            {                
+            {
                 // Our list contains values.  Let's set the first value!
-                string oldValue = _Values[0];
+                var oldValue = _Values[0];
                 _Values[0] = value;
-                OnValueChanged(new string[] { oldValue }, new string[] { value });
+                OnValueChanged(new[] {oldValue}, new[] {value});
             }
             else
             {
                 // Remove all values
-                List<string> values = new List<string>(Values);
+                var values = new List<string>(Values);
                 _Values.Clear();
                 OnValueChanged(values, null);
             }
         }
 
-        virtual public void SetValue(IEnumerable<string> values)
-        {                        
+        public virtual void SetValue(IEnumerable<string> values)
+        {
             // Remove all previous values
             var removedValues = _Values.ToList();
             _Values.Clear();
@@ -142,22 +144,20 @@ namespace DDay.iCal
             OnValueChanged(removedValues, values);
         }
 
-        virtual public void AddValue(string value)
+        public virtual void AddValue(string value)
         {
             if (value != null)
             {
                 _Values.Add(value);
-                OnValueChanged(null, new string[] { value });
+                OnValueChanged(null, new[] {value});
             }
         }
 
-        virtual public void RemoveValue(string value)
+        public virtual void RemoveValue(string value)
         {
-            if (value != null &&
-                _Values.Contains(value) &&
-                _Values.Remove(value))
+            if (value != null && _Values.Contains(value) && _Values.Remove(value))
             {
-                OnValueChanged(new string[] { value }, null);
+                OnValueChanged(new[] {value}, null);
             }
         }
 
@@ -165,18 +165,17 @@ namespace DDay.iCal
 
         #region ICalendarParameter Members
 
-        virtual public string Value
+        public virtual string Value
         {
             get
             {
                 if (Values != null)
+                {
                     return Values.FirstOrDefault();
+                }
                 return default(string);
             }
-            set
-            {
-                SetValue(value);
-            }
+            set { SetValue(value); }
         }
 
         #endregion

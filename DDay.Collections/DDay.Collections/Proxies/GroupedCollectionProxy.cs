@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Collections;
 
 namespace DDay.Collections
@@ -13,10 +11,8 @@ namespace DDay.Collections
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class GroupedCollectionProxy<TGroup, TOriginal, TNew> :
-        IGroupedCollectionProxy<TGroup, TOriginal, TNew>
-        where TOriginal : class, IGroupedObject<TGroup>
-        where TNew : class, TOriginal
+    public class GroupedCollectionProxy<TGroup, TOriginal, TNew> : IGroupedCollectionProxy<TGroup, TOriginal, TNew>
+        where TOriginal : class, IGroupedObject<TGroup> where TNew : class, TOriginal
     {
         #region Private Fields
 
@@ -43,141 +39,127 @@ namespace DDay.Collections
         void _RealObject_ItemRemoved(object sender, ObjectEventArgs<TOriginal, int> e)
         {
             if (e.First is TNew)
-                OnItemRemoved((TNew)e.First, e.Second);
+            {
+                OnItemRemoved((TNew) e.First, e.Second);
+            }
         }
 
         void _RealObject_ItemAdded(object sender, ObjectEventArgs<TOriginal, int> e)
         {
             if (e.First is TNew)
-                OnItemAdded((TNew)e.First, e.Second);
+            {
+                OnItemAdded((TNew) e.First, e.Second);
+            }
         }
 
         #endregion
 
         #region IGroupedCollection Members
 
-        virtual public event EventHandler<ObjectEventArgs<TNew, int>> ItemAdded;
-        virtual public event EventHandler<ObjectEventArgs<TNew, int>> ItemRemoved;
+        public virtual event EventHandler<ObjectEventArgs<TNew, int>> ItemAdded;
+        public virtual event EventHandler<ObjectEventArgs<TNew, int>> ItemRemoved;
 
         protected void OnItemAdded(TNew item, int index)
         {
             if (ItemAdded != null)
+            {
                 ItemAdded(this, new ObjectEventArgs<TNew, int>(item, index));
+            }
         }
 
         protected void OnItemRemoved(TNew item, int index)
         {
             if (ItemRemoved != null)
+            {
                 ItemRemoved(this, new ObjectEventArgs<TNew, int>(item, index));
+            }
         }
 
-        virtual public bool Remove(TGroup group)
+        public virtual bool Remove(TGroup group)
         {
             return _RealObject.Remove(group);
         }
 
-        virtual public void Clear(TGroup group)
+        public virtual void Clear(TGroup group)
         {
             _RealObject.Clear(group);
         }
 
-        virtual public bool ContainsKey(TGroup group)
+        public virtual bool ContainsKey(TGroup group)
         {
-            return _RealObject.ContainsKey(group);            
+            return _RealObject.ContainsKey(group);
         }
 
-        virtual public int CountOf(TGroup group)
+        public virtual int CountOf(TGroup group)
         {
-            return _RealObject
-                .AllOf(group)
-                .OfType<TNew>()
-                .Where(_Predicate)
-                .Count();            
+            return _RealObject.Count(g => g.Group.GetType() == typeof (TGroup));
         }
 
-        virtual public IEnumerable<TNew> AllOf(TGroup group)
+        public virtual IEnumerable<TNew> AllOf(TGroup group)
         {
-            return _RealObject
-                .AllOf(group)
-                .OfType<TNew>()
-                .Where(_Predicate);
+            return _RealObject.AllOf(group).OfType<TNew>().Where(_Predicate);
         }
-        
-        virtual public void SortKeys(IComparer<TGroup> comparer = null)
+
+        public virtual void SortKeys(IComparer<TGroup> comparer = null)
         {
             _RealObject.SortKeys(comparer);
         }
 
-        virtual public void Add(TNew item)
+        public virtual void Add(TNew item)
         {
             _RealObject.Add(item);
         }
 
-        virtual public void Clear()
+        public virtual void Clear()
         {
             // Only clear items of this type
             // that match the predicate.
 
-            var items = _RealObject
-                .OfType<TNew>()
-                .Where(_Predicate)
-                .ToArray();
+            var items = _RealObject.OfType<TNew>().ToArray();
 
-            foreach (TNew item in items)
+            foreach (var item in items)
             {
                 _RealObject.Remove(item);
             }
         }
 
-        virtual public bool Contains(TNew item)
+        public virtual bool Contains(TNew item)
         {
             return _RealObject.Contains(item);
         }
 
-        virtual public void CopyTo(TNew[] array, int arrayIndex)
+        public virtual void CopyTo(TNew[] array, int arrayIndex)
         {
-            int i = 0;
-            foreach (TNew item in this)
+            var i = 0;
+            foreach (var item in this)
             {
                 array[arrayIndex + (i++)] = item;
             }
         }
 
-        virtual public int Count
+        public virtual int Count
         {
-            get 
-            { 
-                return _RealObject
-                    .OfType<TNew>()
-                    .Where(_Predicate)
-                    .Count(); 
-            }
+            get { return _RealObject.OfType<TNew>().Count(); }
         }
 
-        virtual public bool IsReadOnly
+        public virtual bool IsReadOnly
         {
             get { return false; }
         }
 
-        virtual public bool Remove(TNew item)
+        public virtual bool Remove(TNew item)
         {
             return _RealObject.Remove(item);
         }
 
-        virtual public IEnumerator<TNew> GetEnumerator()
+        public virtual IEnumerator<TNew> GetEnumerator()
         {
-            return _RealObject
-                .OfType<TNew>()
-                .Where(_Predicate)
-                .GetEnumerator();
+            return _RealObject.OfType<TNew>().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _RealObject
-                .OfType<TNew>()
-                .Where(_Predicate)
-                .GetEnumerator();
+            return _RealObject.OfType<TNew>().GetEnumerator();
         }
 
         #endregion
@@ -189,7 +171,7 @@ namespace DDay.Collections
             get { return _RealObject; }
         }
 
-        virtual public void SetProxiedObject(IGroupedCollection<TGroup, TOriginal> realObject)
+        public virtual void SetProxiedObject(IGroupedCollection<TGroup, TOriginal> realObject)
         {
             _RealObject = realObject;
         }

@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 
 namespace DDay.iCal
 {
-    static public class KnownTypeHelper
+    public static class KnownTypeHelper
     {
-        static public IList<Type> GetKnownTypes()
+        public static IList<Type> GetKnownTypes()
         {
-            List<Type> types = new List<Type>();
+            var types = new List<Type>();
 
-            types.Add(typeof(CalendarPropertyList));
-            types.Add(typeof(CalendarParameterList));
+            types.Add(typeof (CalendarPropertyList));
+            types.Add(typeof (CalendarParameterList));
 
             return types;
         }

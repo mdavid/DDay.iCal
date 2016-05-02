@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
 
 namespace DDay.iCal
 {
-    public class TimeZoneInfoEvaluator :
-        RecurringEvaluator
+    public class TimeZoneInfoEvaluator : RecurringEvaluator
     {
         #region Protected Properties
 
@@ -20,26 +17,24 @@ namespace DDay.iCal
 
         #region Constructors
 
-        public TimeZoneInfoEvaluator(ITimeZoneInfo tzi) : base(tzi)
-        {
-        }
+        public TimeZoneInfoEvaluator(ITimeZoneInfo tzi) : base(tzi) {}
 
-        #endregion       
- 
+        #endregion
+
         #region Overrides
 
-        public override IList<IPeriod> Evaluate(IDateTime referenceDate, DateTime periodStart, DateTime periodEnd, bool includeReferenceDateInResults)
+        public override HashSet<IPeriod> Evaluate(IDateTime referenceDate, DateTime periodStart, DateTime periodEnd, bool includeReferenceDateInResults)
         {
             // Time zones must include an effective start date/time
             // and must provide an evaluator.
             if (TimeZoneInfo != null)
             {
                 // Always include the reference date in the results
-                IList<IPeriod> periods = base.Evaluate(referenceDate, periodStart, periodEnd, true);
+                var periods = base.Evaluate(referenceDate, periodStart, periodEnd, true);
                 return periods;
             }
 
-            return new List<IPeriod>();            
+            return new HashSet<IPeriod>();
         }
 
         #endregion

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DDay.iCal
 {
-    public interface IRecurrencePattern :
-        IEncodableDataType
+    public interface IRecurrencePattern : IEncodableDataType
     {
         FrequencyType Frequency { get; set; }
         DateTime Until { get; set; }
@@ -21,7 +19,7 @@ namespace DDay.iCal
         IList<int> ByMonth { get; set; }
         IList<int> BySetPosition { get; set; }
         DayOfWeek FirstDayOfWeek { get; set; }
-                
+
         RecurrenceRestrictionType RestrictionType { get; set; }
         RecurrenceEvaluationModeType EvaluationMode { get; set; }
 

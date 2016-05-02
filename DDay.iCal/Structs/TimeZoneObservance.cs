@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.Serialization;
 
 namespace DDay.iCal
 {
@@ -22,7 +19,9 @@ namespace DDay.iCal
         public bool Contains(IDateTime dt)
         {
             if (Period != null)
+            {
                 return Period.Contains(dt);
+            }
             return false;
         }
     }

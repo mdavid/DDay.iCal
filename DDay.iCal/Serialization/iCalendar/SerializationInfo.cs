@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DDay.iCal.Serialization.iCalendar
+﻿namespace DDay.iCal.Serialization.iCalendar
 {
     public class SerializationInfo
     {
@@ -18,12 +14,8 @@ namespace DDay.iCal.Serialization.iCalendar
         /// </summary>
         int Column { get; set; }
 
-        public SerializationInfo()
-        {
-        }
+        public SerializationInfo() {}
 
-        public SerializationInfo(int line, int column)
-        {
-        }
+        public SerializationInfo(int line, int column) {}
     }
 }

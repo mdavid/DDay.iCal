@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DDay.iCal
+﻿namespace DDay.iCal
 {
-    public interface IGeographicLocation :
-        IEncodableDataType
+    public interface IGeographicLocation : IEncodableDataType
     {
         double Latitude { get; set; }
         double Longitude { get; set; }

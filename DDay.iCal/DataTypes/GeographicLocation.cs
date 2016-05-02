@@ -1,8 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.Serialization;
 using System.IO;
 using DDay.iCal.Serialization.iCalendar;
 
@@ -16,9 +13,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class GeographicLocation :
-        EncodableDataType,
-        IGeographicLocation
+    public class GeographicLocation : EncodableDataType, IGeographicLocation
     {
         #region Private Fields
 
@@ -45,13 +40,14 @@ namespace DDay.iCal
 
         #region Constructors
 
-        public GeographicLocation() { }
-        public GeographicLocation(string value)
-            : this()
+        public GeographicLocation() {}
+
+        public GeographicLocation(string value) : this()
         {
-            GeographicLocationSerializer serializer = new GeographicLocationSerializer();
+            var serializer = new GeographicLocationSerializer();
             CopyFrom(serializer.Deserialize(new StringReader(value)) as ICopyable);
         }
+
         public GeographicLocation(double latitude, double longitude)
         {
             Latitude = latitude;
@@ -66,7 +62,7 @@ namespace DDay.iCal
         {
             if (obj is IGeographicLocation)
             {
-                IGeographicLocation g = (IGeographicLocation)obj;
+                var g = (IGeographicLocation) obj;
                 return g.Latitude.Equals(Latitude) && g.Longitude.Equals(Longitude);
             }
             return base.Equals(obj);
@@ -82,10 +78,10 @@ namespace DDay.iCal
             base.CopyFrom(obj);
             if (obj is IGeographicLocation)
             {
-                IGeographicLocation g = (IGeographicLocation)obj;
+                var g = (IGeographicLocation) obj;
                 Latitude = g.Latitude;
                 Longitude = g.Longitude;
-            }            
+            }
         }
 
         public override string ToString()

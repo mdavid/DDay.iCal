@@ -1,45 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using System.Text.RegularExpressions;
-using System.Collections;
 
 namespace DDay.iCal.Serialization.iCalendar
 {
-    public class UriSerializer :
-        EncodableDataTypeSerializer
+    public class UriSerializer : EncodableDataTypeSerializer
     {
         #region Constructors
 
-        public UriSerializer()
-        {
-        }
+        public UriSerializer() {}
 
-        public UriSerializer(ISerializationContext ctx)
-            : base(ctx)
-        {
-        }
+        public UriSerializer(ISerializationContext ctx) : base(ctx) {}
 
-        #endregion        
+        #endregion
 
         #region Overrides
 
         public override Type TargetType
         {
-            get { return typeof(string); }
+            get { return typeof (string); }
         }
 
         public override string SerializeToString(object obj)
         {
             if (obj is Uri)
             {
-                Uri uri = (Uri)obj;
+                var uri = (Uri) obj;
 
-                ICalendarObject co = SerializationContext.Peek() as ICalendarObject;
+                var co = SerializationContext.Peek() as ICalendarObject;
                 if (co != null)
                 {
-                    EncodableDataType dt = new EncodableDataType();
+                    var dt = new EncodableDataType();
                     dt.AssociatedObject = co;
                     return Encode(dt, uri.OriginalString);
                 }
@@ -52,12 +42,12 @@ namespace DDay.iCal.Serialization.iCalendar
         {
             if (tr != null)
             {
-                string value = tr.ReadToEnd();
+                var value = tr.ReadToEnd();
 
-                ICalendarObject co = SerializationContext.Peek() as ICalendarObject;
+                var co = SerializationContext.Peek() as ICalendarObject;
                 if (co != null)
                 {
-                    EncodableDataType dt = new EncodableDataType();
+                    var dt = new EncodableDataType();
                     dt.AssociatedObject = co;
                     value = Decode(dt, value);
                 }
@@ -66,12 +56,10 @@ namespace DDay.iCal.Serialization.iCalendar
 
                 try
                 {
-                    Uri uri = new Uri(value);
+                    var uri = new Uri(value);
                     return uri;
                 }
-                catch
-                {
-                }
+                catch {}
             }
             return null;
         }

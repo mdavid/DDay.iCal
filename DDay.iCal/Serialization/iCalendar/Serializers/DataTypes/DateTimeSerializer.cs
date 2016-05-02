@@ -1,21 +1,16 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Runtime.Serialization;
 
 namespace DDay.iCal.Serialization.iCalendar
 {
-    public class DateTimeSerializer : 
-        EncodableDataTypeSerializer
+    public class DateTimeSerializer : EncodableDataTypeSerializer
     {
         #region Private Methods
 
         private DateTime CoerceDateTime(int year, int month, int day, int hour, int minute, int second, DateTimeKind kind)
         {
-            DateTime dt = DateTime.MinValue;
+            var dt = DateTime.MinValue;
 
             // NOTE: determine if a date/time value exceeds the representable date/time values in .NET.
             // If so, let's automatically adjust the date/time to compensate.
@@ -25,13 +20,15 @@ namespace DDay.iCal.Serialization.iCalendar
             try
             {
                 if (year > 9999)
+                {
                     dt = DateTime.MaxValue;
+                }
                 else if (year > 0)
+                {
                     dt = new DateTime(year, month, day, hour, minute, second, kind);
+                }
             }
-            catch
-            {
-            }
+            catch {}
 
             return dt;
         }
@@ -42,32 +39,38 @@ namespace DDay.iCal.Serialization.iCalendar
 
         public override Type TargetType
         {
-            get { return typeof(iCalDateTime); }
+            get { return typeof (iCalDateTime); }
         }
 
         public override string SerializeToString(object obj)
-        {            
+        {
             if (obj is IDateTime)
             {
-                IDateTime dt = (IDateTime)obj;
+                var dt = (IDateTime) obj;
 
                 // Assign the TZID for the date/time value.
-                if (dt.TZID != null)
-                    dt.Parameters.Set("TZID", dt.TZID);
+                if (dt.TzId != null)
+                {
+                    dt.Parameters.Set("TZID", dt.TzId);
+                }
 
                 // FIXME: what if DATE is the default value type for this?
                 // Also, what if the DATE-TIME value type is specified on something
                 // where DATE-TIME is the default value type?  It should be removed
                 // during serialization, as it's redundant...
                 if (!dt.HasTime)
+                {
                     dt.SetValueType("DATE");
+                }
 
-                string value = string.Format("{0:0000}{1:00}{2:00}", dt.Year, dt.Month, dt.Day);
+                var value = string.Format("{0:0000}{1:00}{2:00}", dt.Year, dt.Month, dt.Day);
                 if (dt.HasTime)
                 {
                     value += string.Format("T{0:00}{1:00}{2:00}", dt.Hour, dt.Minute, dt.Second);
                     if (dt.IsUniversalTime)
+                    {
                         value += "Z";
+                    }
                 }
 
                 // Encode the value as necessary
@@ -76,36 +79,40 @@ namespace DDay.iCal.Serialization.iCalendar
             return null;
         }
 
+        private const RegexOptions _ciCompiled = RegexOptions.Compiled | RegexOptions.IgnoreCase;
+        internal static readonly Regex _dateOnlyMatch = new Regex(@"^((\d{4})(\d{2})(\d{2}))?$", _ciCompiled);
+        internal static readonly Regex _fullDateTimePatternMatch = new Regex(@"^((\d{4})(\d{2})(\d{2}))T((\d{2})(\d{2})(\d{2})(Z)?)$", _ciCompiled);
+
         public override object Deserialize(TextReader tr)
         {
-            string value = tr.ReadToEnd();
+            var value = tr.ReadToEnd();
 
-            IDateTime dt = CreateAndAssociate() as IDateTime;
+            var dt = CreateAndAssociate() as IDateTime;
             if (dt != null)
             {
                 // Decode the value as necessary
                 value = Decode(dt, value);
-                string[] values = value.Split('T');
 
-                string dateOnlyPattern = @"^((\d{4})(\d{2})(\d{2}))?$";
-                string fullPattern = @"^((\d{4})(\d{2})(\d{2}))T((\d{2})(\d{2})(\d{2})(Z)?)$";
-
-                Match match = Regex.Match(value, fullPattern, RegexOptions.IgnoreCase);
+                var match = _fullDateTimePatternMatch.Match(value);
                 if (!match.Success)
-                    match = Regex.Match(value, dateOnlyPattern, RegexOptions.IgnoreCase);
+                {
+                    match = _dateOnlyMatch.Match(value);
+                }
 
                 if (!match.Success)
+                {
                     return null;
+                }
                 else
                 {
-                    DateTime now = DateTime.Now;
+                    var now = DateTime.Now;
 
-                    int year = now.Year;
-                    int month = now.Month;
-                    int date = now.Day;
-                    int hour = 0;
-                    int minute = 0;
-                    int second = 0;
+                    var year = now.Year;
+                    var month = now.Month;
+                    var date = now.Day;
+                    var hour = 0;
+                    var minute = 0;
+                    var second = 0;
 
                     if (match.Groups[1].Success)
                     {
@@ -123,7 +130,9 @@ namespace DDay.iCal.Serialization.iCalendar
                     }
 
                     if (match.Groups[9].Success)
+                    {
                         dt.IsUniversalTime = true;
+                    }
 
                     dt.Value = CoerceDateTime(year, month, date, hour, minute, second, DateTimeKind.Utc);
                     return dt;

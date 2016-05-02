@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DDay.Collections
 {
-    public interface IGroupedCollection<TGroup, TItem> :
-        ICollection<TItem>
-        where TItem : class, IGroupedObject<TGroup>
+    public interface IGroupedCollection<TGroup, TItem> : ICollection<TItem> where TItem : class, IGroupedObject<TGroup>
     {
         /// <summary>
         /// Fired after an item is added to the collection.
@@ -28,7 +25,7 @@ namespace DDay.Collections
         /// Clears all items matching the specified group.
         /// </summary>
         void Clear(TGroup group);
-        
+
         /// <summary>
         /// Returns true if the list contains at least one 
         /// object with a matching group, false otherwise.
@@ -40,7 +37,7 @@ namespace DDay.Collections
         /// with a matching group.
         /// </summary>
         int CountOf(TGroup group);
-        
+
         /// <summary>
         /// Returns a list of objects that
         /// match the specified group.

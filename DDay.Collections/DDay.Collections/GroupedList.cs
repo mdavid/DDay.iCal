@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using System.Runtime.Serialization;
 
 namespace DDay.Collections
 {
@@ -12,9 +10,7 @@ namespace DDay.Collections
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class GroupedList<TGroup, TItem> :
-        IGroupedList<TGroup, TItem>
-        where TItem : class, IGroupedObject<TGroup>
+    public class GroupedList<TGroup, TItem> : IGroupedList<TGroup, TItem> where TItem : class, IGroupedObject<TGroup>
     {
         #region Protected Fields
 
@@ -28,14 +24,18 @@ namespace DDay.Collections
         TItem SubscribeToKeyChanges(TItem item)
         {
             if (item != null)
+            {
                 item.GroupChanged += item_GroupChanged;
+            }
             return item;
         }
 
         TItem UnsubscribeFromKeyChanges(TItem item)
         {
             if (item != null)
+            {
                 item.GroupChanged -= item_GroupChanged;
+            }
             return item;
         }
 
@@ -43,10 +43,12 @@ namespace DDay.Collections
 
         #region Protected Methods
 
-        virtual protected TGroup GroupModifier(TGroup group)
+        protected virtual TGroup GroupModifier(TGroup group)
         {
             if (group == null)
+            {
                 throw new ArgumentNullException("The item's group cannot be null.");
+            }
 
             return group;
         }
@@ -61,7 +63,7 @@ namespace DDay.Collections
             {
                 if (createIfNecessary)
                 {
-                    MultiLinkedList<TItem> list = new MultiLinkedList<TItem>();
+                    var list = new MultiLinkedList<TItem>();
                     _Dictionary[group] = list;
 
                     if (_Lists.Count > 0)
@@ -88,8 +90,7 @@ namespace DDay.Collections
             foreach (var list in _Lists)
             {
                 var startIndex = list.StartIndex;
-                if (list.StartIndex <= index &&
-                    list.ExclusiveEnd > index)
+                if (list.StartIndex <= index && list.ExclusiveEnd > index)
                 {
                     relativeIndex = index - list.StartIndex;
                     return list;
@@ -105,9 +106,9 @@ namespace DDay.Collections
 
         void item_GroupChanged(object sender, ObjectEventArgs<TGroup, TGroup> e)
         {
-            TGroup oldValue = e.First;
-            TGroup newValue = e.Second;
-            TItem obj = sender as TItem;
+            var oldValue = e.First;
+            var newValue = e.Second;
+            var obj = sender as TItem;
 
             if (obj != null)
             {
@@ -116,17 +117,17 @@ namespace DDay.Collections
                 if (!object.Equals(oldValue, default(TGroup)))
                 {
                     // Find the specific item and remove it
-                    TGroup group = GroupModifier(oldValue);
+                    var group = GroupModifier(oldValue);
                     if (_Dictionary.ContainsKey(group))
                     {
-                        IMultiLinkedList<TItem> items = _Dictionary[group];
+                        var items = _Dictionary[group];
 
                         // Find the item's index within the list
-                        int index = items.IndexOf(obj);
+                        var index = items.IndexOf(obj);
                         if (index >= 0)
                         {
                             // Get a reference to the object
-                            TItem item = items[index];
+                            var item = items[index];
 
                             // Remove the object
                             items.RemoveAt(index);
@@ -140,7 +141,9 @@ namespace DDay.Collections
 
                 // If a new group exists, then re-add this item into the hash
                 if (!object.Equals(newValue, default(TGroup)))
+                {
                     Add(obj);
+                }
             }
         }
 
@@ -157,50 +160,56 @@ namespace DDay.Collections
         protected void OnItemAdded(TItem obj, int index)
         {
             if (ItemAdded != null)
+            {
                 ItemAdded(this, new ObjectEventArgs<TItem, int>(obj, index));
+            }
         }
 
         protected void OnItemRemoved(TItem obj, int index)
         {
             if (ItemRemoved != null)
+            {
                 ItemRemoved(this, new ObjectEventArgs<TItem, int>(obj, index));
+            }
         }
 
-        virtual public void Add(TItem item)
+        public virtual void Add(TItem item)
         {
             if (item != null)
             {
                 // Get the "real" group for this item
-                TGroup group = GroupModifier(item.Group);
+                var group = GroupModifier(item.Group);
 
                 // Add a new list if necessary
                 var list = EnsureList(group, true);
-                int index = list.Count;
+                var index = list.Count;
                 list.Add(SubscribeToKeyChanges(item));
                 OnItemAdded(item, list.StartIndex + index);
             }
         }
 
-        virtual public int IndexOf(TItem item)
+        public virtual int IndexOf(TItem item)
         {
             // Get the "real" group
-            TGroup group = GroupModifier(item.Group);
+            var group = GroupModifier(item.Group);
             if (_Dictionary.ContainsKey(group))
             {
                 // Get the list associated with this object's group
                 var list = _Dictionary[group];
 
                 // Find the object within the list.
-                int index = list.IndexOf(item);
+                var index = list.IndexOf(item);
 
                 // Return the index within the overall KeyedList
                 if (index >= 0)
+                {
                     return list.StartIndex + index;
+                }
             }
             return -1;
         }
 
-        virtual public void Clear(TGroup group)
+        public virtual void Clear(TGroup group)
         {
             group = GroupModifier(group);
 
@@ -208,24 +217,26 @@ namespace DDay.Collections
             {
                 // Get the list associated with the group
                 var list = _Dictionary[group].ToArray();
-                
+
                 // Save the number of items in the list
-                int count = list.Length;
+                var count = list.Length;
 
                 // Save the starting index of the list
-                int startIndex = _Dictionary[group].StartIndex;
+                var startIndex = _Dictionary[group].StartIndex;
 
                 // Clear the list (note that this also clears the list
                 // in the _Lists object).
                 _Dictionary[group].Clear();
 
                 // Notify that each of these items were removed
-                for (int i = list.Length - 1; i >= 0; i--)
+                for (var i = list.Length - 1; i >= 0; i--)
+                {
                     OnItemRemoved(UnsubscribeFromKeyChanges(list[i]), startIndex + i);
+                }
             }
         }
 
-        virtual public void Clear()
+        public virtual void Clear()
         {
             // Get a list of items that are being cleared
             var items = _Lists.SelectMany(i => i).ToArray();
@@ -235,56 +246,59 @@ namespace DDay.Collections
             _Lists.Clear();
 
             // Notify that each item was removed
-            for (int i = items.Length - 1; i >= 0; i--)
+            for (var i = items.Length - 1; i >= 0; i--)
+            {
                 OnItemRemoved(UnsubscribeFromKeyChanges(items[i]), i);
+            }
         }
 
-        virtual public bool ContainsKey(TGroup group)
+        public virtual bool ContainsKey(TGroup group)
         {
             group = GroupModifier(group);
             return _Dictionary.ContainsKey(group);
         }
 
-        virtual public int Count
+        public virtual int Count
         {
-            get
-            {
-                return _Lists.Sum(list => list.Count);
-            }
+            get { return _Lists.Sum(list => list.Count); }
         }
 
-        virtual public int CountOf(TGroup group)
+        public virtual int CountOf(TGroup group)
         {
             group = GroupModifier(group);
             if (_Dictionary.ContainsKey(group))
+            {
                 return _Dictionary[group].Count;
+            }
             return 0;
         }
 
-        virtual public IEnumerable<TItem> Values()
+        public virtual IEnumerable<TItem> Values()
         {
             return _Dictionary.Values.SelectMany(i => i);
         }
 
-        virtual public IEnumerable<TItem> AllOf(TGroup group)
+        public virtual IEnumerable<TItem> AllOf(TGroup group)
         {
             group = GroupModifier(group);
             if (_Dictionary.ContainsKey(group))
+            {
                 return _Dictionary[group];
+            }
             return new TItem[0];
         }
-        
-        virtual public bool Remove(TItem obj)
+
+        public virtual bool Remove(TItem obj)
         {
-            TGroup group = GroupModifier(obj.Group);
+            var group = GroupModifier(obj.Group);
             if (_Dictionary.ContainsKey(group))
             {
                 var items = _Dictionary[group];
-                int index = items.IndexOf(obj);
+                var index = items.IndexOf(obj);
 
                 if (index >= 0)
                 {
-                    TItem item = items[index];
+                    var item = items[index];
                     items.RemoveAt(index);
                     OnItemRemoved(UnsubscribeFromKeyChanges(obj), index);
                     return true;
@@ -293,14 +307,14 @@ namespace DDay.Collections
             return false;
         }
 
-        virtual public bool Remove(TGroup group)
+        public virtual bool Remove(TGroup group)
         {
             group = GroupModifier(group);
             if (_Dictionary.ContainsKey(group))
             {
                 var list = _Dictionary[group];
 
-                for (int i = list.Count - 1; i >= 0; i--)
+                for (var i = list.Count - 1; i >= 0; i--)
                 {
                     var obj = list[i];
                     list.RemoveAt(i);
@@ -311,14 +325,14 @@ namespace DDay.Collections
             return false;
         }
 
-        virtual public void SortKeys(IComparer<TGroup> comparer = null)
+        public virtual void SortKeys(IComparer<TGroup> comparer = null)
         {
-            TGroup[] keys = _Dictionary.Keys.ToArray();
+            var keys = _Dictionary.Keys.ToArray();
 
             _Lists.Clear();
 
             IMultiLinkedList<TItem> previous = null;
-            foreach (TGroup group in _Dictionary.Keys.OrderBy(k => k, comparer))
+            foreach (var group in _Dictionary.Keys.OrderBy(k => k, comparer))
             {
                 var list = _Dictionary[group];
                 if (previous == null)
@@ -336,25 +350,27 @@ namespace DDay.Collections
                 _Lists.Add(list);
             }
         }
-        
+
         #endregion
 
         #region ICollection<TObject> Members
 
-        virtual public bool Contains(TItem item)
+        public virtual bool Contains(TItem item)
         {
             var group = GroupModifier(item.Group);
             if (_Dictionary.ContainsKey(group))
+            {
                 return _Dictionary[group].Contains(item);
+            }
             return false;
         }
 
-        virtual public void CopyTo(TItem[] array, int arrayIndex)
+        public virtual void CopyTo(TItem[] array, int arrayIndex)
         {
             _Dictionary.SelectMany(kvp => kvp.Value).ToArray().CopyTo(array, arrayIndex);
         }
 
-        virtual public bool IsReadOnly
+        public virtual bool IsReadOnly
         {
             get { return false; }
         }
@@ -363,10 +379,10 @@ namespace DDay.Collections
 
         #region IList<TObject> Members
 
-        virtual public void Insert(int index, TItem item)
+        public virtual void Insert(int index, TItem item)
         {
             int relativeIndex;
-            IMultiLinkedList<TItem> list = ListForIndex(index, out relativeIndex);
+            var list = ListForIndex(index, out relativeIndex);
             if (list != null)
             {
                 list.Insert(relativeIndex, item);
@@ -374,32 +390,34 @@ namespace DDay.Collections
             }
         }
 
-        virtual public void RemoveAt(int index)
+        public virtual void RemoveAt(int index)
         {
             int relativeIndex;
-            IMultiLinkedList<TItem> list = ListForIndex(index, out relativeIndex);
+            var list = ListForIndex(index, out relativeIndex);
             if (list != null)
             {
-                TItem item = list[relativeIndex];
+                var item = list[relativeIndex];
                 list.RemoveAt(relativeIndex);
                 OnItemRemoved(item, index);
             }
         }
 
-        virtual public TItem this[int index]
+        public virtual TItem this[int index]
         {
             get
             {
                 int relativeIndex;
-                IMultiLinkedList<TItem> list = ListForIndex(index, out relativeIndex);
+                var list = ListForIndex(index, out relativeIndex);
                 if (list != null)
+                {
                     return list[relativeIndex];
+                }
                 return default(TItem);
             }
             set
             {
                 int relativeIndex;
-                IMultiLinkedList<TItem> list = ListForIndex(index, out relativeIndex);
+                var list = ListForIndex(index, out relativeIndex);
                 if (list != null)
                 {
                     // Remove the item at that index and replace it
@@ -431,5 +449,5 @@ namespace DDay.Collections
         }
 
         #endregion
-    }    
+    }
 }

@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using DDay.Collections;
 
 namespace DDay.iCal
 {
-    public class UniqueComponentListProxy<TComponentType> :
-        CalendarObjectListProxy<TComponentType>,
-        IUniqueComponentList<TComponentType>
+    public class UniqueComponentListProxy<TComponentType> : CalendarObjectListProxy<TComponentType>, IUniqueComponentList<TComponentType>
         where TComponentType : class, IUniqueComponent
     {
         Dictionary<string, TComponentType> _Lookup;
@@ -20,9 +17,9 @@ namespace DDay.iCal
             _Lookup = new Dictionary<string, TComponentType>();
 
             children.ItemAdded += new EventHandler<ObjectEventArgs<ICalendarObject, int>>(children_ItemAdded);
-            children.ItemRemoved += new EventHandler<ObjectEventArgs<ICalendarObject,int>>(children_ItemRemoved);
+            children.ItemRemoved += new EventHandler<ObjectEventArgs<ICalendarObject, int>>(children_ItemRemoved);
         }
-        
+
         #endregion
 
         #region Private Methods
@@ -34,10 +31,7 @@ namespace DDay.iCal
                 return _Lookup[uid];
             }
 
-            var item = this
-                .OfType<TComponentType>()
-                .Where(c => string.Equals(c.UID, uid))
-                .FirstOrDefault();
+            var item = this.OfType<TComponentType>().Where(c => string.Equals(c.UID, uid)).FirstOrDefault();
 
             if (item != null)
             {
@@ -48,25 +42,26 @@ namespace DDay.iCal
         }
 
         #endregion
-       
+
         #region UniqueComponentListProxy Members
 
-        virtual public TComponentType this[string uid]
+        public virtual TComponentType this[string uid]
         {
-            get
-            {
-                return Search(uid);
-            }
+            get { return Search(uid); }
             set
             {
                 // Find the item matching the UID
                 var item = Search(uid);
 
                 if (item != null)
+                {
                     Remove(item);
-                
+                }
+
                 if (value != null)
+                {
                     Add(value);
+                }
             }
         }
 
@@ -78,11 +73,13 @@ namespace DDay.iCal
         {
             if (e.First is TComponentType)
             {
-                TComponentType component = (TComponentType)e.First;
+                var component = (TComponentType) e.First;
                 component.UIDChanged += UIDChanged;
 
                 if (!string.IsNullOrEmpty(component.UID))
+                {
                     _Lookup[component.UID] = component;
+                }
             }
         }
 
@@ -90,28 +87,26 @@ namespace DDay.iCal
         {
             if (e.First is TComponentType)
             {
-                TComponentType component = (TComponentType)e.First;
+                var component = (TComponentType) e.First;
                 component.UIDChanged -= UIDChanged;
 
-                if (!string.IsNullOrEmpty(component.UID) &&
-                    _Lookup.ContainsKey(component.UID))
+                if (!string.IsNullOrEmpty(component.UID) && _Lookup.ContainsKey(component.UID))
                 {
                     _Lookup.Remove(component.UID);
                 }
-            }   
+            }
         }
 
         void UIDChanged(object sender, ObjectEventArgs<string, string> e)
         {
-            if (e.First != null &&
-                _Lookup.ContainsKey(e.First))
+            if (e.First != null && _Lookup.ContainsKey(e.First))
             {
                 _Lookup.Remove(e.First);
             }
 
             if (e.Second != null)
             {
-                _Lookup[e.Second] = (TComponentType)sender;
+                _Lookup[e.Second] = (TComponentType) sender;
             }
         }
 

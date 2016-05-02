@@ -1,22 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 
 namespace DDay.iCal.Serialization.iCalendar
 {
-    public class DataMapSerializer :
-        SerializerBase
+    public class DataMapSerializer : SerializerBase
     {
         #region Constructors
 
-        public DataMapSerializer()
-        {            
-        }
+        public DataMapSerializer() {}
 
-        public DataMapSerializer(ISerializationContext ctx) : base(ctx)
-        {
-        }
+        public DataMapSerializer(ISerializationContext ctx) : base(ctx) {}
 
         #endregion
 
@@ -24,20 +17,23 @@ namespace DDay.iCal.Serialization.iCalendar
 
         protected IStringSerializer GetMappedSerializer()
         {
-            ISerializerFactory sf = GetService<ISerializerFactory>();
-            IDataTypeMapper mapper = GetService<IDataTypeMapper>();
-            if (sf != null &&
-                mapper != null)
+            var sf = GetService<ISerializerFactory>();
+            var mapper = GetService<IDataTypeMapper>();
+            if (sf != null && mapper != null)
             {
-                object obj = SerializationContext.Peek();
+                var obj = SerializationContext.Peek();
 
                 // Get the data type for this object
-                Type type = mapper.GetPropertyMapping(obj);
+                var type = mapper.GetPropertyMapping(obj);
 
                 if (type != null)
+                {
                     return sf.Build(type, SerializationContext) as IStringSerializer;
+                }
                 else
+                {
                     return new StringSerializer(SerializationContext);
+                }
             }
             return null;
         }
@@ -52,26 +48,30 @@ namespace DDay.iCal.Serialization.iCalendar
             {
                 ISerializer serializer = GetMappedSerializer();
                 if (serializer != null)
+                {
                     return serializer.TargetType;
+                }
                 return null;
             }
         }
 
         public override string SerializeToString(object obj)
         {
-            IStringSerializer serializer = GetMappedSerializer();
+            var serializer = GetMappedSerializer();
             if (serializer != null)
+            {
                 return serializer.SerializeToString(obj);
+            }
             return null;
         }
 
         public override object Deserialize(TextReader tr)
         {
-            IStringSerializer serializer = GetMappedSerializer();
+            var serializer = GetMappedSerializer();
             if (serializer != null)
             {
-                string value = tr.ReadToEnd();
-                object returnValue = serializer.Deserialize(new StringReader(value));
+                var value = tr.ReadToEnd();
+                var returnValue = serializer.Deserialize(new StringReader(value));
 
                 // Default to returning the string representation of the value
                 // if the value wasn't formatted correctly.
@@ -80,8 +80,8 @@ namespace DDay.iCal.Serialization.iCalendar
                 // as try/catch is much slower than other means.
                 return returnValue ?? value;
             }
-            return null;            
-        } 
+            return null;
+        }
 
         #endregion
     }

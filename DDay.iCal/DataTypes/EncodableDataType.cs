@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.Serialization;
 
 namespace DDay.iCal
 {
@@ -11,18 +8,12 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class EncodableDataType :
-        CalendarDataType,
-        IEncodableDataType
+    public class EncodableDataType : CalendarDataType, IEncodableDataType
     {
-        #region IEncodableDataType Members
-
-        virtual public string Encoding
+        public virtual string Encoding
         {
             get { return Parameters.Get("ENCODING"); }
             set { Parameters.Set("ENCODING", value); }
         }
-
-        #endregion
     }
 }

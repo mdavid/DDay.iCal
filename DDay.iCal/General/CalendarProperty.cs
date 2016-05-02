@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Diagnostics;
@@ -32,13 +30,11 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class CalendarProperty :
-        CalendarObject,
-        ICalendarProperty
+    public class CalendarProperty : CalendarObject, ICalendarProperty
     {
         #region Private Fields
 
-        private IList<object> _Values;        
+        private IList<object> _Values;
         private ICalendarParameterCollection _Parameters;
 
         #endregion
@@ -48,13 +44,10 @@ namespace DDay.iCal
         /// <summary>
         /// Returns a list of parameters that are associated with the iCalendar object.
         /// </summary>
-        virtual public ICalendarParameterCollection Parameters
+        public virtual ICalendarParameterCollection Parameters
         {
             get { return _Parameters; }
-            protected set
-            {
-                this._Parameters = value;
-            }
+            protected set { this._Parameters = value; }
         }
 
         #endregion
@@ -71,14 +64,12 @@ namespace DDay.iCal
             CopyFrom(other);
         }
 
-        public CalendarProperty(string name)
-            : base(name)
+        public CalendarProperty(string name) : base(name)
         {
             Initialize();
         }
 
-        public CalendarProperty(string name, object value)
-            : base(name)
+        public CalendarProperty(string name, object value) : base(name)
         {
             Initialize();
             _Values.Add(value);
@@ -94,25 +85,25 @@ namespace DDay.iCal
             _Values = new List<object>();
             _Parameters = new CalendarParameterList(this, true);
             ValueChanged += new EventHandler<ValueChangedEventArgs<object>>(CalendarProperty_ValueChanged);
-        }        
+        }
 
         #endregion
-               
+
         #region Public Methods
 
         /// <summary>
         /// Adds a parameter to the iCalendar object.
         /// </summary>
-        virtual public void AddParameter(string name, string value)
-        {            
-            CalendarParameter p = new CalendarParameter(name, value);
+        public virtual void AddParameter(string name, string value)
+        {
+            var p = new CalendarParameter(name, value);
             Parameters.Add(p);
         }
 
         /// <summary>
         /// Adds a parameter to the iCalendar object.
         /// </summary>
-        virtual public void AddParameter(ICalendarParameter p)
+        public virtual void AddParameter(ICalendarParameter p)
         {
             Parameters.Add(p);
         }
@@ -124,12 +115,16 @@ namespace DDay.iCal
         void CalendarProperty_ValueChanged(object sender, ValueChangedEventArgs<object> e)
         {
             // Deassociate the old values
-            foreach (object removed in e.RemovedValues)
+            foreach (var removed in e.RemovedValues)
+            {
                 AssociationUtil.DeassociateItem(removed);
+            }
 
             // Associate the new values with this object.
-            foreach (object added in e.AddedValues)
+            foreach (var added in e.AddedValues)
+            {
                 AssociationUtil.AssociateItem(added, this);
+            }
         }
 
         #endregion
@@ -147,20 +142,28 @@ namespace DDay.iCal
         {
             base.CopyFrom(obj);
 
-            ICalendarProperty p = obj as ICalendarProperty;
+            var p = obj as ICalendarProperty;
             if (p != null)
             {
                 // Copy/clone the object if possible (deep copy)
                 if (p.Values is ICopyable)
-                    SetValue(((ICopyable)p.Values).Copy<object>());
+                {
+                    SetValue(((ICopyable) p.Values).Copy<object>());
+                }
                 else if (p.Values is ICloneable)
-                    SetValue(((ICloneable)p.Values).Clone());
+                {
+                    SetValue(((ICloneable) p.Values).Clone());
+                }
                 else
+                {
                     SetValue(p.Values);
+                }
 
                 // Copy parameters
-                foreach (ICalendarParameter parm in p.Parameters)
+                foreach (var parm in p.Parameters)
+                {
                     this.AddChild(parm.Copy<ICalendarParameter>());
+                }
             }
         }
 
@@ -174,15 +177,14 @@ namespace DDay.iCal
         protected void OnValueChanged(object removedValue, object addedValue)
         {
             if (ValueChanged != null)
-                ValueChanged(this, new ValueChangedEventArgs<object>((IEnumerable<object>)removedValue, (IEnumerable<object>)addedValue));
+            {
+                ValueChanged(this, new ValueChangedEventArgs<object>((IEnumerable<object>) removedValue, (IEnumerable<object>) addedValue));
+            }
         }
 
-        virtual public IEnumerable<object> Values
+        public virtual IEnumerable<object> Values
         {
-            get 
-            {
-                return _Values;
-            }
+            get { return _Values; }
         }
 
         public object Value
@@ -190,7 +192,9 @@ namespace DDay.iCal
             get
             {
                 if (_Values != null)
+                {
                     return _Values.FirstOrDefault();
+                }
                 return null;
             }
             set
@@ -198,7 +202,9 @@ namespace DDay.iCal
                 if (value != null)
                 {
                     if (_Values != null && _Values.Count > 0)
+                    {
                         _Values[0] = value;
+                    }
                     else
                     {
                         _Values.Clear();
@@ -212,44 +218,46 @@ namespace DDay.iCal
             }
         }
 
-        virtual public bool ContainsValue(object value)
+        public virtual bool ContainsValue(object value)
         {
             return _Values.Contains(value);
         }
 
-        virtual public int ValueCount
+        public virtual int ValueCount
         {
             get
             {
-                return _Values != null ? _Values.Count : 0;
+                return _Values != null
+                    ? _Values.Count
+                    : 0;
             }
         }
 
-        virtual public void SetValue(object value)
+        public virtual void SetValue(object value)
         {
             if (_Values.Count == 0)
             {
                 // Our list doesn't contain any values.  Let's add one!
                 _Values.Add(value);
-                OnValueChanged(null, new object[] { value });
+                OnValueChanged(null, new[] {value});
             }
             else if (value != null)
             {
                 // Our list contains values.  Let's set the first value!
-                object oldValue = _Values[0];
+                var oldValue = _Values[0];
                 _Values[0] = value;
-                OnValueChanged(new object[] { oldValue }, new object[] { value });
+                OnValueChanged(new[] {oldValue}, new[] {value});
             }
             else
             {
                 // Remove all values
-                List<object> values = new List<object>(Values);
+                var values = new List<object>(Values);
                 _Values.Clear();
                 OnValueChanged(values, null);
             }
         }
 
-        virtual public void SetValue(IEnumerable<object> values)
+        public virtual void SetValue(IEnumerable<object> values)
         {
             // Remove all previous values
             var removedValues = _Values.ToList();
@@ -258,22 +266,20 @@ namespace DDay.iCal
             OnValueChanged(removedValues, values);
         }
 
-        virtual public void AddValue(object value)
+        public virtual void AddValue(object value)
         {
             if (value != null)
             {
                 _Values.Add(value);
-                OnValueChanged(null, new object[] { value });
+                OnValueChanged(null, new[] {value});
             }
         }
-        
-        virtual public void RemoveValue(object value)
+
+        public virtual void RemoveValue(object value)
         {
-            if (value != null &&
-                _Values.Contains(value) &&
-                _Values.Remove(value))
+            if (value != null && _Values.Contains(value) && _Values.Remove(value))
             {
-                OnValueChanged(new object[] { value }, null);
+                OnValueChanged(new[] {value}, null);
             }
         }
 

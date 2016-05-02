@@ -1,9 +1,6 @@
 using System;
 using System.Diagnostics;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Configuration;
 using System.Runtime.Serialization;
 
 namespace DDay.iCal
@@ -15,14 +12,12 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class Todo : 
-        RecurringComponent,
-        ITodo
+    public class Todo : RecurringComponent, ITodo
     {
         #region Private Fields
 
         TodoEvaluator m_Evaluator;
-        
+
         #endregion
 
         #region Public Properties
@@ -30,7 +25,7 @@ namespace DDay.iCal
         /// <summary>
         /// The date/time the todo was completed.
         /// </summary>
-        virtual public IDateTime Completed
+        public virtual IDateTime Completed
         {
             get { return Properties.Get<IDateTime>("COMPLETED"); }
             set { Properties.Set("COMPLETED", value); }
@@ -41,10 +36,7 @@ namespace DDay.iCal
         /// </summary>
         public override IDateTime DTStart
         {
-            get
-            {
-                return base.DTStart;
-            }
+            get { return base.DTStart; }
             set
             {
                 base.DTStart = value;
@@ -55,7 +47,7 @@ namespace DDay.iCal
         /// <summary>
         /// The due date of the todo item.
         /// </summary>
-        virtual public IDateTime Due
+        public virtual IDateTime Due
         {
             get { return Properties.Get<IDateTime>("DUE"); }
             set
@@ -78,7 +70,7 @@ namespace DDay.iCal
         //
         // Therefore, Duration is not serialized, as Due
         // should always be extrapolated from the duration.
-        virtual public TimeSpan Duration
+        public virtual TimeSpan Duration
         {
             get { return Properties.Get<TimeSpan>("DURATION"); }
             set
@@ -88,25 +80,25 @@ namespace DDay.iCal
             }
         }
 
-        virtual public IGeographicLocation GeographicLocation
+        public virtual IGeographicLocation GeographicLocation
         {
             get { return Properties.Get<IGeographicLocation>("GEO"); }
             set { Properties.Set("GEO", value); }
         }
 
-        virtual public string Location
+        public virtual string Location
         {
             get { return Properties.Get<string>("LOCATION"); }
             set { Properties.Set("LOCATION", value); }
         }
 
-        virtual public int PercentComplete
+        public virtual int PercentComplete
         {
             get { return Properties.Get<int>("PERCENT-COMPLETE"); }
             set { Properties.Set("PERCENT-COMPLETE", value); }
         }
 
-        virtual public IList<string> Resources
+        public virtual IList<string> Resources
         {
             get { return Properties.GetMany<string>("RESOURCES"); }
             set { Properties.Set("RESOURCES", value); }
@@ -115,7 +107,7 @@ namespace DDay.iCal
         /// <summary>
         /// The status of the todo item.
         /// </summary>
-        virtual public TodoStatus Status
+        public virtual TodoStatus Status
         {
             get { return Properties.Get<TodoStatus>("STATUS"); }
             set
@@ -129,8 +121,13 @@ namespace DDay.iCal
                     if (IsLoaded)
                     {
                         if (value == TodoStatus.Completed)
+                        {
                             Completed = iCalDateTime.Now;
-                        else Completed = null;
+                        }
+                        else
+                        {
+                            Completed = null;
+                        }
                     }
 
                     Properties.Set("STATUS", value);
@@ -169,15 +166,15 @@ namespace DDay.iCal
         /// into account to give the most accurate result possible.
         /// </note>
         /// </summary>
-        /// <param name="DateTime">The date and time to test.</param>
         /// <returns>True if the todo item has been completed</returns>
-        virtual public bool IsCompleted(IDateTime currDt)
+        public virtual bool IsCompleted(IDateTime currDt)
         {
             if (Status == TodoStatus.Completed)
             {
-                if (Completed == null ||
-                    Completed.GreaterThan(currDt))
+                if (Completed == null || Completed.GreaterThan(currDt))
+                {
                     return true;
+                }
 
                 // Evaluate to the previous occurrence.
                 m_Evaluator.EvaluateToPreviousOccurrence(Completed, currDt);
@@ -185,8 +182,10 @@ namespace DDay.iCal
                 foreach (Period p in m_Evaluator.Periods)
                 {
                     if (p.StartTime.GreaterThan(Completed) && // The item has recurred after it was completed
-                        currDt.GreaterThanOrEqual(p.StartTime))     // and the current date is after or on the recurrence date.
+                        currDt.GreaterThanOrEqual(p.StartTime)) // and the current date is after or on the recurrence date.
+                    {
                         return false;
+                    }
                 }
                 return true;
             }
@@ -199,20 +198,27 @@ namespace DDay.iCal
         /// </summary>
         /// <param name="currDt">The date and time to test.</param>
         /// <returns>True if the item is Active as of <paramref name="currDt"/>, False otherwise.</returns>
-        virtual public bool IsActive(IDateTime currDt)
+        public virtual bool IsActive(IDateTime currDt)
         {
             if (DTStart == null)
+            {
                 return !IsCompleted(currDt) && !IsCancelled();
+            }
             else if (currDt.GreaterThanOrEqual(DTStart))
+            {
                 return !IsCompleted(currDt) && !IsCancelled();
-            else return false;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>
         /// Returns True if the todo item was cancelled.
         /// </summary>
         /// <returns>True if the todo was cancelled, False otherwise.</returns>
-        virtual public bool IsCancelled()
+        public virtual bool IsCancelled()
         {
             return Status == TodoStatus.Cancelled;
         }
@@ -223,10 +229,7 @@ namespace DDay.iCal
 
         protected override bool EvaluationIncludesReferenceDate
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
         }
 
         protected override void OnDeserializing(StreamingContext context)
@@ -243,11 +246,17 @@ namespace DDay.iCal
         private void ExtrapolateTimes()
         {
             if (Due == null && DTStart != null && Duration != default(TimeSpan))
+            {
                 Due = DTStart.Add(Duration);
+            }
             else if (Duration == default(TimeSpan) && DTStart != null && Due != null)
+            {
                 Duration = Due.Subtract(DTStart);
+            }
             else if (DTStart == null && Duration != default(TimeSpan) && Due != null)
+            {
                 DTStart = Due.Subtract(Duration);
+            }
         }
 
         #endregion

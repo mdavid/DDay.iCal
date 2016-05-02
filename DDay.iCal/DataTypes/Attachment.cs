@@ -1,6 +1,5 @@
 using System;
 using System.Net;
-using System.Collections.Generic;
 using System.Text;
 using System.Runtime.Serialization;
 using System.IO;
@@ -14,9 +13,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class Attachment : 
-        EncodableDataType,
-        IAttachment
+    public class Attachment : EncodableDataType, IAttachment
     {
         #region Private Fields
 
@@ -28,14 +25,14 @@ namespace DDay.iCal
 
         #region Constructors
 
-        public Attachment() 
+        public Attachment()
         {
             Initialize();
         }
-        public Attachment(string value)
-            : this()
+
+        public Attachment(string value) : this()
         {
-            AttachmentSerializer serializer = new AttachmentSerializer();
+            var serializer = new AttachmentSerializer();
             CopyFrom(serializer.Deserialize(new StringReader(value)) as ICopyable);
         }
 
@@ -64,19 +61,29 @@ namespace DDay.iCal
         {
             if (obj is IAttachment)
             {
-                IAttachment a = (IAttachment)obj;
+                var a = (IAttachment) obj;
 
                 if (Data == null && a.Data == null)
+                {
                     return Uri.Equals(a.Uri);
+                }
                 else if (Data == null || a.Data == null)
+                {
                     // One item is null, but the other isn't                    
                     return false;
+                }
                 else if (Data.Length != a.Data.Length)
+                {
                     return false;
-                for (int i = 0; i < Data.Length; i++)
+                }
+                for (var i = 0; i < Data.Length; i++)
+                {
                     if (Data[i] != a.Data[i])
+                    {
                         return false;
-                return true;                
+                    }
+                }
+                return true;
             }
             return base.Equals(obj);
         }
@@ -84,18 +91,22 @@ namespace DDay.iCal
         public override int GetHashCode()
         {
             if (Uri != null)
+            {
                 return Uri.GetHashCode();
+            }
             else if (Data != null)
+            {
                 return Data.GetHashCode();
+            }
             return base.GetHashCode();
         }
-      
+
         public override void CopyFrom(ICopyable obj)
         {
             base.CopyFrom(obj);
             if (obj is IAttachment)
             {
-                IAttachment a = (IAttachment)obj;
+                var a = (IAttachment) obj;
                 ValueEncoding = a.ValueEncoding;
 
                 if (a.Data != null)
@@ -103,96 +114,105 @@ namespace DDay.iCal
                     Data = new byte[a.Data.Length];
                     a.Data.CopyTo(Data, 0);
                 }
-                else Data = null;
+                else
+                {
+                    Data = null;
+                }
 
                 Uri = a.Uri;
             }
         }
 
-        #endregion        
+        #endregion
 
         #region IAttachment Members
 
-        virtual public Uri Uri
+        public virtual Uri Uri
         {
             get { return m_Uri; }
             set { m_Uri = value; }
         }
 
-        virtual public byte[] Data
+        public virtual byte[] Data
         {
             get { return m_Data; }
             set { m_Data = value; }
         }
 
-        virtual public Encoding ValueEncoding
+        public virtual Encoding ValueEncoding
         {
             get { return m_Encoding; }
             set { m_Encoding = value; }
         }
 
-        virtual public string Value
+        public virtual string Value
         {
             get
             {
                 if (Data != null)
+                {
                     return m_Encoding.GetString(Data);
+                }
                 return null;
             }
             set
             {
                 if (value != null)
+                {
                     Data = m_Encoding.GetBytes(value);
-                else                    
+                }
+                else
+                {
                     Data = null;
+                }
             }
         }
 
-        virtual public string FormatType
+        public virtual string FormatType
         {
             get { return Parameters.Get("FMTTYPE"); }
             set { Parameters.Set("FMTTYPE", value); }
         }
 
         /// <summary>
-        /// Loads (fills) the <c>Data</c> property with the file designated
-        /// at the given <see cref="URI"/>.
+        /// Loads (fills) the <c>Data</c> property with the file designated at the given URI".
         /// </summary>
-        virtual public void LoadDataFromUri()
+        public virtual void LoadDataFromUri()
         {
             LoadDataFromUri(null, null, null);
         }
 
         /// <summary>
-        /// Loads (fills) the <c>Data</c> property with the file designated
-        /// at the given <see cref="URI"/>.
+        /// Loads (fills) the <c>Data</c> property with the file designated at the given URI.
         /// </summary>
         /// <param name="username">The username to supply for credentials</param>
         /// <param name="password">The pasword to supply for credentials</param>
-        virtual public void LoadDataFromUri(string username, string password)
+        public virtual void LoadDataFromUri(string username, string password)
         {
             LoadDataFromUri(null, username, password);
         }
 
         /// <summary>
-        /// Loads (fills) the <c>Data</c> property with the contents of the
-        /// given <see cref="URI"/>.
+        /// Loads (fills) the <c>Data</c> property with the contents of the given URI.
         /// </summary>
         /// <param name="uri">The Uri from which to download the <c>Data</c></param>
         /// <param name="username">The username to supply for credentials</param>
         /// <param name="password">The pasword to supply for credentials</param>
-        virtual public void LoadDataFromUri(Uri uri, string username, string password)
+        public virtual void LoadDataFromUri(Uri uri, string username, string password)
         {
-            using (WebClient client = new WebClient())
+            using (var client = new WebClient())
             {
-                if (username != null &&
-                    password != null)
+                if (username != null && password != null)
+                {
                     client.Credentials = new System.Net.NetworkCredential(username, password);
+                }
 
                 if (uri == null)
                 {
                     if (Uri == null)
+                    {
                         throw new ArgumentException("A URI was not provided for the LoadDataFromUri() method");
+                    }
                     uri = new Uri(Uri.OriginalString);
                 }
 

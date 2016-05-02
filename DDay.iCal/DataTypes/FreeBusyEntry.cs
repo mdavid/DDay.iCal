@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace DDay.iCal
+﻿namespace DDay.iCal
 {
-    public class FreeBusyEntry :
-        Period,
-        IFreeBusyEntry
+    public class FreeBusyEntry : Period, IFreeBusyEntry
     {
         #region Private Fields
 
@@ -17,7 +10,11 @@ namespace DDay.iCal
 
         #region Constructors
 
-        public FreeBusyEntry() : base() { Initialize(); }
+        public FreeBusyEntry() : base()
+        {
+            Initialize();
+        }
+
         public FreeBusyEntry(IPeriod period, FreeBusyStatus status) : base()
         {
             Initialize();
@@ -38,7 +35,7 @@ namespace DDay.iCal
         {
             base.CopyFrom(obj);
 
-            IFreeBusyEntry fb = obj as IFreeBusyEntry;
+            var fb = obj as IFreeBusyEntry;
             if (fb != null)
             {
                 Status = fb.Status;
@@ -49,7 +46,7 @@ namespace DDay.iCal
 
         #region IFreeBusyEntry Members
 
-        virtual public FreeBusyStatus Status
+        public virtual FreeBusyStatus Status
         {
             get { return _Status; }
             set { _Status = value; }

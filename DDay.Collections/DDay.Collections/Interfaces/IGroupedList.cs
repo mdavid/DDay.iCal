@@ -1,13 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DDay.Collections
 {
-    public interface IGroupedList<TGroup, TItem> :
-        IGroupedCollection<TGroup, TItem>,
-        IList<TItem>
-        where TItem : class, IGroupedObject<TGroup>
+    public interface IGroupedList<TGroup, TItem> : IGroupedCollection<TGroup, TItem>, IList<TItem> where TItem : class, IGroupedObject<TGroup>
     {
         /// <summary>
         /// Returns the index of the given item

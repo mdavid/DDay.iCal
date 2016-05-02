@@ -1,27 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DDay.iCal
+﻿namespace DDay.iCal
 {
     public class AssociationUtil
     {
         #region Static Public Methods
 
-        static public void AssociateItem(object item, ICalendarObject objectToAssociate)
+        public static void AssociateItem(object item, ICalendarObject objectToAssociate)
         {
             if (item is ICalendarDataType)
-                ((ICalendarDataType)item).AssociatedObject = objectToAssociate;
+            {
+                ((ICalendarDataType) item).AssociatedObject = objectToAssociate;
+            }
             else if (item is ICalendarObject)
-                ((ICalendarObject)item).Parent = objectToAssociate;
+            {
+                ((ICalendarObject) item).Parent = objectToAssociate;
+            }
         }
 
-        static public void DeassociateItem(object item)
+        public static void DeassociateItem(object item)
         {
             if (item is ICalendarDataType)
-                ((ICalendarDataType)item).AssociatedObject = null;
+            {
+                ((ICalendarDataType) item).AssociatedObject = null;
+            }
             else if (item is ICalendarObject)
-                ((ICalendarObject)item).Parent = null;
+            {
+                ((ICalendarObject) item).Parent = null;
+            }
         }
 
         #endregion

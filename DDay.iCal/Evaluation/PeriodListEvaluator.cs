@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DDay.iCal
 {
-    public class PeriodListEvaluator :
-        Evaluator
+    public class PeriodListEvaluator : Evaluator
     {
         #region Private Fields
 
@@ -24,24 +22,30 @@ namespace DDay.iCal
 
         #region Overrides
 
-        public override IList<IPeriod> Evaluate(IDateTime referenceDate, DateTime periodStart, DateTime periodEnd, bool includeReferenceDateInResults)
+        public override HashSet<IPeriod> Evaluate(IDateTime referenceDate, DateTime periodStart, DateTime periodEnd, bool includeReferenceDateInResults)
         {
-            List<IPeriod> periods = new List<IPeriod>();
+            var periods = new HashSet<IPeriod>();
 
             if (includeReferenceDateInResults)
             {
                 IPeriod p = new Period(referenceDate);
                 if (!periods.Contains(p))
+                {
                     periods.Add(p);
+                }
             }
 
             if (periodEnd < periodStart)
+            {
                 return periods;
+            }
 
-            foreach (IPeriod p in m_PeriodList)
+            foreach (var p in m_PeriodList)
             {
                 if (!periods.Contains(p))
+                {
                     periods.Add(p);
+                }
             }
 
             return periods;

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace DDay.iCal
 {
-    public interface IFreeBusy :
-        IUniqueComponent,
-        IMergeable
+    public interface IFreeBusy : IUniqueComponent, IMergeable
     {
         IList<IFreeBusyEntry> Entries { get; set; }
         IDateTime DTStart { get; set; }

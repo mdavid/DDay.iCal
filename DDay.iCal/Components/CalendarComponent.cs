@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Text;
-using System.Reflection;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Diagnostics;
@@ -19,9 +16,7 @@ namespace DDay.iCal
     [Serializable]
 #endif
     [DebuggerDisplay("Component: {Name}")]
-    public class CalendarComponent :
-        CalendarObject,
-        ICalendarComponent
+    public class CalendarComponent : CalendarObject, ICalendarComponent
     {
         #region Static Public Methods
 
@@ -32,7 +27,7 @@ namespace DDay.iCal
         /// <summary>
         /// Loads an iCalendar component (Event, Todo, Journal, etc.) from an open stream.
         /// </summary>
-        static public ICalendarComponent LoadFromStream(Stream s)
+        public static ICalendarComponent LoadFromStream(Stream s)
         {
             return LoadFromStream(s, Encoding.UTF8);
         }
@@ -41,22 +36,23 @@ namespace DDay.iCal
 
         #region LoadFromStream(Stream s, Encoding e) variants
 
-        static public ICalendarComponent LoadFromStream(Stream stream, Encoding encoding)
+        public static ICalendarComponent LoadFromStream(Stream stream, Encoding encoding)
         {
             return LoadFromStream(stream, encoding, new ComponentSerializer());
         }
 
-        static public T LoadFromStream<T>(Stream stream, Encoding encoding)
-            where T : ICalendarComponent
+        public static T LoadFromStream<T>(Stream stream, Encoding encoding) where T : ICalendarComponent
         {
-            ComponentSerializer serializer = new ComponentSerializer();            
+            var serializer = new ComponentSerializer();
             object obj = LoadFromStream(stream, encoding, serializer);
             if (obj is T)
-                return (T)obj;
+            {
+                return (T) obj;
+            }
             return default(T);
         }
 
-        static public ICalendarComponent LoadFromStream(Stream stream, Encoding encoding, ISerializer serializer)
+        public static ICalendarComponent LoadFromStream(Stream stream, Encoding encoding, ISerializer serializer)
         {
             return serializer.Deserialize(stream, encoding) as ICalendarComponent;
         }
@@ -65,33 +61,35 @@ namespace DDay.iCal
 
         #region LoadFromStream(TextReader tr) variants
 
-        static public ICalendarComponent LoadFromStream(TextReader tr)
+        public static ICalendarComponent LoadFromStream(TextReader tr)
         {
-            string text = tr.ReadToEnd();
+            var text = tr.ReadToEnd();
             tr.Close();
 
-            byte[] memoryBlock = Encoding.UTF8.GetBytes(text);
-            MemoryStream ms = new MemoryStream(memoryBlock);
+            var memoryBlock = Encoding.UTF8.GetBytes(text);
+            var ms = new MemoryStream(memoryBlock);
             return LoadFromStream(ms, Encoding.UTF8);
         }
 
-        static public T LoadFromStream<T>(TextReader tr) where T : ICalendarComponent
+        public static T LoadFromStream<T>(TextReader tr) where T : ICalendarComponent
         {
             object obj = LoadFromStream(tr);
             if (obj is T)
-                return (T)obj;
+            {
+                return (T) obj;
+            }
             return default(T);
         }
 
-        #endregion        
+        #endregion
 
         #endregion
 
         #endregion
 
         #region Private Fields
-                
-        private ICalendarPropertyList m_Properties;        
+
+        private ICalendarPropertyList m_Properties;
 
         #endregion
 
@@ -100,24 +98,28 @@ namespace DDay.iCal
         /// <summary>
         /// Returns a list of properties that are associated with the iCalendar object.
         /// </summary>
-        virtual public ICalendarPropertyList Properties
+        public virtual ICalendarPropertyList Properties
         {
             get { return m_Properties; }
-            protected set
-            {
-                this.m_Properties = value;
-            }
+            protected set { this.m_Properties = value; }
         }
 
         #endregion
 
         #region Constructors
 
-        public CalendarComponent() : base() { Initialize(); }
-        public CalendarComponent(string name) : base(name) { Initialize(); }
+        public CalendarComponent() : base()
+        {
+            Initialize();
+        }
+
+        public CalendarComponent(string name) : base(name)
+        {
+            Initialize();
+        }
 
         private void Initialize()
-        {            
+        {
             m_Properties = new CalendarPropertyList(this, true);
         }
 
@@ -136,12 +138,14 @@ namespace DDay.iCal
         {
             base.CopyFrom(obj);
 
-            ICalendarComponent c = obj as ICalendarComponent;
+            var c = obj as ICalendarComponent;
             if (c != null)
             {
                 Properties.Clear();
-                foreach (ICalendarProperty p in c.Properties)
+                foreach (var p in c.Properties)
+                {
                     Properties.Add(p.Copy<ICalendarProperty>());
+                }
             }
         }
 
@@ -152,21 +156,21 @@ namespace DDay.iCal
         /// <summary>
         /// Adds a property to this component.
         /// </summary>
-        virtual public void AddProperty(string name, string value)
+        public virtual void AddProperty(string name, string value)
         {
-            CalendarProperty p = new CalendarProperty(name, value);
+            var p = new CalendarProperty(name, value);
             AddProperty(p);
         }
 
         /// <summary>
         /// Adds a property to this component.
         /// </summary>
-        virtual public void AddProperty(ICalendarProperty p)
+        public virtual void AddProperty(ICalendarProperty p)
         {
             p.Parent = this;
             Properties.Set(p.Name, p);
         }
 
-        #endregion        
+        #endregion
     }
 }

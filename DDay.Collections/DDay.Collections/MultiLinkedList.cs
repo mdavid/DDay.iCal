@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace DDay.Collections
 {
-    public class MultiLinkedList<TType> :
-        List<TType>,
-        IMultiLinkedList<TType>
+    public class MultiLinkedList<TType> : List<TType>, IMultiLinkedList<TType>
     {
         #region Private Fields
 
@@ -18,24 +13,34 @@ namespace DDay.Collections
 
         #region IMultiLinkedList<TType> Members
 
-        virtual public void SetPrevious(IMultiLinkedList<TType> previous)
+        public virtual void SetPrevious(IMultiLinkedList<TType> previous)
         {
             _Previous = previous;
         }
 
-        virtual public void SetNext(IMultiLinkedList<TType> next)
+        public virtual void SetNext(IMultiLinkedList<TType> next)
         {
             _Next = next;
         }
 
-        virtual public int StartIndex
+        public virtual int StartIndex
         {
-            get { return _Previous != null ? _Previous.ExclusiveEnd : 0; }
+            get
+            {
+                return _Previous != null
+                    ? _Previous.ExclusiveEnd
+                    : 0;
+            }
         }
 
-        virtual public int ExclusiveEnd
+        public virtual int ExclusiveEnd
         {
-            get { return Count > 0 ? StartIndex + Count : StartIndex; }
+            get
+            {
+                return Count > 0
+                    ? StartIndex + Count
+                    : StartIndex;
+            }
         }
 
         #endregion

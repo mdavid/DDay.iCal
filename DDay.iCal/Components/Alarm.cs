@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Configuration;
 using System.Runtime.Serialization;
 
 namespace DDay.iCal
@@ -14,9 +11,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class Alarm :
-        CalendarComponent,
-        IAlarm
+    public class Alarm : CalendarComponent, IAlarm
     {
         #region Private Fields
 
@@ -26,49 +21,49 @@ namespace DDay.iCal
 
         #region Public Properties
 
-        virtual public AlarmAction Action
+        public virtual AlarmAction Action
         {
             get { return Properties.Get<AlarmAction>("ACTION"); }
             set { Properties.Set("ACTION", value); }
         }
 
-        virtual public IAttachment Attachment
+        public virtual IAttachment Attachment
         {
             get { return Properties.Get<IAttachment>("ATTACH"); }
             set { Properties.Set("ATTACH", value); }
         }
 
-        virtual public IList<IAttendee> Attendees
+        public virtual IList<IAttendee> Attendees
         {
             get { return Properties.GetMany<IAttendee>("ATTENDEE"); }
             set { Properties.Set("ATTENDEE", value); }
         }
 
-        virtual public string Description
+        public virtual string Description
         {
             get { return Properties.Get<string>("DESCRIPTION"); }
             set { Properties.Set("DESCRIPTION", value); }
         }
 
-        virtual public TimeSpan Duration
+        public virtual TimeSpan Duration
         {
             get { return Properties.Get<TimeSpan>("DURATION"); }
             set { Properties.Set("DURATION", value); }
         }
 
-        virtual public int Repeat
+        public virtual int Repeat
         {
             get { return Properties.Get<int>("REPEAT"); }
             set { Properties.Set("REPEAT", value); }
         }
 
-        virtual public string Summary
+        public virtual string Summary
         {
             get { return Properties.Get<string>("SUMMARY"); }
             set { Properties.Set("SUMMARY", value); }
         }
 
-        virtual public ITrigger Trigger
+        public virtual ITrigger Trigger
         {
             get { return Properties.Get<ITrigger>("TRIGGER"); }
             set { Properties.Set("TRIGGER", value); }
@@ -78,7 +73,7 @@ namespace DDay.iCal
 
         #region Protected Properties
 
-        virtual protected List<AlarmOccurrence> Occurrences
+        protected virtual List<AlarmOccurrence> Occurrences
         {
             get { return m_Occurrences; }
             set { m_Occurrences = value; }
@@ -99,7 +94,7 @@ namespace DDay.iCal
             Occurrences = new List<AlarmOccurrence>();
         }
 
-        #endregion                
+        #endregion
 
         #region Public Methods
 
@@ -107,7 +102,7 @@ namespace DDay.iCal
         /// Gets a list of alarm occurrences for the given recurring component, <paramref name="rc"/>
         /// that occur between <paramref name="FromDate"/> and <paramref name="ToDate"/>.
         /// </summary>
-        virtual public IList<AlarmOccurrence> GetOccurrences(IRecurringComponent rc, IDateTime FromDate, IDateTime ToDate)
+        public virtual IList<AlarmOccurrence> GetOccurrences(IRecurringComponent rc, IDateTime FromDate, IDateTime ToDate)
         {
             Occurrences.Clear();
 
@@ -120,24 +115,34 @@ namespace DDay.iCal
                 {
                     // Ensure that "FromDate" has already been set
                     if (FromDate == null)
-                        FromDate = rc.Start.Copy<IDateTime>();
-
-                    TimeSpan d = default(TimeSpan);
-                    foreach (Occurrence o in rc.GetOccurrences(FromDate, ToDate))
                     {
-                        IDateTime dt = o.Period.StartTime;
+                        FromDate = rc.Start.Copy<IDateTime>();
+                    }
+
+                    var d = default(TimeSpan);
+                    foreach (var o in rc.GetOccurrences(FromDate, ToDate))
+                    {
+                        var dt = o.Period.StartTime;
                         if (Trigger.Related == TriggerRelation.End)
                         {
                             if (o.Period.EndTime != null)
                             {
                                 dt = o.Period.EndTime;
                                 if (d == default(TimeSpan))
+                                {
                                     d = o.Period.Duration;
+                                }
                             }
                             // Use the "last-found" duration as a reference point
                             else if (d != default(TimeSpan))
+                            {
                                 dt = o.Period.StartTime.Add(d);
-                            else throw new ArgumentException("Alarm trigger is relative to the END of the occurrence; however, the occurence has no discernible end.");
+                            }
+                            else
+                            {
+                                throw new ArgumentException(
+                                    "Alarm trigger is relative to the END of the occurrence; however, the occurence has no discernible end.");
+                            }
                         }
 
                         Occurrences.Add(new AlarmOccurrence(this, dt.Add(Trigger.Duration.Value), rc));
@@ -145,7 +150,7 @@ namespace DDay.iCal
                 }
                 else
                 {
-                    IDateTime dt = Trigger.DateTime.Copy<IDateTime>();
+                    var dt = Trigger.DateTime.Copy<IDateTime>();
                     dt.AssociatedObject = this;
                     Occurrences.Add(new AlarmOccurrence(this, dt, rc));
                 }
@@ -165,12 +170,12 @@ namespace DDay.iCal
         /// </summary>
         /// <param name="Start">The earliest date/time to poll trigerred alarms for.</param>
         /// <returns>A list of <see cref="AlarmOccurrence"/> objects, each containing a triggered alarm.</returns>
-        virtual public IList<AlarmOccurrence> Poll(IDateTime Start, IDateTime End)
+        public virtual IList<AlarmOccurrence> Poll(IDateTime Start, IDateTime End)
         {
-            List<AlarmOccurrence> Results = new List<AlarmOccurrence>();
+            var Results = new List<AlarmOccurrence>();
 
             // Evaluate the alarms to determine the recurrences
-            RecurringComponent rc = Parent as RecurringComponent;
+            var rc = Parent as RecurringComponent;
             if (rc != null)
             {
                 Results.AddRange(GetOccurrences(rc, Start, End));
@@ -188,21 +193,18 @@ namespace DDay.iCal
         /// <c>DURATION</c> properties.  Each recurrence of the alarm will
         /// have its own set of generated repetitions.
         /// </summary>
-        virtual protected void AddRepeatedItems()
+        protected virtual void AddRepeatedItems()
         {
-            if (Repeat != null)
+            var len = Occurrences.Count;
+            for (var i = 0; i < len; i++)
             {
-                int len = Occurrences.Count;
-                for (int i = 0; i < len; i++)
-                {
-                    AlarmOccurrence ao = Occurrences[i];
-                    IDateTime alarmTime = ao.DateTime.Copy<IDateTime>();
+                var ao = Occurrences[i];
+                var alarmTime = ao.DateTime.Copy<IDateTime>();
 
-                    for (int j = 0; j < Repeat; j++)
-                    {
-                        alarmTime = alarmTime.Add(Duration);
-                        Occurrences.Add(new AlarmOccurrence(this, alarmTime.Copy<IDateTime>(), ao.Component));
-                    }
+                for (var j = 0; j < Repeat; j++)
+                {
+                    alarmTime = alarmTime.Add(Duration);
+                    Occurrences.Add(new AlarmOccurrence(this, alarmTime.Copy<IDateTime>(), ao.Component));
                 }
             }
         }

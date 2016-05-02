@@ -1,54 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace DDay.iCal
 {
-    public class FreeBusy :
-        UniqueComponent,
-        IFreeBusy
+    public class FreeBusy : UniqueComponent, IFreeBusy
     {
         #region Static Public Methods
 
-        static public IFreeBusy Create(ICalendarObject obj, IFreeBusy freeBusyRequest)
+        public static IFreeBusy Create(ICalendarObject obj, IFreeBusy freeBusyRequest)
         {
             if (obj is IGetOccurrencesTyped)
             {
-                IGetOccurrencesTyped getOccurrences = (IGetOccurrencesTyped)obj;
-                IList<Occurrence> occurrences = getOccurrences.GetOccurrences<IEvent>(freeBusyRequest.Start, freeBusyRequest.End);
-                List<string> contacts = new List<string>();
-                bool isFilteredByAttendees = false;
-                
-                if (freeBusyRequest.Attendees != null &&
-                    freeBusyRequest.Attendees.Count > 0)
+                var getOccurrences = (IGetOccurrencesTyped) obj;
+                var occurrences = getOccurrences.GetOccurrences<IEvent>(freeBusyRequest.Start, freeBusyRequest.End);
+                var contacts = new List<string>();
+                var isFilteredByAttendees = false;
+
+                if (freeBusyRequest.Attendees != null && freeBusyRequest.Attendees.Count > 0)
                 {
                     isFilteredByAttendees = true;
-                    foreach (IAttendee attendee in freeBusyRequest.Attendees)
+                    foreach (var attendee in freeBusyRequest.Attendees)
                     {
                         if (attendee.Value != null)
-                            contacts.Add(attendee.Value.OriginalString.Trim());                        
+                        {
+                            contacts.Add(attendee.Value.OriginalString.Trim());
+                        }
                     }
                 }
 
-                IFreeBusy fb = freeBusyRequest.Copy<IFreeBusy>();
+                var fb = freeBusyRequest.Copy<IFreeBusy>();
                 fb.UID = new UIDFactory().Build();
                 fb.Entries.Clear();
                 fb.DTStamp = iCalDateTime.Now;
 
-                foreach (Occurrence o in occurrences)
+                foreach (var o in occurrences)
                 {
-                    IUniqueComponent uc = o.Source as IUniqueComponent;
+                    var uc = o.Source as IUniqueComponent;
 
                     if (uc != null)
                     {
-                        IEvent evt = uc as IEvent;
-                        bool accepted = false;
-                        FreeBusyStatus type = FreeBusyStatus.Busy;
-                        
+                        var evt = uc as IEvent;
+                        var accepted = false;
+                        var type = FreeBusyStatus.Busy;
+
                         // We only accept events, and only "opaque" events.
                         if (evt != null && evt.Transparency != TransparencyType.Transparent)
+                        {
                             accepted = true;
+                        }
 
                         // If the result is filtered by attendees, then
                         // we won't accept it until we find an event
@@ -56,13 +54,13 @@ namespace DDay.iCal
                         if (accepted && isFilteredByAttendees)
                         {
                             accepted = false;
-                            foreach (IAttendee a in uc.Attendees)
+                            foreach (var a in uc.Attendees)
                             {
                                 if (a.Value != null && contacts.Contains(a.Value.OriginalString.Trim()))
                                 {
                                     if (a.ParticipationStatus != null)
                                     {
-                                        switch(a.ParticipationStatus.ToUpperInvariant())
+                                        switch (a.ParticipationStatus.ToUpperInvariant())
                                         {
                                             case ParticipationStatus.Tentative:
                                                 accepted = true;
@@ -93,18 +91,22 @@ namespace DDay.iCal
             return null;
         }
 
-        static public IFreeBusy CreateRequest(IDateTime fromInclusive, IDateTime toExclusive, IOrganizer organizer, IAttendee[] contacts)
+        public static IFreeBusy CreateRequest(IDateTime fromInclusive, IDateTime toExclusive, IOrganizer organizer, IAttendee[] contacts)
         {
-            FreeBusy fb = new FreeBusy();
+            var fb = new FreeBusy();
             fb.DTStamp = iCalDateTime.Now;
             fb.DTStart = fromInclusive;
             fb.DTEnd = toExclusive;
             if (organizer != null)
+            {
                 fb.Organizer = organizer.Copy<IOrganizer>();
+            }
             if (contacts != null)
             {
-                foreach (IAttendee attendee in contacts)
+                foreach (var attendee in contacts)
+                {
                     fb.Attendees.Add(attendee.Copy<IAttendee>());
+                }
             }
 
             return fb;
@@ -123,59 +125,63 @@ namespace DDay.iCal
 
         #region IFreeBusy Members
 
-        virtual public IList<IFreeBusyEntry> Entries
+        public virtual IList<IFreeBusyEntry> Entries
         {
             get { return Properties.GetMany<IFreeBusyEntry>("FREEBUSY"); }
             set { Properties.Set("FREEBUSY", value); }
         }
 
-        virtual public IDateTime DTStart
+        public virtual IDateTime DTStart
         {
             get { return Properties.Get<IDateTime>("DTSTART"); }
             set { Properties.Set("DTSTART", value); }
         }
 
-        virtual public IDateTime DTEnd
+        public virtual IDateTime DTEnd
         {
             get { return Properties.Get<IDateTime>("DTEND"); }
             set { Properties.Set("DTEND", value); }
         }
 
-        virtual public IDateTime Start
+        public virtual IDateTime Start
         {
             get { return Properties.Get<IDateTime>("DTSTART"); }
             set { Properties.Set("DTSTART", value); }
         }
 
-        virtual public IDateTime End
+        public virtual IDateTime End
         {
             get { return Properties.Get<IDateTime>("DTEND"); }
             set { Properties.Set("DTEND", value); }
         }
 
-        virtual public FreeBusyStatus GetFreeBusyStatus(IPeriod period)
+        public virtual FreeBusyStatus GetFreeBusyStatus(IPeriod period)
         {
-            FreeBusyStatus status = FreeBusyStatus.Free;
+            var status = FreeBusyStatus.Free;
             if (period != null)
-            {                
-                foreach (IFreeBusyEntry fbe in Entries)
+            {
+                foreach (var fbe in Entries)
                 {
                     if (fbe.CollidesWith(period) && status < fbe.Status)
+                    {
                         status = fbe.Status;
+                    }
                 }
             }
             return status;
         }
 
-        virtual public FreeBusyStatus GetFreeBusyStatus(IDateTime dt)
+        public virtual FreeBusyStatus GetFreeBusyStatus(IDateTime dt)
         {
-            FreeBusyStatus status = FreeBusyStatus.Free;
+            var status = FreeBusyStatus.Free;
             if (dt != null)
             {
-                foreach (IFreeBusyEntry fbe in Entries)
+                foreach (var fbe in Entries)
                 {
                     if (fbe.Contains(dt) && status < fbe.Status)
+                    {
                         status = fbe.Status;
+                    }
                 }
             }
             return status;
@@ -185,15 +191,17 @@ namespace DDay.iCal
 
         #region IMergeable Members
 
-        virtual public void MergeWith(IMergeable obj)
+        public virtual void MergeWith(IMergeable obj)
         {
-            IFreeBusy fb = obj as IFreeBusy;
+            var fb = obj as IFreeBusy;
             if (fb != null)
             {
-                foreach (IFreeBusyEntry entry in fb.Entries)
+                foreach (var entry in fb.Entries)
                 {
                     if (!Entries.Contains(entry))
+                    {
                         Entries.Add(entry.Copy<IFreeBusyEntry>());
+                    }
                 }
             }
         }

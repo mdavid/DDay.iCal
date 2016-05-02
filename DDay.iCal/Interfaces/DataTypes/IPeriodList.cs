@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace DDay.iCal
 {
-    public interface IPeriodList :
-        IEncodableDataType,
-        IList<IPeriod>
+    public interface IPeriodList : IEncodableDataType, IList<IPeriod>
     {
         string TZID { get; set; }
 

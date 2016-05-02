@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DDay.iCal
+﻿namespace DDay.iCal
 {
-    public interface IStatusCode :
-        IEncodableDataType
+    public interface IStatusCode : IEncodableDataType
     {
         int[] Parts { get; set; }
         int Primary { get; }

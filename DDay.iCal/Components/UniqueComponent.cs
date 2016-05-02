@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Linq;
-using System.Text;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using DDay.Collections;
@@ -15,9 +13,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class UniqueComponent : 
-        CalendarComponent,
-        IUniqueComponent
+    public class UniqueComponent : CalendarComponent, IUniqueComponent
     {
         // TODO: Add AddRelationship() public method.
         // This method will add the UID of a related component
@@ -32,10 +28,11 @@ namespace DDay.iCal
             Initialize();
             EnsureProperties();
         }
+
         public UniqueComponent(string name) : base(name)
         {
             Initialize();
-            EnsureProperties();            
+            EnsureProperties();
         }
 
         private void EnsureProperties()
@@ -54,9 +51,9 @@ namespace DDay.iCal
                 // the iCalendar standard doesn't care at all about milliseconds.  Therefore, when comparing
                 // two calendars, one generated, and one loaded from file, they may be functionally identical,
                 // but be determined to be different due to millisecond differences.
-                DateTime now = DateTime.Now;
-                DTStamp = new iCalDateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);                
-            }            
+                var now = DateTime.Now;
+                DTStamp = new iCalDateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+            }
         }
 
         private void Initialize()
@@ -69,37 +66,37 @@ namespace DDay.iCal
 
         #region Public Properties
 
-        virtual public IList<IAttendee> Attendees
+        public virtual IList<IAttendee> Attendees
         {
             get { return Properties.GetMany<IAttendee>("ATTENDEE"); }
             set { Properties.Set("ATTENDEE", value); }
         }
 
-        virtual public IList<string> Comments
+        public virtual IList<string> Comments
         {
             get { return Properties.GetMany<string>("COMMENT"); }
             set { Properties.Set("COMMENT", value); }
         }
 
-        virtual public IDateTime DTStamp
+        public virtual IDateTime DTStamp
         {
             get { return Properties.Get<IDateTime>("DTSTAMP"); }
             set { Properties.Set("DTSTAMP", value); }
         }
 
-        virtual public IOrganizer Organizer
+        public virtual IOrganizer Organizer
         {
             get { return Properties.Get<IOrganizer>("ORGANIZER"); }
             set { Properties.Set("ORGANIZER", value); }
         }
 
-        virtual public IList<IRequestStatus> RequestStatuses
+        public virtual IList<IRequestStatus> RequestStatuses
         {
             get { return Properties.GetMany<IRequestStatus>("REQUEST-STATUS"); }
             set { Properties.Set("REQUEST-STATUS", value); }
         }
 
-        virtual public Uri Url
+        public virtual Uri Url
         {
             get { return Properties.Get<Uri>("URL"); }
             set { Properties.Set("URL", value); }
@@ -111,9 +108,7 @@ namespace DDay.iCal
 
         void Properties_ItemRemoved(object sender, ObjectEventArgs<ICalendarProperty, int> e)
         {
-            if (e.First != null &&
-                e.First.Name != null &&
-                string.Equals(e.First.Name.ToUpper(), "UID"))
+            if (e.First != null && e.First.Name != null && string.Equals(e.First.Name.ToUpper(), "UID"))
             {
                 OnUIDChanged(e.First.Values.Cast<string>().FirstOrDefault(), null);
                 e.First.ValueChanged -= Object_ValueChanged;
@@ -122,9 +117,7 @@ namespace DDay.iCal
 
         void Properties_ItemAdded(object sender, ObjectEventArgs<ICalendarProperty, int> e)
         {
-            if (e.First != null &&
-                e.First.Name != null &&
-                string.Equals(e.First.Name.ToUpper(), "UID"))
+            if (e.First != null && e.First.Name != null && string.Equals(e.First.Name.ToUpper(), "UID"))
             {
                 OnUIDChanged(null, e.First.Values.Cast<string>().FirstOrDefault());
                 e.First.ValueChanged += Object_ValueChanged;
@@ -133,15 +126,15 @@ namespace DDay.iCal
 
         void Object_ValueChanged(object sender, ValueChangedEventArgs<object> e)
         {
-            string oldValue = e.RemovedValues.OfType<string>().FirstOrDefault();
-            string newValue = e.AddedValues.OfType<string>().FirstOrDefault();
+            var oldValue = e.RemovedValues.OfType<string>().FirstOrDefault();
+            var newValue = e.AddedValues.OfType<string>().FirstOrDefault();
             OnUIDChanged(oldValue, newValue);
         }
 
         #endregion
 
         #region Overrides
-        
+
         protected override void OnDeserializing(StreamingContext context)
         {
             base.OnDeserializing(context);
@@ -158,13 +151,17 @@ namespace DDay.iCal
 
         public override bool Equals(object obj)
         {
-            if (obj is RecurringComponent && 
-                obj != this)
+            if (obj is RecurringComponent && obj != this)
             {
-                RecurringComponent r = (RecurringComponent)obj;                
+                var r = (RecurringComponent) obj;
                 if (UID != null)
+                {
                     return UID.Equals(r.UID);
-                else return UID == r.UID;
+                }
+                else
+                {
+                    return UID == r.UID;
+                }
             }
             return base.Equals(obj);
         }
@@ -172,7 +169,9 @@ namespace DDay.iCal
         public override int GetHashCode()
         {
             if (UID != null)
+            {
                 return UID.GetHashCode();
+            }
             return base.GetHashCode();
         }
 
@@ -180,15 +179,17 @@ namespace DDay.iCal
 
         #region IUniqueComponent Members
 
-        virtual public event EventHandler<ObjectEventArgs<string, string>> UIDChanged;
+        public virtual event EventHandler<ObjectEventArgs<string, string>> UIDChanged;
 
-        virtual protected void OnUIDChanged(string oldUID, string newUID)
+        protected virtual void OnUIDChanged(string oldUID, string newUID)
         {
             if (UIDChanged != null)
+            {
                 UIDChanged(this, new ObjectEventArgs<string, string>(oldUID, newUID));
+            }
         }
 
-        virtual public string UID
+        public virtual string UID
         {
             get { return Properties.Get<string>("UID"); }
             set { Properties.Set("UID", value); }

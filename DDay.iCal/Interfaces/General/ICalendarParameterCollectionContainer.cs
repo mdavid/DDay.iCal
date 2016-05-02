@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DDay.iCal
+﻿namespace DDay.iCal
 {
-    public interface ICalendarParameterCollectionContainer        
+    public interface ICalendarParameterCollectionContainer
     {
         ICalendarParameterCollection Parameters { get; }
     }

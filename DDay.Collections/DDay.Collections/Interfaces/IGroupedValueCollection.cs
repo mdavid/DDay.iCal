@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace DDay.Collections
 {
-    public interface IGroupedValueCollection<TGroup, TInterface, TItem, TValueType> :
-        IGroupedCollection<TGroup, TInterface>
-        where TInterface : class, IGroupedObject<TGroup>, IValueObject<TValueType>
-        where TItem : new()
+    public interface IGroupedValueCollection<TGroup, TInterface, TItem, TValueType> : IGroupedCollection<TGroup, TInterface>
+        where TInterface : class, IGroupedObject<TGroup>, IValueObject<TValueType> where TItem : new()
     {
         void Set(TGroup group, TValueType value);
         void Set(TGroup group, IEnumerable<TValueType> values);

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using DDay.Collections;
 
 namespace DDay.iCal
 {
-    public interface ICalendarParameterCollection :
-        IGroupedList<string, ICalendarParameter>
+    public interface ICalendarParameterCollection : IGroupedList<string, ICalendarParameter>
     {
         void SetParent(ICalendarObject parent);
         void Add(string name, string value);

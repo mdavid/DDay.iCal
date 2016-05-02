@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.IO;
@@ -15,9 +13,7 @@ namespace DDay.iCal
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class PeriodList : 
-        EncodableDataType,
-        IPeriodList
+    public class PeriodList : EncodableDataType, IPeriodList
     {
         #region Private Fields
 
@@ -48,9 +44,10 @@ namespace DDay.iCal
         {
             Initialize();
         }
+
         public PeriodList(string value) : this()
         {
-            PeriodListSerializer serializer = new PeriodListSerializer();
+            var serializer = new PeriodListSerializer();
             CopyFrom(serializer.Deserialize(new StringReader(value)) as ICopyable);
         }
 
@@ -74,22 +71,28 @@ namespace DDay.iCal
         {
             if (obj is IPeriodList)
             {
-                IPeriodList r = (IPeriodList)obj;
+                var r = (IPeriodList) obj;
 
-                IEnumerator<IPeriod> p1Enum = GetEnumerator();
-                IEnumerator<IPeriod> p2Enum = r.GetEnumerator();
+                var p1Enum = GetEnumerator();
+                var p2Enum = r.GetEnumerator();
 
                 while (p1Enum.MoveNext())
                 {
                     if (!p2Enum.MoveNext())
+                    {
                         return false;
+                    }
 
                     if (!object.Equals(p1Enum.Current, p2Enum.Current))
+                    {
                         return false;
+                    }
                 }
 
                 if (p2Enum.MoveNext())
+                {
                     return false;
+                }
 
                 return true;
             }
@@ -98,26 +101,30 @@ namespace DDay.iCal
 
         public override int GetHashCode()
         {
-            int hashCode = 0;
-            foreach (IPeriod p in this)
+            var hashCode = 0;
+            foreach (var p in this)
+            {
                 hashCode ^= p.GetHashCode();
+            }
             return hashCode;
         }
- 
+
         public override void CopyFrom(ICopyable obj)
         {
             base.CopyFrom(obj);
             if (obj is IPeriodList)
             {
-                IPeriodList rdt = (IPeriodList)obj;
-                foreach (IPeriod p in rdt)
+                var rdt = (IPeriodList) obj;
+                foreach (var p in rdt)
+                {
                     Add(p.Copy<IPeriod>());
+                }
             }
         }
 
         public override string ToString()
         {
-            PeriodListSerializer serializer = new PeriodListSerializer();
+            var serializer = new PeriodListSerializer();
             return serializer.SerializeToString(this);
         }
 
@@ -127,18 +134,25 @@ namespace DDay.iCal
 
         public List<Period> Evaluate(iCalDateTime StartDate, iCalDateTime FromDate, iCalDateTime EndDate)
         {
-            List<Period> periods = new List<Period>();
+            var periods = new List<Period>();
 
             if (StartDate > FromDate)
+            {
                 FromDate = StartDate;
+            }
 
-            if (EndDate < FromDate ||
-                FromDate > EndDate)
+            if (EndDate < FromDate || FromDate > EndDate)
+            {
                 return periods;
+            }
 
             foreach (Period p in Periods)
+            {
                 if (!periods.Contains(p))
+                {
                     periods.Add(p);
+                }
+            }
 
             return periods;
         }
@@ -147,38 +161,32 @@ namespace DDay.iCal
 
         #region IPeriodList Members
 
-        virtual public void Add(IDateTime dt)
+        public virtual void Add(IDateTime dt)
         {
             Periods.Add(new Period(dt));
         }
 
-        virtual public void Remove(IDateTime dt)
+        public virtual void Remove(IDateTime dt)
         {
             Periods.Remove(new Period(dt));
         }
 
         public IPeriod this[int index]
         {
-            get
-            {
-                return m_Periods[index];
-            }
-            set
-            {
-                m_Periods[index] = value;
-            }
+            get { return m_Periods[index]; }
+            set { m_Periods[index] = value; }
         }
 
         #endregion
 
         #region IList<IPeriod> Members
 
-        virtual public void Add(IPeriod item)
+        public virtual void Add(IPeriod item)
         {
             m_Periods.Add(item);
         }
 
-        virtual public void Clear()
+        public virtual void Clear()
         {
             m_Periods.Clear();
         }

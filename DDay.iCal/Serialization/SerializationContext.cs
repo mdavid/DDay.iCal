@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using DDay.iCal.Serialization.iCalendar;
 
 namespace DDay.iCal.Serialization
 {
-    public class SerializationContext :        
-        ISerializationContext
+    public class SerializationContext : ISerializationContext
     {
         #region Static Private Fields
 
-        static private SerializationContext _Default;
+        private static SerializationContext _Default;
 
         #endregion
 
@@ -19,7 +17,7 @@ namespace DDay.iCal.Serialization
         /// <summary>
         /// Gets the Singleton instance of the SerializationContext class.
         /// </summary>
-        static public ISerializationContext Default
+        public static ISerializationContext Default
         {
             get
             {
@@ -34,7 +32,7 @@ namespace DDay.iCal.Serialization
                 // and something goes wrong and the objects don't get popped off the stack,
                 // we don't need to worry (as much) about a memory leak, because the
                 // objects weren't pushed onto a stack referenced by a static variable.
-                SerializationContext ctx = new SerializationContext();
+                var ctx = new SerializationContext();
                 ctx.m_ServiceProvider = _Default.m_ServiceProvider;
                 return ctx;
             }
@@ -59,40 +57,46 @@ namespace DDay.iCal.Serialization
             SetService(new ComponentFactory());
             SetService(new DataTypeMapper());
             SetService(new EncodingStack());
-            SetService(new EncodingProvider(this));            
+            SetService(new EncodingProvider(this));
             SetService(new CompositeProcessor<IICalendar>());
             SetService(new CompositeProcessor<ICalendarComponent>());
-            SetService(new CompositeProcessor<ICalendarProperty>());            
+            SetService(new CompositeProcessor<ICalendarProperty>());
         }
 
         #endregion
 
         #region ISerializationContext Members
 
-        virtual public void Push(object item)
+        public virtual void Push(object item)
         {
             if (item != null)
+            {
                 m_Stack.Push(new WeakReference(item));
+            }
         }
 
-        virtual public object Pop()
+        public virtual object Pop()
         {
             if (m_Stack.Count > 0)
             {
-                WeakReference r = m_Stack.Pop();
+                var r = m_Stack.Pop();
                 if (r.IsAlive)
+                {
                     return r.Target;
+                }
             }
             return null;
         }
 
-        virtual public object Peek()
+        public virtual object Peek()
         {
             if (m_Stack.Count > 0)
             {
-                WeakReference r = m_Stack.Peek();
+                var r = m_Stack.Peek();
                 if (r.IsAlive)
+                {
                     return r.Target;
+                }
             }
             return null;
         }
@@ -101,42 +105,42 @@ namespace DDay.iCal.Serialization
 
         #region IServiceProvider Members
 
-        virtual public object GetService(Type serviceType)
+        public virtual object GetService(Type serviceType)
         {
             return m_ServiceProvider.GetService(serviceType);
         }
 
-        virtual public object GetService(string name)
+        public virtual object GetService(string name)
         {
             return m_ServiceProvider.GetService(name);
         }
 
-        virtual public T GetService<T>()
+        public virtual T GetService<T>()
         {
             return m_ServiceProvider.GetService<T>();
         }
 
-        virtual public T GetService<T>(string name)
+        public virtual T GetService<T>(string name)
         {
             return m_ServiceProvider.GetService<T>(name);
         }
 
-        virtual public void SetService(string name, object obj)
+        public virtual void SetService(string name, object obj)
         {
             m_ServiceProvider.SetService(name, obj);
         }
 
-        virtual public void SetService(object obj)
+        public virtual void SetService(object obj)
         {
             m_ServiceProvider.SetService(obj);
         }
 
-        virtual public void RemoveService(Type type)
+        public virtual void RemoveService(Type type)
         {
             m_ServiceProvider.RemoveService(type);
         }
 
-        virtual public void RemoveService(string name)
+        public virtual void RemoveService(string name)
         {
             m_ServiceProvider.RemoveService(name);
         }

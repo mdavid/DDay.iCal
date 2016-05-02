@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace DDay.Collections
 {
-    public class GroupedListEnumerator<TType> :
-        IEnumerator<TType>
+    public class GroupedListEnumerator<TType> : IEnumerator<TType>
     {
         IList<IMultiLinkedList<TType>> _Lists;
         IEnumerator<IMultiLinkedList<TType>> _ListsEnumerator;
@@ -17,17 +13,19 @@ namespace DDay.Collections
             _Lists = lists;
         }
 
-        virtual public TType Current
+        public virtual TType Current
         {
             get
             {
                 if (_ListEnumerator != null)
+                {
                     return _ListEnumerator.Current;
+                }
                 return default(TType);
             }
         }
 
-        virtual public void Dispose()
+        public virtual void Dispose()
         {
             Reset();
         }
@@ -46,7 +44,9 @@ namespace DDay.Collections
             get
             {
                 if (_ListEnumerator != null)
+                {
                     return _ListEnumerator.Current;
+                }
                 return default(TType);
             }
         }
@@ -74,7 +74,7 @@ namespace DDay.Collections
             return false;
         }
 
-        virtual public bool MoveNext()
+        public virtual bool MoveNext()
         {
             if (_ListEnumerator != null)
             {
@@ -86,20 +86,23 @@ namespace DDay.Collections
                 {
                     DisposeListEnumerator();
                     if (MoveNextList())
+                    {
                         return MoveNext();
+                    }
                 }
             }
             else
             {
                 if (MoveNextList())
+                {
                     return MoveNext();
+                }
             }
             return false;
         }
 
-        virtual public void Reset()
+        public virtual void Reset()
         {
-
             if (_ListsEnumerator != null)
             {
                 _ListsEnumerator.Dispose();

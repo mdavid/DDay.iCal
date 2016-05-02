@@ -1,12 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Collections;
-using System.IO;
-using System.Resources;
-using System.Web;
-using System.Reflection;
-using System.Text.RegularExpressions;
 using NUnit.Framework;
 
 namespace DDay.iCal.Test
@@ -14,18 +5,10 @@ namespace DDay.iCal.Test
     [TestFixture]
     public class CopyTest
     {
-        private string tzid;
-
-        [TestFixtureSetUp]
-        public void InitAll()
-        {            
-            tzid = "US-Eastern";
-        }
-
         private void CopyCalendarTest(string filename)
         {
-            IICalendar iCal1 = iCalendar.LoadFromFile(@"Calendars\Serialization\" + filename)[0];
-            IICalendar iCal2 = iCal1.Copy<IICalendar>();
+            var iCal1 = iCalendar.LoadFromFile(@"Calendars\Serialization\" + filename)[0];
+            var iCal2 = iCal1.Copy<IICalendar>();
             SerializationTest.CompareCalendars(iCal1, iCal2);
         }
 
@@ -69,7 +52,7 @@ namespace DDay.iCal.Test
         public void CopyDuration1()
         {
             CopyCalendarTest("Duration1.ics");
-        }        
+        }
 
         [Test, Category("Copy")]
         public void CopyEncoding1()

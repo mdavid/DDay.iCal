@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace DDay.iCal
+﻿namespace DDay.iCal
 {
+
     #region Alarms
 
     public enum AlarmAction
@@ -43,7 +39,7 @@ namespace DDay.iCal
     }
 
     #endregion
-    
+
     #region Status Constants
 
     public class ParticipationStatus
@@ -85,9 +81,9 @@ namespace DDay.iCal
     /// </summary>    
     public enum JournalStatus
     {
-        Draft,      // Indicates journal is draft.
-        Final,      // Indicates journal is final.
-        Cancelled   // Indicates journal is removed.
+        Draft, // Indicates journal is draft.
+        Final, // Indicates journal is final.
+        Cancelled // Indicates journal is removed.
     };
 
     public enum FreeBusyStatus
@@ -201,7 +197,7 @@ namespace DDay.iCal
         /// were evaluated, an exception would be thrown.
         /// </summary>
         ThrowException
-    } 
+    }
 
     #endregion
 
@@ -294,7 +290,7 @@ namespace DDay.iCal
         /// counter-proposal.
         /// </summary>
         public const string DeclineCounter = "DECLINECOUNTER";
-    } 
+    }
 
-    #endregion   
+    #endregion
 }
